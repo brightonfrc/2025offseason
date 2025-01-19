@@ -24,6 +24,11 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class AccelerationLimiterConstants{
+    //3 inch wheel, or 0.0762m
+    public static double wheelRadius=0.0762;
+    public static double maximumMagnitudeChange=0.1;
+  }
   public static class OperatorConstants{
     public static final int kDriverControllerPort=0;
   }

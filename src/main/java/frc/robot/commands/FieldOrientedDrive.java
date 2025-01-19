@@ -35,6 +35,7 @@ public class FieldOrientedDrive extends Command {
     private double maximumRotationSpeed;
     private double maximumSpeed;
     private Boolean slowMode;
+    private double maxAcceleration;
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
     /**
@@ -71,9 +72,7 @@ public class FieldOrientedDrive extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-
         SmartDashboard.putNumber("Goal bearing", goalBearing);
-
 
         //Both joysticks assumes the right to be bearing 0 and then works clockwise from there. To have bearing 0 be in front, the bearing
         //has to be moved back by 90 degrees/ 1/2 PI
@@ -82,7 +81,7 @@ public class FieldOrientedDrive extends Command {
         if (Math.hypot(xboxController.getRightY(), xboxController.getRightX())>  0.5) {
             joystickTurnBearing = Math.atan2(xboxController.getRightY(), xboxController.getRightX()) + Math.PI/2;
         }
-        SmartDashboard.putNumber("Turn: Right Joystick bearing", joystickTurnBearing);
+        // SmartDashboard.putNumber("Turn: Right Joystick bearing", joystickTurnBearing);
 
         //error tolerance of 2 degrees
         if (Math.abs(joystickTurnBearing-goalBearing)>Math.PI/180*FieldOrientedDriveConstants.bearingTolerance){
@@ -96,15 +95,16 @@ public class FieldOrientedDrive extends Command {
         SmartDashboard.putNumber("Robot bearing", robotBearing);
 
         joystickMoveBearing = Math.atan2(xboxController.getLeftY(), xboxController.getLeftX());
-        SmartDashboard.putNumber("Drive: Left joystick bearing", joystickMoveBearing);
+        // SmartDashboard.putNumber("Drive: Left joystick bearing", joystickMoveBearing);
 
         joystickMoveBearing = joystickMoveBearing - robotBearing;
         SmartDashboard.putNumber("Drive: Robot Relative bearing", joystickMoveBearing);
 
         joystickMoveMagnitude = Math.pow(Math.pow(xboxController.getLeftX(), 2) + Math.pow(xboxController.getLeftY(), 2), 0.5);
-        SmartDashboard.putNumber("Drive: Left joystick magnitude", joystickMoveMagnitude);
+        // SmartDashboard.putNumber("Drive: Left joystick magnitude", joystickMoveMagnitude);
 
         xSpeed = -joystickMoveMagnitude * Math.cos(joystickMoveBearing) * (xboxController.a().getAsBoolean() ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
+        
         SmartDashboard.putNumber("xSpeed", xSpeed);
 
         ySpeed = -joystickMoveMagnitude * Math.sin(joystickMoveBearing) * (xboxController.a().getAsBoolean() ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
@@ -114,6 +114,10 @@ public class FieldOrientedDrive extends Command {
         SmartDashboard.putNumber("rotSpeed", rotSpeed);
 
         driveSubsystem.drive(ySpeed, xSpeed, rotSpeed, false);
+
+        //for testing how RPM scales with commanded robot speed
+        SmartDashboard.putNumber("Mean strafe RPM: CommandedSpeed", Math.hypot(xSpeed, ySpeed)/driveSubsystem.getCurrentMeanSpeed());
+        
     }
 
     // Called once the command ends or is interrupted.
