@@ -15,7 +15,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.AccelerationLimiterConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -184,15 +183,18 @@ public class DriveSubsystem extends SubsystemBase {
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
+
   /**
-   * Returns the average speed of the 4 drive motors
-   * 
-   * @return the average angular velocity of the motors in RPM
+   * Resets the gyroscope to 0 degrees
    */
-  public double getCurrentMeanSpeed(){
-    double meanSpeed= Math.abs(m_frontLeft.getStrafeVelocity())+Math.abs(m_frontRight.getStrafeVelocity())+Math.abs(m_rearLeft.getStrafeVelocity())+Math.abs(m_rearRight.getStrafeVelocity());
-    meanSpeed=meanSpeed/4;
-    //convert to m/s from RPM
-    return meanSpeed;
+  public void resetGyro(){
+    m_gyro.reset();
+  }
+
+  /**
+   * Gets angle of the gyro
+   */
+  public double getGyroAngle(){
+    return m_gyro.getAngle()%360;
   }
 }

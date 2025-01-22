@@ -25,18 +25,16 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class AccelerationLimiterConstants{
-    //3 inch wheel, or 0.0762m
-    public static double wheelRadius=0.0762;
-    public static double maximumMagnitudeChange=0.1;
+    public static double maximumAcceleration=0.01;
+    public static double maximumDeceleration=0.02;
   }
   public static class OperatorConstants{
     public static final int kDriverControllerPort=0;
   }
   public static class TestingConstants{
-    public static final double maximumSpeed=0.60;
+    public static final double maximumSpeed=0.50;
     public static final double maximumRotationSpeed=0.01;
     public static final double maximumSpeedReduced=0.10;
-    public static final double maximumRotationSpeedReduced=0.01;
   }
   public static class GameSetup {
     public static final double startAngleOffset = 0; // Degrees
@@ -52,9 +50,9 @@ public final class Constants {
     // public static final int kLiftMotor = 12;
     }
   public static final class FieldOrientedDriveConstants{
-    public static final double kFODP = 0.1;
+    public static final double kFODP = 0.18;
     public static final double kFODI = 0.0;
-    public static final double kFODD = 0.1;
+    public static final double kFODD = 0.0;
 
     //Maximum rotation speed
     public static final double rotationScalar = Math.PI;

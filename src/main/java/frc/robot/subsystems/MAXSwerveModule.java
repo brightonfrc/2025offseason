@@ -112,8 +112,4 @@ public class MAXSwerveModule {
     m_drivingEncoder.setPosition(0);
   }
 
-  /** Returns the velocity of the driving encoder */
-  public double getStrafeVelocity() {
-    return m_drivingEncoder.getVelocity();
-  }
 }
