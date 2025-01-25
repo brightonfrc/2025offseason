@@ -25,17 +25,19 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class AccelerationLimiterConstants{
-    public static double maximumAcceleration=0.01;
+    public static double maximumAcceleration=0.02;
     public static double maximumDeceleration=0.02;
   }
   public static class OperatorConstants{
     public static final int kDriverControllerPort=0;
   }
   public static class TestingConstants{
-    public static final double maximumSpeed=0.50;
+    public static final double maximumSpeed=0.40;
     public static final double maximumRotationSpeed=0.01;
     public static final double maximumSpeedReduced=0.10;
+    public static final double maximumRotationSpeedRobotOriented=0.005;
   }
+
   public static class GameSetup {
     public static final double startAngleOffset = 0; // Degrees
     public static final boolean isFieldRelative = false; // true: field relative; false: robot relative
@@ -50,14 +52,16 @@ public final class Constants {
     // public static final int kLiftMotor = 12;
     }
   public static final class FieldOrientedDriveConstants{
-    public static final double kFODP = 0.18;
-    public static final double kFODI = 0.0;
+    public static final double kFODP = 0.25;
+    public static final double kFODI = 0.3;
     public static final double kFODD = 0.0;
 
     //Maximum rotation speed
     public static final double rotationScalar = Math.PI;
 
-    public static final double bearingTolerance = 2;
+    public static final double bearingTolerance = 0.5;
+
+    public static final double moveJoystickDeadzone=0.04;
   }
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
