@@ -61,7 +61,7 @@ public final class Constants {
 
     public static final double bearingTolerance = 0.5;
 
-    public static final double moveJoystickDeadzone=0.04;
+    public static final double moveJoystickDeadzone=0.02;
   }
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of

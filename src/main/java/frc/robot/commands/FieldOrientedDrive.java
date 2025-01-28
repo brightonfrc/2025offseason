@@ -27,6 +27,9 @@ public class FieldOrientedDrive extends Command {
     private double previousXSpeed;
     private double previousYSpeed;
 
+    private Boolean slowModeActive;
+    private Boolean hasToggled;
+
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     /**
      * Creates a new ExampleCommand.
@@ -51,10 +54,21 @@ public class FieldOrientedDrive extends Command {
         previousYSpeed=0;
         driveSubsystem.resetGyro();
         goalBearing=0;
+        slowModeActive=false;
+        hasToggled=false;
     }
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        if (xboxController.a().getAsBoolean()&&hasToggled==false){
+            slowModeActive=!slowModeActive;
+            hasToggled=true;
+        }
+        if(xboxController.a().getAsBoolean()==false){
+            //button no longer pressed, able to toggle slow mode now
+            hasToggled=false;
+        }
+        SmartDashboard.putBoolean("Slow Mode Active", slowModeActive);
         SmartDashboard.putNumber("Goal bearing", goalBearing);
         //Both joysticks assumes the right to be bearing 0 and then works clockwise from there. To have bearing 0 be in front, the bearing
         //has to be moved back by 90 degrees/ 1/2 PI
@@ -87,7 +101,7 @@ public class FieldOrientedDrive extends Command {
         joystickMoveMagnitude = Math.pow(Math.pow(xboxController.getLeftX(), 2) + Math.pow(xboxController.getLeftY(), 2), 0.5);
         SmartDashboard.putNumber("Drive: Left joystick magnitude", joystickMoveMagnitude);
 
-        xSpeed = joystickMoveMagnitude * Math.cos(joystickMoveBearing) * (xboxController.a().getAsBoolean() ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
+        xSpeed = joystickMoveMagnitude * Math.cos(joystickMoveBearing) * (slowModeActive ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
         if(xSpeed>previousXSpeed+AccelerationLimiterConstants.maximumAcceleration){
             xSpeed=previousXSpeed+AccelerationLimiterConstants.maximumAcceleration;
         }
@@ -97,7 +111,7 @@ public class FieldOrientedDrive extends Command {
         previousXSpeed=xSpeed;
         SmartDashboard.putNumber("xSpeed", xSpeed);
 
-        ySpeed = joystickMoveMagnitude * Math.sin(joystickMoveBearing) * (xboxController.a().getAsBoolean() ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
+        ySpeed = joystickMoveMagnitude * Math.sin(joystickMoveBearing) * (slowModeActive ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
         if(Math.abs(ySpeed)<FieldOrientedDriveConstants.moveJoystickDeadzone){
             //apply a deadzone to xSpeed
             ySpeed=0;
@@ -113,17 +127,16 @@ public class FieldOrientedDrive extends Command {
 
         rotSpeed = bearingPIDController.calculate(robotBearing) * TestingConstants.maximumRotationSpeed;
         SmartDashboard.putNumber("rotSpeed", rotSpeed);
-        //ySpeed is negatively mapped
         
 
         
         if(xboxController.rightBumper().getAsBoolean()){
             driveSubsystem.drive(0, 0, 0, false);
         } else{
-            //Ella prefers this
+            //Datis and Ella prefers this
             driveSubsystem.drive(xSpeed, -ySpeed, rotSpeed, false);
 
-            // William prefers this
+            // William and Sam prefers this
             // driveSubsystem.drive(xSpeed, -ySpeed, -xboxController.getRightX()*TestingConstants.maximumRotationSpeedRobotOriented, false);
         }
     }
