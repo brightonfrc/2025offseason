@@ -112,6 +112,15 @@ public final class Constants {
 
     public static final double errorIntervalPositions = 1.0;
     public static final double errorIntervalRotations = 1.0;
+
+    // PID (REPLACE WITH ACTUAL VALUES AT SOME POINT)
+    public static final double kTurnP = 1.0;
+    public static final double kTurnI = 1.0;
+    public static final double kTurnD = 1.0;
+
+    public static final double kMoveP = 1.0;
+    public static final double kMoveI = 1.0;
+    public static final double kMoveD = 1.0;
   }
 
   public static final class ModuleConstants {
