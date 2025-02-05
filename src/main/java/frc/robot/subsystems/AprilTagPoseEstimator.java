@@ -18,6 +18,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -45,9 +46,12 @@ public class AprilTagPoseEstimator extends SubsystemBase {
   }
 
   public Optional<EstimatedRobotPose> getGlobalPose() {
-    if(this.prevEstimatedRobotPose.isPresent()) {
+    if(this.prevEstimatedRobotPose != null && this.prevEstimatedRobotPose.isPresent()) {
       this.photonPoseEstimator.setReferencePose(this.prevEstimatedRobotPose.get().estimatedPose);
     }
+
+    SmartDashboard.putString("latestResult", cam.getLatestResult());
+
     this.prevEstimatedRobotPose = photonPoseEstimator.update(cam.getLatestResult());
     return this.prevEstimatedRobotPose;
   }
@@ -58,17 +62,21 @@ public class AprilTagPoseEstimator extends SubsystemBase {
 
     // Could not work out pose
     Optional<EstimatedRobotPose> globalPose = this.getGlobalPose();
+    SmartDashboard.putString("globalPose", globalPose.toString());
     if(globalPose.isEmpty()) {
       return Optional.empty();
     }
 
     // Look for tag
+    String tagText = "";
     List<AprilTag> tags = this.aprilTagFieldLayout.getTags();
     for(AprilTag tag : tags) {
       if(tag.ID == tagID) {
+        tagText += "." + tag.ID;
         return Optional.of(tag.pose.minus(globalPose.get().estimatedPose));
       }
     }
+    SmartDashboard.putString("tags", tagText);
 
     // Required tag not on field
     return Optional.empty();

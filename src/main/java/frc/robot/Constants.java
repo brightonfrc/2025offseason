@@ -203,7 +203,7 @@ public final class Constants {
 
   public static final class CVConstants {
     // TODO: Fill
-    public static final String kCameraName = "testCamera";
+    public static final String kCameraName = "C270_HD_WEBCAM";
     public static final Transform3d kRobotToCamera = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); // This is camera mounted facing forward, half a meter forward of center, half a meter up from center.
 
   }
