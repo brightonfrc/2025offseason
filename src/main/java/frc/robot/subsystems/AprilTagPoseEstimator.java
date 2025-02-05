@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class AprilTagPoseEstimator extends SubsystemBase {
-  private Optional<EstimatedRobotPose> prevEstimatedRobotPose;
+  private EstimatedRobotPose prevEstimatedRobotPose = new EstimatedRobotPose(new Pose3d(0, 0, 0), 0, new List<PhotonTrackedTarget>{}, PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
   private final AprilTagFieldLayout aprilTagFieldLayout;
   private final PhotonCamera cam;
   private final PhotonPoseEstimator photonPoseEstimator;
@@ -46,13 +46,14 @@ public class AprilTagPoseEstimator extends SubsystemBase {
   }
 
   public Optional<EstimatedRobotPose> getGlobalPose() {
-    if(this.prevEstimatedRobotPose != null && this.prevEstimatedRobotPose.isPresent()) {
-      this.photonPoseEstimator.setReferencePose(this.prevEstimatedRobotPose.get().estimatedPose);
+    this.photonPoseEstimator.setReferencePose(this.prevEstimatedRobotPose.estimatedPose);
+
+    SmartDashboard.putString("latestResult", cam.getLatestResult().toString());
+
+    Optional<EstimatedRobotPose> pose = photonPoseEstimator.update(cam.getLatestResult());
+    if(pose.isPresent() {
+      this.prevEstimatedRobotPose = pose.get();
     }
-
-    SmartDashboard.putString("latestResult", cam.getLatestResult());
-
-    this.prevEstimatedRobotPose = photonPoseEstimator.update(cam.getLatestResult());
     return this.prevEstimatedRobotPose;
   }
 
