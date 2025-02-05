@@ -15,7 +15,10 @@ import java.util.Optional;
 public class AprilTagAlignment extends Command {
   private final DriveSubsystem driveSubsystem;
   private final AprilTagPoseEstimator poseEstimator;
-  private final PIDController movementPID;
+  private final PIDController movementXPID;
+  private final PIDController movementYPID;
+
+
   private final PIDController rotationPID;
 
   public AprilTagAlignment(DriveSubsystem _driveSubsystem, AprilTagPoseEstimator _poseEstimator, double offsetX, double offsetY) {
@@ -23,7 +26,13 @@ public class AprilTagAlignment extends Command {
     poseEstimator = _poseEstimator;
     addRequirements(_driveSubsystem, _poseEstimator);
 
-    movementPID = new PIDController(
+    movementXPID = new PIDController(
+      AprilTagAlignmentConstants.kMoveP,
+      AprilTagAlignmentConstants.kMoveI,
+      AprilTagAlignmentConstants.kMoveD
+    );
+
+    movementYPID = new PIDController(
       AprilTagAlignmentConstants.kMoveP,
       AprilTagAlignmentConstants.kMoveI,
       AprilTagAlignmentConstants.kMoveD
@@ -35,16 +44,23 @@ public class AprilTagAlignment extends Command {
     AprilTagAlignmentConstants.kTurnD
   );
 
+  rotationPID.setSetpoint(0);
+  movementXPID.setSetpoint(offsetX);
+  movementYPID.setSetpoint(offsetY);
+
     
     // Set tolerances for stopping
-    movementPID.setTolerance(AprilTagAlignmentConstants.errorIntervalPositions);
+    movementXPID.setTolerance(AprilTagAlignmentConstants.errorIntervalPositions);
+    movementYPID.setTolerance(AprilTagAlignmentConstants.errorIntervalPositions);
   }
 
   @Override
   public void execute() {
+
     Optional<Transform3d> possibleTransform = poseEstimator.getRobotToTag(1);
 
     if (possibleTransform.isPresent()) {
+
       Transform3d transform = possibleTransform.get();
       Translation3d translation = transform.getTranslation();
       Rotation3d rotation = transform.getRotation();
@@ -54,16 +70,24 @@ public class AprilTagAlignment extends Command {
 
       double yaw = rotation.getZ();  // Rotation (Yaw)
 
-      // Use PID  to calculate the movement speed needed to reduce error
-      double movementSpeed = movementPID.calculate(x, AprilTagAlignmentConstants.stopDistanceX); // Move x to 0
-      double strafeSpeed = movementPID.calculate(y, AprilTagAlignmentConstants.stopDistanceY);   // Move y to 0
+      double rotationOutput = rotationPID.calculate(yaw);
 
-      double turnSpeed = rotationPID.calculate(yaw, 0);   // Align yaw to 0
+      if(rotationPID.atSetpoint()){ // Move towards set point
+        // Use PID  to calculate the movement speed needed to reduce error
+        double movementSpeed = movementXPID.calculate(x, AprilTagAlignmentConstants.stopDistanceX); // Move x to 0
+        double strafeSpeed = movementYPID.calculate(y, AprilTagAlignmentConstants.stopDistanceY);   // Move y to 0
 
-      // Drive the robot towards the AprilTag
-      driveSubsystem.drive(movementSpeed, strafeSpeed, turnSpeed, false);
+        // Drive the robot towards the AprilTag
+        driveSubsystem.drive(movementSpeed, -strafeSpeed, 0, false); // negative strafespeed because y is inversed (positive = left)
+      }
+      else{ // If not at set point, rotate towards setpoint
+        driveSubsystem.drive(0, 0, rotationOutput, false);
+      }
     }
+    else endCommand = true;
   }
+
+  private Boolean endCommand = false;
 
   @Override
   public void end(boolean interrupted) {
@@ -72,6 +96,6 @@ public class AprilTagAlignment extends Command {
 
   @Override
   public boolean isFinished() {
-    return movementPID.atSetpoint(); // Stops when within error tolerance
+    return (movementXPID.atSetpoint() && movementYPID.atSetpoint() && rotationPID.atSetpoint()) || endCommand; // Stops when within error tolerance
   }
 }
