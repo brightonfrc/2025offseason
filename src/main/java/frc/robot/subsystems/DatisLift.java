@@ -11,11 +11,12 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.AbsoluteEncoder;
 public class DatisLift extends SubsystemBase {
   private SparkMax liftNeo;
+  private SparkMax reversedLiftNeo;
   private AbsoluteEncoder encoder;
   /** Creates a new DatisLift. */
-  public DatisLift(SparkMax liftNeo) {
+  public DatisLift(SparkMax liftNeo, SparkMax reversedLiftNeo) {
     this.liftNeo=liftNeo;
-
+    this.reversedLiftNeo=reversedLiftNeo;
     encoder=liftNeo.getAbsoluteEncoder();
     
     
@@ -27,6 +28,7 @@ public class DatisLift extends SubsystemBase {
   /**Method used to set lift power ranging from -1 to 1 */
   public void setPower(double power){
     liftNeo.set(power);
+    reversedLiftNeo.set(-power);
   }
   
 }
