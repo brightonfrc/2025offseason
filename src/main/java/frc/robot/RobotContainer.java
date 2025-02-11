@@ -10,7 +10,9 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FieldOrientedDrive;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -31,12 +33,24 @@ public class RobotContainer {
   
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
 
+  //for Choreo
+  private final AutoFactory autoFactory;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
+    //for Choreo
+    autoFactory = new AutoFactory(
+            m_driveSubsystem::getPose, // A function that returns the current robot pose
+            m_driveSubsystem::resetOdometry, // A function that resets the current robot pose to the provided Pose2d
+            m_driveSubsystem::followTrajectory, // The drive subsystem trajectory follower 
+            true, // If alliance flipping should be enabled 
+            m_driveSubsystem // The drive subsystem
+        );
     configureBindings();
+    
   }
 
   /**
@@ -66,6 +80,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    // return Autos.exampleAuto(m_exampleSubsystem);
+    return Commands.sequence(
+        autoFactory.resetOdometry("Testing"),  
+        autoFactory.trajectoryCmd("Testing")
+        //add additional commands as needed
+    );
   }
 }

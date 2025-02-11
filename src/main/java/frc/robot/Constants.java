@@ -24,6 +24,11 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class ChoreoConstants{
+    public static double translationkP=0.1;
+    public static double translationkI=0.0;
+    public static double translationkD=0.0;
+  }
   public static class AccelerationLimiterConstants{
     public static double maximumAcceleration=0.02;
     public static double maximumDeceleration=0.02;
