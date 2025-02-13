@@ -5,11 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.LiftConstants;
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.LiftConstants.Height;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Lift;
+import frc.robot.commands.RunLift;
 import frc.robot.subsystems.DatisLift;
 import frc.robot.commands.FieldOrientedDrive;
 import frc.robot.subsystems.DriveSubsystem;
@@ -35,7 +36,7 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
-  new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  new CommandXboxController(OIConstants.kDriverControllerPort);
   
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
 
@@ -65,11 +66,15 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    //delete once done testing
+    m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
+    m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
+    
 
     
-    m_driverController.rightBumper().onTrue(new Lift(lift, Height.Ground));
-    m_driverController.leftBumper().onTrue(new Lift(lift, Height.L4));
-    //I create keybinds for all the other heights later
+    // m_driverController.rightBumper().onTrue(new Lift(lift, Height.Ground));
+    // m_driverController.leftBumper().onTrue(new Lift(lift, Height.L4));
+    // //I create keybinds for all the other heights later
   }
 
   /**
