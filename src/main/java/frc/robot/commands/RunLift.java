@@ -32,7 +32,7 @@ public class RunLift extends Command {
       lift.setPower(LiftConstants.maxPower);
     }
     else{
-      lift.setPower(LiftConstants.maxPower);
+      lift.setPower(-LiftConstants.maxPower);
     }
   }
 
