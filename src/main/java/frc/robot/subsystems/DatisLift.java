@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LiftConstants;
 
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.AbsoluteEncoder;
 public class DatisLift extends SubsystemBase {
@@ -18,7 +19,6 @@ public class DatisLift extends SubsystemBase {
     this.liftNeo=liftNeo;
     this.reversedLiftNeo=reversedLiftNeo;
     encoder=liftNeo.getAbsoluteEncoder();
-    
     
   }
   /**Method to get the current lift angle (0 being at lowest level) */
