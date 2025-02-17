@@ -19,6 +19,7 @@ import frc.robot.Constants.ChoreoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldOrientedDriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -85,7 +86,10 @@ public class DriveSubsystem extends SubsystemBase {
         );
 
         // Apply the generated speeds
-        drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.omegaRadiansPerSecond/DriveConstants.kMaxAngularSpeed,false );
+        drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.omegaRadiansPerSecond/DriveConstants.kMaxAngularSpeed,false);
+        SmartDashboard.putNumber("Pose/x", pose.getX());
+        SmartDashboard.putNumber("Pose/Y", pose.getY());
+        SmartDashboard.putNumber("Pose/Rot", pose.getRotation().getDegrees());
     }
 
   @Override

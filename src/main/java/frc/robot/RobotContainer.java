@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FieldOrientedDrive;
+import frc.robot.commands.StopRobot;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import choreo.auto.AutoFactory;
@@ -39,7 +40,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+    
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
     //for Choreo
     autoFactory = new AutoFactory(
@@ -83,8 +84,15 @@ public class RobotContainer {
     // return Autos.exampleAuto(m_exampleSubsystem);
     return Commands.sequence(
         autoFactory.resetOdometry("Testing"),  
-        autoFactory.trajectoryCmd("Testing")
-        //add additional commands as needed
+        autoFactory.trajectoryCmd("Testing"),
+        new StopRobot(m_driveSubsystem)
     );
+  }
+  public void SetUpDefaultCommand(){
+    m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+  }
+
+  public void resetGyro(){
+    m_driveSubsystem.resetGyro();
   }
 }
