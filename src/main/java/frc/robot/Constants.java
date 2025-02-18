@@ -25,10 +25,14 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class ChoreoConstants{
+    public static double startX=7;
+    public static double startY=7;
+    public static double startRadians=0;
+
     public static double translationkP=0.1;
     public static double translationkI=0.0;
     public static double translationkD=0.0;
-    public static double rotationkP=0.05;
+    public static double rotationkP=0.1;
     public static double rotationkI=0.0;
     public static double rotationkD=0.0;
   }

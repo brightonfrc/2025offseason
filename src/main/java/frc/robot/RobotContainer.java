@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ChoreoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -12,6 +13,8 @@ import frc.robot.commands.StopRobot;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import choreo.auto.AutoFactory;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -47,7 +50,7 @@ public class RobotContainer {
             m_driveSubsystem::getPose, // A function that returns the current robot pose
             m_driveSubsystem::resetOdometry, // A function that resets the current robot pose to the provided Pose2d
             m_driveSubsystem::followTrajectory, // The drive subsystem trajectory follower 
-            true, // If alliance flipping should be enabled 
+            false, // If alliance flipping should be enabled 
             m_driveSubsystem // The drive subsystem
         );
     configureBindings();
@@ -82,8 +85,10 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
+    m_driveSubsystem.resetOdometry(new Pose2d(ChoreoConstants.startX,ChoreoConstants.startY,new Rotation2d(ChoreoConstants.startRadians)));
     return Commands.sequence(
-        autoFactory.resetOdometry("Testing"),  
+        //for some reason, resetOdometry isn't working properly
+        // autoFactory.resetOdometry("Testing"),  
         autoFactory.trajectoryCmd("Testing"),
         new StopRobot(m_driveSubsystem)
     );

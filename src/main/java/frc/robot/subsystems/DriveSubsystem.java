@@ -63,9 +63,9 @@ public class DriveSubsystem extends SubsystemBase {
       });
   
   //for Choreo
-  private final PIDController xController = new PIDController(ChoreoConstants.translationkD, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
-  private final PIDController yController = new PIDController(ChoreoConstants.translationkD, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
-  private final PIDController headingController = new PIDController(FieldOrientedDriveConstants.kFODP, FieldOrientedDriveConstants.kFODI, FieldOrientedDriveConstants.kFODD);
+  private final PIDController xController = new PIDController(ChoreoConstants.translationkP, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
+  private final PIDController yController = new PIDController(ChoreoConstants.translationkP, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
+  private final PIDController headingController = new PIDController(ChoreoConstants.rotationkP, ChoreoConstants.rotationkI, ChoreoConstants.rotationkD);
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -111,7 +111,13 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    Pose2d pose= m_odometry.getPoseMeters();
+    double angle =m_gyro.getAngle()%360;
+    if (angle<0){
+      angle+=360;
+    }
+    pose= new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(angle));
+    return pose;
   }
 
   /**
@@ -120,6 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
+    
     m_odometry.resetPosition(
         Rotation2d.fromDegrees(m_gyro.getAngle()%360),
         new SwerveModulePosition[] {
