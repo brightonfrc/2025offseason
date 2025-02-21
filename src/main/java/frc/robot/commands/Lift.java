@@ -37,7 +37,7 @@ public class Lift extends Command {
         height=LiftConstants.desiredHeight[4];
         break;
     }
-    angleRequired=Math.asin(height/2/LiftConstants.armLength);
+    angleRequired=Math.asin((height/2)/LiftConstants.armLength);
     SmartDashboard.putNumber("Angle required", angleRequired);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lift);
@@ -54,8 +54,7 @@ public class Lift extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double currentAngle=lift.getLiftAngle();
-    SmartDashboard.putNumber("Current Lift angle", currentAngle);
+    double currentAngle=Math.toRadians(lift.getLiftAngle());
     double desiredPower=liftController.calculate(currentAngle)+LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
     SmartDashboard.putNumber("Power", desiredPower);
     lift.setPower(desiredPower);

@@ -25,6 +25,8 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class LiftConstants{
+    public static final double angleAtPeakHeight=87.6;
+    public static final int encoderChannel=0;
     public static final int liftNeoCANID=11;
     public static final int reversedLiftNeoCANDID=12;
     //to ensure the arm doesn't tear itself apart. 
@@ -32,15 +34,13 @@ public final class Constants {
     //to be honest, it can probably handle 0.3
 
     public static final double[] desiredHeight= new double[]{
-      0.00,//normal height
+      //do note that ground height isn't actually at 0, because arm has minimum height
+      0.20,//normal height
       0.46,//L1
       0.81,//L2
       1.21,//L3
-      1.83 //L4
+      1.4 //L4 (Officially its 6-feet up, but the at the end can also move)
     };
-    public static final double gearRatio=250;
-    // In case it wasn't obvious, lift angle is in radians
-    public static final double rotationConversionFactor=2*Math.PI/gearRatio;
     
 
     public static enum Height{
