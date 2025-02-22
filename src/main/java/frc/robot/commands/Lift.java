@@ -38,7 +38,7 @@ public class Lift extends Command {
         break;
     }
     angleRequired=Math.asin((height/2)/LiftConstants.armLength);
-    SmartDashboard.putNumber("Angle required", angleRequired);
+    SmartDashboard.putNumber("Angle required", Math.toDegrees(angleRequired));
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lift);
   }
@@ -56,14 +56,18 @@ public class Lift extends Command {
   public void execute() {
     double currentAngle=Math.toRadians(lift.getLiftAngle());
     double desiredPower=liftController.calculate(currentAngle)+LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
+    //scaling power down to reduce strain on lift
+    desiredPower=desiredPower*LiftConstants.maxPower;
     SmartDashboard.putNumber("Power", desiredPower);
     lift.setPower(desiredPower);
+    SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     lift.setPower(0);
+    
   }
 
   // Returns true when the command should end.

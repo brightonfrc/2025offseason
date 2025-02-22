@@ -62,14 +62,14 @@ public class RobotContainer {
   private void configureBindings() {
     
     //delete once done testing
-    m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
-    m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
+    // m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
+    // m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
     
 
     
-    // m_driverController.rightBumper().onTrue(new Lift(lift, Height.Ground));
-    // m_driverController.leftBumper().onTrue(new Lift(lift, Height.L4));
-    // //I create keybinds for all the other heights later
+    m_driverController.rightBumper().onTrue(new Lift(lift, Height.Ground));
+    m_driverController.leftBumper().onTrue(new Lift(lift, Height.L4));
+    //I create keybinds for all the other heights later
   }
 
   /**

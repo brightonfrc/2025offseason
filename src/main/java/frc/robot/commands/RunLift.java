@@ -30,10 +30,10 @@ public class RunLift extends Command {
   public void execute() {
     SmartDashboard.putNumber("Lift Angle", lift.getLiftAngle());
     if (up){
-      lift.setPower(LiftConstants.maxPower);
+      lift.setPower(0.1);
     }
     else{
-      lift.setPower(-LiftConstants.maxPower);
+      lift.setPower(-0.1);
     }
   }
 
