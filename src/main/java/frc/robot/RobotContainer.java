@@ -49,7 +49,7 @@ public class RobotContainer {
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
     //for Choreo
     autoFactory = new AutoFactory(
-            m_driveSubsystem::getPose, // A function that returns the current robot pose
+            m_driveSubsystem::getPoseChoreo, // A function that returns the current robot pose
             m_driveSubsystem::resetOdometry, // A function that resets the current robot pose to the provided Pose2d
             m_driveSubsystem::followTrajectory, // The drive subsystem trajectory follower 
             false, // If alliance flipping should be enabled 
@@ -97,6 +97,8 @@ public class RobotContainer {
         autoFactory.trajectoryCmd("Testing"),
         stop,
         new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)), 
+        //deposit coral
+        new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
         autoFactory.resetOdometry("TestingPartTwo"),
         autoFactory.trajectoryCmd("TestingPartTwo"),
         stopAgain

@@ -109,15 +109,20 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public Pose2d getPose() {
     Pose2d pose= m_odometry.getPoseMeters();
-    double angle =m_gyro.getAngle()%360;
-    if (angle<0){
-      angle+=360;
-    }
-    pose= new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(angle));
+    // double angle =m_gyro.getAngle()%360;
+    // if (angle<0){
+    //   angle+=360;
+    // }
+    // pose= new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(angle));
     SmartDashboard.putNumber("Pose/x", pose.getX());
     SmartDashboard.putNumber("Pose/y", pose.getY());
     SmartDashboard.putNumber("Pose/rot", pose.getRotation().getDegrees());
     return pose;
+  }
+  /**Returns currently-estimated pose without current bearing */
+  public Pose2d getPoseChoreo(){
+    Pose2d pose=getPose();
+    return new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(0));
   }
 
   /**
