@@ -29,17 +29,21 @@ public final class Constants {
     // public static double translationkI=0;
     // public static double translationkD=0;
     // public static double translationTolerance=0.01;
-    //0.5 degrees of tolerance
-    public static double rotationTolerance=Math.PI/360;
+    public static double rotationkP=0.25;
+    public static double rotationkD=0.00;
+    public static double rotationkI=0.1;
+    //1 degrees of tolerance
+    public static double rotationTolerance=Math.PI/180;
+    //remember that the gyro is inverted, so 90 degrees is to the left
     //bearing of robot when first Choreo Path Ends.
-    public static double endRotOne=120;
+    public static double endRotOne=240;
   }
   public static class ChoreoConstants{
     // public static double startX=7;
     // public static double startY=7;
     // public static double startRadians=0;
 
-    public static double translationkP=0.1;
+    public static double translationkP=0.70;
     public static double translationkI=0.0;
     public static double translationkD=0.0;
     public static double rotationkP=0.1;

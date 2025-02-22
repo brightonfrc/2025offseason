@@ -85,10 +85,8 @@ public class DriveSubsystem extends SubsystemBase {
         );
 
         // Apply the generated speeds
-        drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.omegaRadiansPerSecond/DriveConstants.kMaxAngularSpeed,false);
-        SmartDashboard.putNumber("Pose/x", pose.getX());
-        SmartDashboard.putNumber("Pose/Y", pose.getY());
-        SmartDashboard.putNumber("Pose/Rot", pose.getRotation().getDegrees());
+        drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,0,false);
+        // drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.omegaRadiansPerSecond/DriveConstants.kMaxAngularSpeed,false);
     }
 
   @Override
@@ -116,6 +114,9 @@ public class DriveSubsystem extends SubsystemBase {
       angle+=360;
     }
     pose= new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(angle));
+    SmartDashboard.putNumber("Pose/x", pose.getX());
+    SmartDashboard.putNumber("Pose/y", pose.getY());
+    SmartDashboard.putNumber("Pose/rot", pose.getRotation().getDegrees());
     return pose;
   }
 

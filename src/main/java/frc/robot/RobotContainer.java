@@ -85,14 +85,21 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    StopRobot stop= new StopRobot(m_driveSubsystem);
+    //annoyingly, you can't reuse the same command in a Commands.sequence
+    StopRobot stopAgain= new StopRobot(m_driveSubsystem);
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
+    // m_driveSubsystem.resetOdometry(new Pose2d(ChoreoConstants.startX,ChoreoConstants.startY,new Rotation2d(ChoreoConstants.startRadians)));
     return Commands.sequence(
         //for some reason, resetOdometry isn't working properly
         autoFactory.resetOdometry("Testing"),  
         autoFactory.trajectoryCmd("Testing"),
-        new StopRobot(m_driveSubsystem),
-        new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne))
+        stop,
+        new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)), 
+        autoFactory.resetOdometry("TestingPartTwo"),
+        autoFactory.trajectoryCmd("TestingPartTwo"),
+        stopAgain
     );
   }
   public void SetUpDefaultCommand(){
@@ -101,5 +108,8 @@ public class RobotContainer {
 
   public void resetGyro(){
     m_driveSubsystem.resetGyro();
+  }
+  public void getPose(){
+    m_driveSubsystem.getPose();
   }
 }

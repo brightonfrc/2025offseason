@@ -42,7 +42,7 @@ public class MoveToPoint extends Command {
     // yController=new PIDController(AutonomousNavConstants.translationkP,AutonomousNavConstants.translationkI, AutonomousNavConstants.translationkD);
     // yController.setSetpoint(goal.getY());
     // yController.setTolerance(AutonomousNavConstants.translationTolerance);
-    rotController=new PIDController(FieldOrientedDriveConstants.kFODP, FieldOrientedDriveConstants.kFODI, FieldOrientedDriveConstants.kFODD);
+    rotController=new PIDController(AutonomousNavConstants.rotationkP, AutonomousNavConstants.rotationkI, AutonomousNavConstants.rotationkD);
     rotController.setTolerance(AutonomousNavConstants.rotationTolerance);
     rotController.enableContinuousInput(0, 2*Math.PI);
     rotController.setSetpoint(goal);
@@ -59,7 +59,7 @@ public class MoveToPoint extends Command {
     }
     // SmartDashboard.putNumber("Pose/x", driveSubsystem.getPose().getX());
     // SmartDashboard.putNumber("Pose/y", driveSubsystem.getPose().getY());
-    SmartDashboard.putNumber("Pose/rot", robotBearing);
+    
 
     //convert to radians
     robotBearing=Math.toRadians(robotBearing);
@@ -68,7 +68,8 @@ public class MoveToPoint extends Command {
     // double ySpeed=yController.calculate(driveSubsystem.getPose().getY());
     // SmartDashboard.putNumber("Speed/x", xSpeed);
     // SmartDashboard.putNumber("Speed/y", ySpeed);
-    SmartDashboard.putNumber("Speed/rot", rotSpeed);
+    //rotation works
+    // SmartDashboard.putNumber("Speed/rot", rotSpeed);
     driveSubsystem.drive(0, 0, rotSpeed, false);
   }
 
