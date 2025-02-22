@@ -4,11 +4,13 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutonomousNavConstants;
 import frc.robot.Constants.ChoreoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FieldOrientedDrive;
+import frc.robot.commands.MoveToPoint;
 import frc.robot.commands.StopRobot;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -85,12 +87,12 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
-    m_driveSubsystem.resetOdometry(new Pose2d(ChoreoConstants.startX,ChoreoConstants.startY,new Rotation2d(ChoreoConstants.startRadians)));
     return Commands.sequence(
         //for some reason, resetOdometry isn't working properly
-        // autoFactory.resetOdometry("Testing"),  
+        autoFactory.resetOdometry("Testing"),  
         autoFactory.trajectoryCmd("Testing"),
-        new StopRobot(m_driveSubsystem)
+        new StopRobot(m_driveSubsystem),
+        new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne))
     );
   }
   public void SetUpDefaultCommand(){

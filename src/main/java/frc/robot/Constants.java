@@ -24,10 +24,20 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class AutonomousNavConstants{
+    // public static double translationkP=0.1;
+    // public static double translationkI=0;
+    // public static double translationkD=0;
+    // public static double translationTolerance=0.01;
+    //0.5 degrees of tolerance
+    public static double rotationTolerance=Math.PI/360;
+    //bearing of robot when first Choreo Path Ends.
+    public static double endRotOne=120;
+  }
   public static class ChoreoConstants{
-    public static double startX=7;
-    public static double startY=7;
-    public static double startRadians=0;
+    // public static double startX=7;
+    // public static double startY=7;
+    // public static double startRadians=0;
 
     public static double translationkP=0.1;
     public static double translationkI=0.0;
