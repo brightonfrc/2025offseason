@@ -96,7 +96,7 @@ public class RobotContainer {
         autoFactory.resetOdometry("Testing"),  
         autoFactory.trajectoryCmd("Testing"),
         stop,
-        new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)), 
+        new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
         //deposit coral
         new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
         autoFactory.resetOdometry("TestingPartTwo"),

@@ -30,10 +30,10 @@ public final class Constants {
     // public static double translationkD=0;
     // public static double translationTolerance=0.01;
     public static double rotationkP=0.25;
-    public static double rotationkD=0.00;
+    public static double rotationkD=0.02;
     public static double rotationkI=0.1;
-    //1 degrees of tolerance
-    public static double rotationTolerance=Math.PI/180;
+    //0.5 degrees of tolerance
+    public static double rotationTolerance=Math.PI/360;
     //remember that the gyro is inverted, so 90 degrees is to the left
     //bearing of robot when first Choreo Path Ends.
     public static double endRotOne=240;
