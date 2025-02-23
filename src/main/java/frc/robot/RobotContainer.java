@@ -41,6 +41,7 @@ public class RobotContainer {
   new CommandXboxController(OIConstants.kDriverControllerPort);
   
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
+  private Lift goToGround=new Lift(lift, Height.Ground);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -65,10 +66,10 @@ public class RobotContainer {
     // m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
     // m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
     
-
-    
+    Lift goToL4=new Lift(lift, Height.L4);
+    goToL4.withInterruptBehavior(InterruptionBehavior.kCancelSelf);
     m_driverController.rightBumper().onTrue(new Lift(lift, Height.Ground));
-    m_driverController.leftBumper().onTrue(new Lift(lift, Height.L4));
+    m_driverController.leftBumper().onTrue(goToL4);
     //I create keybinds for all the other heights later
   }
 
@@ -80,5 +81,16 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
+  }
+
+  public void StowLift(){
+    goToGround.schedule();
+  }
+  /**Returns true if robot roll or pitch exceeds the maximum tilt */
+  public Boolean checkTilt(){
+    if(m_driveSubsystem.getTilt()>LiftConstants.maximumTilt){
+      return true;
+    }
+    return false;
   }
 }

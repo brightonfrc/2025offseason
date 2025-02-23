@@ -25,6 +25,7 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class LiftConstants{
+    public static final double maximumTilt=10;
     public static final double angleAtPeakHeight=87.6;
     public static final int encoderChannel=0;
     public static final int liftNeoCANID=11;
