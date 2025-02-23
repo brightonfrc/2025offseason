@@ -41,12 +41,14 @@ public class RobotContainer {
   new CommandXboxController(OIConstants.kDriverControllerPort);
   
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
-  private Lift goToGround=new Lift(lift, Height.Ground);
+  // private Lift goToGround=new Lift(lift, Height.Ground);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+    
+    // m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
     configureBindings();
   }
@@ -66,10 +68,10 @@ public class RobotContainer {
     // m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
     // m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
     
-    Lift goToL4=new Lift(lift, Height.L4);
-    goToL4.withInterruptBehavior(InterruptionBehavior.kCancelSelf);
+    // Lift goToL4=new Lift(lift, Height.Ground);
+    // goToL4.withInterruptBehavior(InterruptionBehavior.kCancelSelf);
     m_driverController.rightBumper().onTrue(new Lift(lift, Height.Ground));
-    m_driverController.leftBumper().onTrue(goToL4);
+    m_driverController.leftBumper().onTrue(new Lift(lift, Height.L4));
     //I create keybinds for all the other heights later
   }
 
@@ -84,7 +86,7 @@ public class RobotContainer {
   }
 
   public void StowLift(){
-    goToGround.schedule();
+    // goToGround.schedule();
   }
   /**Returns true if robot roll or pitch exceeds the maximum tilt */
   public Boolean checkTilt(){

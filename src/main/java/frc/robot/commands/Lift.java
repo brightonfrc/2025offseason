@@ -16,6 +16,7 @@ public class Lift extends Command {
   private DatisLift lift;
   private double angleRequired;
   private PIDController liftController;
+  private double previousPower;
   /** Creates a new Lift. */
   public Lift(DatisLift lift, Height heightDesired) {
     this.lift=lift;
@@ -49,16 +50,30 @@ public class Lift extends Command {
     liftController= new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
     liftController.setTolerance(LiftConstants.angleTolerance);
     liftController.setSetpoint(angleRequired);
+    previousPower=0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("Current angle", lift.getLiftAngle());
     double currentAngle=Math.toRadians(lift.getLiftAngle());
-    double desiredPower=liftController.calculate(currentAngle)+LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
+    double desiredPower=liftController.calculate(currentAngle);
     //scaling power down to reduce strain on lift
     desiredPower=desiredPower*LiftConstants.maxPower;
+    if (Math.abs(desiredPower-previousPower)>LiftConstants.maximumPowerChange){
+      //controller demands excessive power change
+      if (desiredPower<0){
+        //reducing power
+        desiredPower=previousPower-LiftConstants.maximumPowerChange;
+      }
+      else{
+        desiredPower=previousPower+LiftConstants.maximumPowerChange;
+      }
+    }
+    desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
     SmartDashboard.putNumber("Power", desiredPower);
+    previousPower=desiredPower;
     lift.setPower(desiredPower);
     // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
   }
