@@ -30,7 +30,7 @@ public final class Constants {
     public static final int liftNeoCANID=11;
     public static final int reversedLiftNeoCANDID=12;
     //to ensure the arm doesn't tear itself apart. 
-    public static final double maxPower=0.7;
+    public static final double maxPower=0.6;
 
     public static final double[] desiredHeight= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
