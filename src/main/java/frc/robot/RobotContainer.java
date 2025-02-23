@@ -70,9 +70,13 @@ public class RobotContainer {
     
     // Lift goToL4=new Lift(lift, Height.Ground);
     // goToL4.withInterruptBehavior(InterruptionBehavior.kCancelSelf);
-    m_driverController.rightBumper().onTrue(new Lift(lift, Height.Ground));
-    m_driverController.leftBumper().onTrue(new Lift(lift, Height.L4));
+    m_driverController.b().onTrue(new Lift(lift, Height.Ground));
+    m_driverController.rightBumper().onTrue(new Lift(lift, Height.L1));
+    m_driverController.rightTrigger().onTrue(new Lift(lift, Height.L2));
+    m_driverController.leftBumper().onTrue(new Lift(lift, Height.L3));
+    m_driverController.leftTrigger().onTrue(new Lift(lift, Height.L4));
     //I create keybinds for all the other heights later
+    
   }
 
   /**
