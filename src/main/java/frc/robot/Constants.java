@@ -53,7 +53,7 @@ public final class Constants {
       L4
     }
     //arm length is 29 inches?
-    public static final double armLength=29*0.0254;
+    public static final double armLength=27.4*0.0254;
     public static final double kPLift=0.6;
     public static final double kILift=0.0;
     public static final double kDLift=0;
