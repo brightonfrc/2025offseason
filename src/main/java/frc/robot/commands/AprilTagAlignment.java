@@ -76,11 +76,13 @@ public class AprilTagAlignment extends Command {
 
       if(rotationPID.atSetpoint()){ // Move towards set point
         // Use PID  to calculate the movement speed needed to reduce error
-        double movementSpeed = movementXPID.calculate(x, AprilTagAlignmentConstants.stopDisplacementX); // Move x to 0
-        double strafeSpeed = movementYPID.calculate(y, AprilTagAlignmentConstants.stopDisplacementY);   // Move y to 0
+        double movementSpeed = movementXPID.calculate(x); // 
+        double strafeSpeed = movementYPID.calculate(y);   // 
 
         // Drive the robot towards the AprilTag
-        driveSubsystem.drive(movementSpeed, -strafeSpeed, 0, false); // negative strafespeed because y is inversed (positive = left)
+        driveSubsystem.drive(-movementSpeed, strafeSpeed, 0, false); 
+        // don't invert strafespeed because y is also inversed (positive = left) 
+        // negative movementSpeed because robot needs to drive forwards (not backwards) in order to reduce xDisplacement
       }
       else{ // If not at set point, rotate towards setpoint
         driveSubsystem.drive(0, 0, rotationOutput, false);

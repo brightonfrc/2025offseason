@@ -107,20 +107,24 @@ public final class Constants {
   }
 
   public static final class AprilTagAlignmentConstants{
-    public static final double stopDisplacementX = 1.0;
-    public static final double stopDisplacementY = 1.0;
+    //0.5 m from reef
+    public static final double stopDisplacementX = 0.5;
+    //0.165 m left for left stick displacement
+    public static final double stopDisplacementY = 0.165;
 
-    public static final double errorIntervalPositions = 1.0;
-    public static final double errorIntervalRotations = 1.0;
+    //1 cm of error
+    public static final double errorIntervalPositions = 0.01;
+    //0.5 degrees of error
+    public static final double errorIntervalRotations = Math.PI/360;
 
     // PID (REPLACE WITH ACTUAL VALUES AT SOME POINT)
-    public static final double kTurnP = 1.0;
-    public static final double kTurnI = 1.0;
-    public static final double kTurnD = 1.0;
+    public static final double kTurnP = 0.25;
+    public static final double kTurnI = 0.1;
+    public static final double kTurnD = 0;
 
-    public static final double kMoveP = 1.0;
-    public static final double kMoveI = 1.0;
-    public static final double kMoveD = 1.0;
+    public static final double kMoveP = 0.1;
+    public static final double kMoveI = 0;
+    public static final double kMoveD = 0;
   }
 
   public static final class ModuleConstants {

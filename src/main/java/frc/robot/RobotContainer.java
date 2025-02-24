@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AprilTagAlignmentConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AprilTagAlignment;
 import frc.robot.commands.Autos;
@@ -44,7 +45,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    // m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+    m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
     configureBindings();
   }
@@ -67,6 +68,10 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    //align right
+    m_driverController.leftStick().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, 3, AprilTagAlignmentConstants.stopDisplacementX, AprilTagAlignmentConstants.stopDisplacementY));
+    //align left
+    m_driverController.rightStick().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, 3, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY));
   }
 
   /**
