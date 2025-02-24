@@ -107,8 +107,8 @@ public final class Constants {
   }
 
   public static final class AprilTagAlignmentConstants{
-    public static final double stopDistanceX = 1.0;
-    public static final double stopDistanceY = 1.0;
+    public static final double stopDisplacementX = 1.0;
+    public static final double stopDisplacementY = 1.0;
 
     public static final double errorIntervalPositions = 1.0;
     public static final double errorIntervalRotations = 1.0;
@@ -203,8 +203,8 @@ public final class Constants {
 
   public static final class CVConstants {
     // TODO: Fill
-    public static final String kCameraName = "C270_HD_WEBCAM";
-    public static final Transform3d kRobotToCamera = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); // This is camera mounted facing forward, half a meter forward of center, half a meter up from center.
+    public static final String kCameraName = "Arducam_OV9281_USB"; // Options: [USB]C270_HD_WEBCAM, [Innomaker]Arducam_OV9281_USB
+    public static final Transform3d kRobotToCamera = new Transform3d(new Translation3d(0.330, 0, 0.125), new Rotation3d(0,0,0)); // Remember y is sideways, x is forwards for our code
 
   }
 

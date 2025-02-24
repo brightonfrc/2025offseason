@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,10 +12,12 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -23,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class AprilTagPoseEstimator extends SubsystemBase {
-  private EstimatedRobotPose prevEstimatedRobotPose = new EstimatedRobotPose(new Pose3d(0, 0, 0), 0, new List<PhotonTrackedTarget>{}, PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
+  private EstimatedRobotPose prevEstimatedRobotPose = new EstimatedRobotPose(new Pose3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)), 0, new ArrayList<PhotonTrackedTarget>(), PhotonPoseEstimator.PoseStrategy.LOWEST_AMBIGUITY);
   private final AprilTagFieldLayout aprilTagFieldLayout;
   private final PhotonCamera cam;
   private final PhotonPoseEstimator photonPoseEstimator;
@@ -51,10 +54,11 @@ public class AprilTagPoseEstimator extends SubsystemBase {
     SmartDashboard.putString("latestResult", cam.getLatestResult().toString());
 
     Optional<EstimatedRobotPose> pose = photonPoseEstimator.update(cam.getLatestResult());
-    if(pose.isPresent() {
+    if(pose.isPresent()) {
       this.prevEstimatedRobotPose = pose.get();
+      return Optional.of(this.prevEstimatedRobotPose);
     }
-    return this.prevEstimatedRobotPose;
+    return Optional.empty();
   }
 
   public Optional<Transform3d> getRobotToTag(int tagID) {

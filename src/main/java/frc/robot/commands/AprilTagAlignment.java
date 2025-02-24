@@ -4,15 +4,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.AprilTagPoseEstimator;
 import frc.robot.Constants.AprilTagAlignmentConstants;
-import frc.robot.Constants.FieldOrientedDriveConstants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Rotation3d;
 import java.util.Optional;
 
 public class AprilTagAlignment extends Command {
+  private final int tagID;
   private final DriveSubsystem driveSubsystem;
   private final AprilTagPoseEstimator poseEstimator;
   private final PIDController movementXPID;
@@ -21,7 +22,8 @@ public class AprilTagAlignment extends Command {
 
   private final PIDController rotationPID;
 
-  public AprilTagAlignment(DriveSubsystem _driveSubsystem, AprilTagPoseEstimator _poseEstimator, double offsetX, double offsetY) {
+  public AprilTagAlignment(DriveSubsystem _driveSubsystem, AprilTagPoseEstimator _poseEstimator, int _tagID, double offsetX, double offsetY) {
+    tagID = _tagID;
     driveSubsystem = _driveSubsystem;
     poseEstimator = _poseEstimator;
     addRequirements(_driveSubsystem, _poseEstimator);
@@ -38,11 +40,11 @@ public class AprilTagAlignment extends Command {
       AprilTagAlignmentConstants.kMoveD
     );
 
-  rotationPID = new PIDController(
-    AprilTagAlignmentConstants.kTurnP,
-    AprilTagAlignmentConstants.kTurnI,
-    AprilTagAlignmentConstants.kTurnD
-  );
+    rotationPID = new PIDController(
+      AprilTagAlignmentConstants.kTurnP,
+      AprilTagAlignmentConstants.kTurnI,
+      AprilTagAlignmentConstants.kTurnD
+    );
 
   rotationPID.setSetpoint(0);
   movementXPID.setSetpoint(offsetX);
@@ -56,8 +58,8 @@ public class AprilTagAlignment extends Command {
 
   @Override
   public void execute() {
-
-    Optional<Transform3d> possibleTransform = poseEstimator.getRobotToTag(1);
+    Optional<Transform3d> possibleTransform = poseEstimator.getRobotToTag(this.tagID);
+    SmartDashboard.putString("Robot to tag", possibleTransform.toString());
 
     if (possibleTransform.isPresent()) {
 
@@ -74,8 +76,8 @@ public class AprilTagAlignment extends Command {
 
       if(rotationPID.atSetpoint()){ // Move towards set point
         // Use PID  to calculate the movement speed needed to reduce error
-        double movementSpeed = movementXPID.calculate(x, AprilTagAlignmentConstants.stopDistanceX); // Move x to 0
-        double strafeSpeed = movementYPID.calculate(y, AprilTagAlignmentConstants.stopDistanceY);   // Move y to 0
+        double movementSpeed = movementXPID.calculate(x, AprilTagAlignmentConstants.stopDisplacementX); // Move x to 0
+        double strafeSpeed = movementYPID.calculate(y, AprilTagAlignmentConstants.stopDisplacementY);   // Move y to 0
 
         // Drive the robot towards the AprilTag
         driveSubsystem.drive(movementSpeed, -strafeSpeed, 0, false); // negative strafespeed because y is inversed (positive = left)
