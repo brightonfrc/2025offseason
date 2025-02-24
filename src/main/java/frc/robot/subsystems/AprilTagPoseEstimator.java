@@ -51,9 +51,15 @@ public class AprilTagPoseEstimator extends SubsystemBase {
   public Optional<EstimatedRobotPose> getGlobalPose() {
     this.photonPoseEstimator.setReferencePose(this.prevEstimatedRobotPose.estimatedPose);
 
-    SmartDashboard.putString("latestResult", cam.getLatestResult().toString());
+    List<PhotonTrackedTarget> targets = cam.getLatestResult().targets;
+    SmartDashboard.putNumber("latestResult/count", targets.size());
+
+    for(int i = 0; i < targets.size(); i++) {
+      SmartDashboard.putString("latestResult/"+i, targets.get(i).fiducialId+"@"+targets.get(i).bestCameraToTarget.toString());
+    }
 
     Optional<EstimatedRobotPose> pose = photonPoseEstimator.update(cam.getLatestResult());
+
     if(pose.isPresent()) {
       this.prevEstimatedRobotPose = pose.get();
       return Optional.of(this.prevEstimatedRobotPose);

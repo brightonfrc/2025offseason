@@ -12,6 +12,12 @@ import frc.robot.commands.FieldOrientedDrive;
 import frc.robot.subsystems.AprilTagPoseEstimator;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -38,7 +44,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+    // m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
     configureBindings();
   }
@@ -70,12 +76,23 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    SmartDashboard.putString("Auto", "AprilTag Alignment");
-    return new AprilTagAlignment(m_driveSubsystem, new AprilTagPoseEstimator(), 3, 0.5, 0);
+    // SmartDashboard.putString("Auto", "AprilTag Alignment");
+    return null;
+    // return new AprilTagAlignment(m_driveSubsystem, new AprilTagPoseEstimator(), 3, 0.5, 0);
   }
 
   // TODO: Delete
   public void printPose() {
-    SmartDashboard.putString("robot2tag", m_poseEstimator.getRobotToTag(2).toString());
+    Optional<Transform3d> opt = m_poseEstimator.getRobotToTag(3);
+    if(opt.isPresent()) {
+      Transform3d r2t = opt.get();
+      SmartDashboard.putString("robot2tag", r2t.getTranslation().toString() + "Rotation3d(yaw="+r2t.getRotation().getZ()+", pitch="+r2t.getRotation().getY()+", roll="+r2t.getX()+")");
+      SmartDashboard.putNumber("robot2tag/t/x", r2t.getTranslation().getX());
+      SmartDashboard.putNumber("robot2tag/t/y", r2t.getTranslation().getY());
+      SmartDashboard.putNumber("robot2tag/t/z", r2t.getTranslation().getZ());
+      SmartDashboard.putNumber("robot2tag/r/y", r2t.getRotation().getZ());
+      SmartDashboard.putNumber("robot2tag/r/p", r2t.getRotation().getY());
+      SmartDashboard.putNumber("robot2tag/r/r", r2t.getX());
+    }
   }
 }

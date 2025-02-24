@@ -203,7 +203,8 @@ public final class Constants {
 
   public static final class CVConstants {
     // TODO: Fill
-    public static final String kCameraName = "Arducam_OV9281_USB"; // Options: [USB]C270_HD_WEBCAM, [Innomaker]Arducam_OV9281_USB
+    // Before using AprilTagPoseEstimator, ensure the camera is calibrated, in 3D mode, and on an AprilTag pipeline at https://photonvision.local:5800
+    public static final String kCameraName = "Arducam_OV9281_USB_Camera"; // Options: [USB]C270_HD_WEBCAM, [Innomaker]Arducam_OV9281_USB_Camera
     public static final Transform3d kRobotToCamera = new Transform3d(new Translation3d(0.330, 0, 0.125), new Rotation3d(0,0,0)); // Remember y is sideways, x is forwards for our code
 
   }
