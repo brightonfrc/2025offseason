@@ -24,12 +24,50 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class LiftConstants{
+    //for some reason at 0.04 the robot goes insane
+    // public static final double maximumPowerChange=0.05;
+    public static final double maximumTilt=10;
+    public static final double angleAtPeakHeight=87.6;
+    public static final int encoderChannel=0;
+    public static final int liftNeoCANID=11;
+    public static final int reversedLiftNeoCANDID=12;
+    //to ensure the arm doesn't tear itself apart. 
+    // public static final double maxPower=1.0;
+    public static final double maxAngularVelocity=Math.PI/2;
+    public static final double maxAngularAcceleration=2*Math.PI;
+
+    public static final double[] desiredHeight= new double[]{
+      //do note that ground height isn't actually at 0, because arm has minimum height
+      0.30,//normal height
+      0.46,//L1
+      0.81,//L2
+      1.21,//L3
+      1.4 //L4 (Officially its 6-feet up, but the at the end can also move)
+    };
+    
+
+    public static enum Height{
+      Ground,
+      L1,
+      L2,
+      L3,
+      L4
+    }
+    //arm length is 29 inches?
+    public static final double armLength=27.4*0.0254;
+    public static final double kPLift=0.6;
+    public static final double kILift=0.0;
+    public static final double kDLift=0;
+    public static final double angleTolerance=Math.PI/180;
+    //remember to adjust as more components are added
+    public static final double kWeightMomentOffsetFactor=0.0246;
+
+    
+  }
   public static class AccelerationLimiterConstants{
     public static double maximumAcceleration=0.02;
     public static double maximumDeceleration=0.02;
-  }
-  public static class OperatorConstants{
-    public static final int kDriverControllerPort=0;
   }
   public static class TestingConstants{
     public static final double maximumSpeed=0.40;

@@ -69,14 +69,14 @@ public class FieldOrientedDrive extends Command {
             hasToggled=false;
         }
         SmartDashboard.putBoolean("Slow Mode Active", slowModeActive);
-        SmartDashboard.putNumber("Goal bearing", goalBearing);
+        // SmartDashboard.putNumber("Goal bearing", goalBearing);
         //Both joysticks assumes the right to be bearing 0 and then works clockwise from there. To have bearing 0 be in front, the bearing
         //has to be moved back by 90 degrees/ 1/2 PI
         //If right joystick is not being moved retain previous bearing
         if (Math.hypot(xboxController.getRightY(), xboxController.getRightX())>  0.9) {
             joystickTurnBearing = Math.atan2(xboxController.getRightY(), xboxController.getRightX()) + Math.PI/2;
         }
-        SmartDashboard.putNumber("Turn: Right Joystick bearing", joystickTurnBearing);
+        // SmartDashboard.putNumber("Turn: Right Joystick bearing", joystickTurnBearing);
         //error tolerance of 2 degrees
         if (Math.abs(joystickTurnBearing-goalBearing)>Math.PI/180*FieldOrientedDriveConstants.bearingTolerance){
             goalBearing = -joystickTurnBearing;
@@ -90,16 +90,16 @@ public class FieldOrientedDrive extends Command {
         }
         //converting to radians
         robotBearing = robotBearing / 180 * Math.PI;
-        SmartDashboard.putNumber("Robot bearing", robotBearing);
+        // SmartDashboard.putNumber("Robot bearing", robotBearing);
         //it looks cooked but that's because the controller is mapped kinda funny
         joystickMoveBearing = Math.atan2(xboxController.getLeftX(), -xboxController.getLeftY());
-        SmartDashboard.putNumber("Drive: Left joystick bearing", joystickMoveBearing);
+        // SmartDashboard.putNumber("Drive: Left joystick bearing", joystickMoveBearing);
         //gyro measures angles anticlockwise.
         joystickMoveBearing=joystickMoveBearing+robotBearing-2*Math.PI;
 
-        SmartDashboard.putNumber("Drive: Robot Relative bearing", joystickMoveBearing);
+        // SmartDashboard.putNumber("Drive: Robot Relative bearing", joystickMoveBearing);
         joystickMoveMagnitude = Math.pow(Math.pow(xboxController.getLeftX(), 2) + Math.pow(xboxController.getLeftY(), 2), 0.5);
-        SmartDashboard.putNumber("Drive: Left joystick magnitude", joystickMoveMagnitude);
+        // SmartDashboard.putNumber("Drive: Left joystick magnitude", joystickMoveMagnitude);
 
         xSpeed = joystickMoveMagnitude * Math.cos(joystickMoveBearing) * (slowModeActive ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
         if(xSpeed>previousXSpeed+AccelerationLimiterConstants.maximumAcceleration){
@@ -109,7 +109,7 @@ public class FieldOrientedDrive extends Command {
             xSpeed=previousXSpeed-AccelerationLimiterConstants.maximumDeceleration;
         }
         previousXSpeed=xSpeed;
-        SmartDashboard.putNumber("xSpeed", xSpeed);
+        // SmartDashboard.putNumber("xSpeed", xSpeed);
 
         ySpeed = joystickMoveMagnitude * Math.sin(joystickMoveBearing) * (slowModeActive ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
         if(Math.abs(ySpeed)<FieldOrientedDriveConstants.moveJoystickDeadzone){
@@ -123,22 +123,24 @@ public class FieldOrientedDrive extends Command {
             ySpeed=previousYSpeed-AccelerationLimiterConstants.maximumDeceleration;
         }
         previousYSpeed=ySpeed;
-        SmartDashboard.putNumber("ySpeed", ySpeed);
+        // SmartDashboard.putNumber("ySpeed", ySpeed);
 
         rotSpeed = bearingPIDController.calculate(robotBearing) * TestingConstants.maximumRotationSpeed;
-        SmartDashboard.putNumber("rotSpeed", rotSpeed);
+        // SmartDashboard.putNumber("rotSpeed", rotSpeed);
         
 
-        
-        if(xboxController.rightBumper().getAsBoolean()){
-            driveSubsystem.drive(0, 0, 0, false);
-        } else{
-            //Datis and Ella prefers this
-            driveSubsystem.drive(xSpeed, -ySpeed, rotSpeed, false);
+        //Datis and Ella prefers this
+        driveSubsystem.drive(xSpeed, -ySpeed, rotSpeed, false);
 
-            // William and Sam prefers this
-            // driveSubsystem.drive(xSpeed, -ySpeed, -xboxController.getRightX()*TestingConstants.maximumRotationSpeedRobotOriented, false);
-        }
+        // William and Sam prefers this
+        // driveSubsystem.drive(xSpeed, -ySpeed, -xboxController.getRightX()*TestingConstants.maximumRotationSpeedRobotOriented, false);
+        
+        // Emergency stop button (Not needed)
+        // if(xboxController.rightBumper().getAsBoolean()){
+        //     driveSubsystem.drive(0, 0, 0, false);
+        // } else{
+            
+        // }
     }
     // Called once the command ends or is interrupted.
     @Override
