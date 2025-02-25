@@ -28,12 +28,12 @@ public class RunLift extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // SmartDashboard.putNumber("Lift Angle", lift.getLiftAngle());
+    SmartDashboard.putNumber("Lift Angle", lift.getLiftAngle());
     if (up){
-      lift.setPower(0.1);
+      lift.setPower(0.05);
     }
     else{
-      lift.setPower(-0.1);
+      lift.setPower(-0.05);
     }
   }
 

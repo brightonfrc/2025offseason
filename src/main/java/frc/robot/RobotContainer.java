@@ -20,6 +20,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -39,6 +40,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
   new CommandXboxController(OIConstants.kDriverControllerPort);
+  private final Joystick jankDPad= new Joystick(OIConstants.kDriverControllerPort);
   
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
   // private Lift goToGround=new Lift(lift, Height.Ground);
@@ -98,5 +100,9 @@ public class RobotContainer {
       return true;
     }
     return false;
+  }
+
+  public int checkHeight(){
+    return jankDPad.getPOV();
   }
 }

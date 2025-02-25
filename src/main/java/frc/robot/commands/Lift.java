@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDCOntroller;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,7 +42,6 @@ public class Lift extends Command {
         break;
     }
     angleRequired=Math.asin((height/2)/LiftConstants.armLength);
-    // SmartDashboard.putNumber("Angle required", Math.toDegrees(angleRequired));
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lift);
   }
@@ -63,6 +61,7 @@ public class Lift extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("Angle required", Math.toDegrees(angleRequired));
     SmartDashboard.putNumber("Current angle", lift.getLiftAngle());
     double currentAngle=Math.toRadians(lift.getLiftAngle());
     // double desiredPower=liftController.calculate(currentAngle);
@@ -78,11 +77,12 @@ public class Lift extends Command {
     //     desiredPower=previousPower+LiftConstants.maximumPowerChange;
     //   }
     // }
-    // desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
     // previousPower=desiredPower;
-    double desiredPower=profiledLiftController.calculate(currentAngle);
+    double desiredAngularVelocity=profiledLiftController.calculate(currentAngle);
+    double desiredPower=desiredAngularVelocity/LiftConstants.maxAngularVelocity;
+    desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
     SmartDashboard.putNumber("Power", desiredPower);
-    lift.setPower(desiredPower);
+    // lift.setPower(desiredPower);
     // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
   }
 
@@ -96,6 +96,6 @@ public class Lift extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return liftController.atSetpoint();
+    return profiledLiftController.atSetpoint();
   }
 }
