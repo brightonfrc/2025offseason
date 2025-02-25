@@ -26,14 +26,6 @@ public class DatisLift extends SubsystemBase {
   }
   /**Method used to set lift power ranging from -1 to 1 */
   public void setPower(double power){
-    if(Math.abs(power)>LiftConstants.maxPower){
-      if (power>0){
-        power=LiftConstants.maxPower;
-      }
-      else{
-        power=-LiftConstants.maxPower;
-      }
-    }
     liftNeo.set(power);
     reversedLiftNeo.set(-power);
   }

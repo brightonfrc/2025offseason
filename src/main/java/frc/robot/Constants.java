@@ -25,8 +25,6 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class LiftConstants{
-    //to make sure the lift doesn't tear itself apart
-    public static final double maxPower=0.8;
     //for some reason at 0.04 the robot goes insane
     // public static final double maximumPowerChange=0.05;
     public static final double maximumTilt=10;
@@ -58,7 +56,7 @@ public final class Constants {
     }
     //arm length is 29 inches?
     public static final double armLength=27.4*0.0254;
-    public static final double kPLift=0.3;
+    public static final double kPLift=0.6;
     public static final double kILift=0.0;
     public static final double kDLift=0;
     public static final double angleTolerance=Math.PI/180;
