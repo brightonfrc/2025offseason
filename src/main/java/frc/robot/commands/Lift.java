@@ -5,6 +5,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDCOntroller;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DatisLift;
@@ -15,8 +18,9 @@ import frc.robot.Constants.LiftConstants.Height;
 public class Lift extends Command {
   private DatisLift lift;
   private double angleRequired;
-  private PIDController liftController;
-  private double previousPower;
+  // private PIDController liftController;
+  // private double previousPower;
+  private ProfiledPIDController profiledLiftController;
   /** Creates a new Lift. */
   public Lift(DatisLift lift, Height heightDesired) {
     this.lift=lift;
@@ -47,10 +51,13 @@ public class Lift extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    liftController= new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
-    liftController.setTolerance(LiftConstants.angleTolerance);
-    liftController.setSetpoint(angleRequired);
-    previousPower=0;
+    // liftController= new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
+    // liftController.setTolerance(LiftConstants.angleTolerance);
+    // liftController.setSetpoint(angleRequired);
+    profiledLiftController = new ProfiledPIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift, new TrapezoidProfile.Constraints(LiftConstants.maxAngularVelocity, LiftConstants.maxAngularAcceleration));
+    // previousPower=0;
+    profiledLiftController.setGoal(angleRequired);
+    profiledLiftController.setTolerance(LiftConstants.angleTolerance);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -58,22 +65,23 @@ public class Lift extends Command {
   public void execute() {
     SmartDashboard.putNumber("Current angle", lift.getLiftAngle());
     double currentAngle=Math.toRadians(lift.getLiftAngle());
-    double desiredPower=liftController.calculate(currentAngle);
+    // double desiredPower=liftController.calculate(currentAngle);
     //scaling power down to reduce strain on lift
-    desiredPower=desiredPower*LiftConstants.maxPower;
-    if (Math.abs(desiredPower-previousPower)>LiftConstants.maximumPowerChange){
-      //controller demands excessive power change
-      if (desiredPower<0){
-        //reducing power
-        desiredPower=previousPower-LiftConstants.maximumPowerChange;
-      }
-      else{
-        desiredPower=previousPower+LiftConstants.maximumPowerChange;
-      }
-    }
-    desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
+    // desiredPower=desiredPower*LiftConstants.maxPower;
+    // if (Math.abs(desiredPower-previousPower)>LiftConstants.maximumPowerChange){
+    //   //controller demands excessive power change
+    //   if (desiredPower<0){
+    //     //reducing power
+    //     desiredPower=previousPower-LiftConstants.maximumPowerChange;
+    //   }
+    //   else{
+    //     desiredPower=previousPower+LiftConstants.maximumPowerChange;
+    //   }
+    // }
+    // desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
+    // previousPower=desiredPower;
+    double desiredPower=profiledLiftController.calculate(currentAngle);
     SmartDashboard.putNumber("Power", desiredPower);
-    previousPower=desiredPower;
     lift.setPower(desiredPower);
     // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
   }
