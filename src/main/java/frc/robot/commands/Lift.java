@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDCOntroller;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -96,6 +95,6 @@ public class Lift extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return liftController.atSetpoint();
+    return profiledLiftController.atSetpoint();
   }
 }
