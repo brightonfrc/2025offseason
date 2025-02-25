@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
@@ -22,6 +23,7 @@ public class Arm extends SubsystemBase {
   /**Gets the arm angle above or below the horizontal. So being below would create a negative value */
   public double getArmAngle(){
     double measuredAngle= encoder.get();
+    SmartDashboard.putNumber("Arm angle", measuredAngle);
     return measuredAngle;
   }
   /**Method used to set arm power ranging from -1 to 1 */
