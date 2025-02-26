@@ -24,6 +24,10 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class ArmConstants{
+    public static final int armCANID=13;
+    public static final int armEncoderPort=0;
+  }
   public static class LiftConstants{
     //for some reason at 0.04 the robot goes insane
     public static final double maximumPowerChange=0.05;

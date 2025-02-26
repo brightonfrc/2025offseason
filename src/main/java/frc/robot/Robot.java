@@ -42,9 +42,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    if (m_robotContainer.checkTilt()){
-      m_robotContainer.StowLift();
-    }
+    
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -82,7 +80,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // if (m_robotContainer.checkTilt()){
+    //   m_robotContainer.StowLift();
+    // }
+    
+  }
 
   @Override
   public void testInit() {
