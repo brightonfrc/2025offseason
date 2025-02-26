@@ -69,6 +69,9 @@ public class RobotContainer {
   private void configureBindings() {
     
     //delete once done testing
+    // m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
+    // m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
+
     m_driverController.rightBumper().whileTrue(new RunArm(arm, true));
     m_driverController.leftBumper().whileTrue(new RunArm(arm, false));
     
@@ -105,4 +108,8 @@ public class RobotContainer {
   public void getArmAngle(){
     arm.getArmAngle();
   }
+  public void getLiftAngle(){
+    lift.getLiftAngle();
+  }
 }
+

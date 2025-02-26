@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.LiftConstants;
 
 import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -28,6 +30,14 @@ public class Arm extends SubsystemBase {
   }
   /**Method used to set arm power ranging from -1 to 1 */
   public void setPower(double power){
+    if(Math.abs(power)>ArmConstants.maxPower){
+      if (power>0){
+        power=LiftConstants.maxPower;
+      }
+      else{
+        power=-LiftConstants.maxPower;
+      }
+    }
     armMotor.set(VictorSPXControlMode.PercentOutput,power);
   }
 }

@@ -32,10 +32,15 @@ public final class Constants {
       //do note that ground height isn't actually at 0, because arm has minimum height
       0,//Ground intake (Not sure what angle this needs to be)
       -75,//L1
-      70,//L2
-      70,//L3
+      70,//L2 and L3
       45 //L4 
     };
+    public static final double maxPower=0.2;
+    public static final double kPArm=0.1;
+    public static final double kIArm=0;
+    public static final double kDArm=0;
+    //1 degree tolerance
+    public static final double angleTolerance=Math.PI/180;
   }
   public static class LiftConstants{
     //for some reason at 0.04 the robot goes insane
@@ -63,7 +68,8 @@ public final class Constants {
       L1,
       L2,
       L3,
-      L4
+      L4,
+      Stow
     }
     //arm length is 29 inches?
     public static final double armLength=27.4*0.0254;

@@ -84,6 +84,8 @@ public class Robot extends TimedRobot {
     // if (m_robotContainer.checkTilt()){
     //   m_robotContainer.StowLift();
     // }
+    // m_robotContainer.getLiftAngle();
+    m_robotContainer.getArmAngle();
   }
 
   @Override

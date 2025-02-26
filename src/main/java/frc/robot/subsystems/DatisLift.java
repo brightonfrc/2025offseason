@@ -22,6 +22,7 @@ public class DatisLift extends SubsystemBase {
   }
   /**Method to get the current lift angle (0 being at lowest level) */
   public double getLiftAngle(){
+    SmartDashboard.putNumber("Lift Angle", 90-encoder.get()*360+LiftConstants.angleAtPeakHeight);
     return 90-encoder.get()*360+LiftConstants.angleAtPeakHeight;
   }
   /**Method used to set lift power ranging from -1 to 1 */

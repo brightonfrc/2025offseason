@@ -7,36 +7,46 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DatisLift;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.LiftConstants;
 import frc.robot.Constants.LiftConstants.Height;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Lift extends Command {
   private DatisLift lift;
+  private Arm arm;
   private double angleRequired;
   private double armAngleRequired;
   private PIDController liftController;
+  private PIDController armController;
   private double previousPower;
   /** Creates a new Lift. */
-  public Lift(DatisLift lift, Height heightDesired) {
+  public Lift(DatisLift lift, Arm arm, Height heightDesired) {
+    this.arm=arm;
     this.lift=lift;
     double height=0;
     switch(heightDesired){
       case Ground:
         height=LiftConstants.desiredHeight[0];
+        armAngleRequired=ArmConstants.desiredArmAngle[0];
         break;
       case L1:
         height=LiftConstants.desiredHeight[1];
+        armAngleRequired=ArmConstants.desiredArmAngle[1];
         break;
       case L2:
         height=LiftConstants.desiredHeight[2];
+        armAngleRequired=ArmConstants.desiredArmAngle[2];
         break;
       case L3:
         height=LiftConstants.desiredHeight[3];
+        armAngleRequired=ArmConstants.desiredArmAngle[2];
         break;
       case L4:
         height=LiftConstants.desiredHeight[4];
+        armAngleRequired=ArmConstants.desiredArmAngle[3];
         break;
     }
     angleRequired=Math.asin((height/2)/LiftConstants.armLength);
@@ -52,12 +62,15 @@ public class Lift extends Command {
     liftController.setTolerance(LiftConstants.angleTolerance);
     liftController.setSetpoint(angleRequired);
     previousPower=0;
+    armController= new PIDController(ArmConstants.kPArm, ArmConstants.kIArm, ArmConstants.kDArm);
+    armController.setTolerance(ArmConstants.angleTolerance);
+    armController.setSetpoint(armAngleRequired);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Current angle", lift.getLiftAngle());
+    SmartDashboard.putNumber("Current lift angle", lift.getLiftAngle());
     double currentAngle=Math.toRadians(lift.getLiftAngle());
     double desiredPower=liftController.calculate(currentAngle);
     //scaling power down to reduce strain on lift
@@ -73,22 +86,28 @@ public class Lift extends Command {
       }
     }
     desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
-    SmartDashboard.putNumber("Power", desiredPower);
+    SmartDashboard.putNumber("Power/Lift", desiredPower);
     previousPower=desiredPower;
     lift.setPower(desiredPower);
     // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
+
+    SmartDashboard.putNumber("Current arm angle", arm.getArmAngle());
+    double currentArmAngle=Math.toRadians(arm.getArmAngle());
+    double desiredArmPower=armController.calculate(currentArmAngle);
+    SmartDashboard.putNumber("Power/Arm", desiredArmPower);
+    lift.setPower(desiredArmPower);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     lift.setPower(0);
-    
+    arm.setPower(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return liftController.atSetpoint();
+    return liftController.atSetpoint()&&armController.atSetpoint();
   }
 }
