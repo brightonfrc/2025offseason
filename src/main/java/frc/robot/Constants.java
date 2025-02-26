@@ -30,16 +30,14 @@ public final class Constants {
   }
   public static class LiftConstants{
     //for some reason at 0.04 the robot goes insane
-    // public static final double maximumPowerChange=0.05;
+    public static final double maximumPowerChange=0.05;
     public static final double maximumTilt=10;
     public static final double angleAtPeakHeight=87.6;
     public static final int encoderChannel=0;
     public static final int liftNeoCANID=11;
     public static final int reversedLiftNeoCANDID=12;
     //to ensure the arm doesn't tear itself apart. 
-    // public static final double maxPower=1.0;
-    public static final double maxAngularVelocity=Math.PI/2;
-    public static final double maxAngularAcceleration=2*Math.PI;
+    public static final double maxPower=0.9;
 
     public static final double[] desiredHeight= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
