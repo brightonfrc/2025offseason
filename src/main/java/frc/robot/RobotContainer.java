@@ -11,6 +11,7 @@ import frc.robot.Constants.LiftConstants.Height;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Lift;
+import frc.robot.commands.RunArm;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DatisLift;
 import frc.robot.commands.FieldOrientedDrive;
@@ -68,16 +69,16 @@ public class RobotContainer {
   private void configureBindings() {
     
     //delete once done testing
-    // m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
-    // m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
+    m_driverController.rightBumper().whileTrue(new RunArm(arm, true));
+    m_driverController.leftBumper().whileTrue(new RunArm(arm, false));
     
     // Lift goToL4=new Lift(lift, Height.Ground);
     // goToL4.withInterruptBehavior(InterruptionBehavior.kCancelSelf);
-    m_driverController.b().onTrue(new Lift(lift, Height.Ground));
-    m_driverController.rightBumper().onTrue(new Lift(lift, Height.L1));
-    m_driverController.rightTrigger().onTrue(new Lift(lift, Height.L2));
-    m_driverController.leftBumper().onTrue(new Lift(lift, Height.L3));
-    m_driverController.leftTrigger().onTrue(new Lift(lift, Height.L4));
+    // m_driverController.b().onTrue(new Lift(lift, Height.Ground));
+    // m_driverController.rightBumper().onTrue(new Lift(lift, Height.L1));
+    // m_driverController.rightTrigger().onTrue(new Lift(lift, Height.L2));
+    // m_driverController.leftBumper().onTrue(new Lift(lift, Height.L3));
+    // m_driverController.leftTrigger().onTrue(new Lift(lift, Height.L4));
     //I create keybinds for all the other heights later
   }
 
