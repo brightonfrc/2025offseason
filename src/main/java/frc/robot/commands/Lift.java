@@ -15,6 +15,7 @@ import frc.robot.Constants.LiftConstants.Height;
 public class Lift extends Command {
   private DatisLift lift;
   private double angleRequired;
+  private double armAngleRequired;
   private PIDController liftController;
   private double previousPower;
   /** Creates a new Lift. */

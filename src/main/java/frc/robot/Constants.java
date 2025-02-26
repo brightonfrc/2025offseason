@@ -27,6 +27,15 @@ public final class Constants {
   public static class ArmConstants{
     public static final int armCANID=13;
     public static final int armEncoderPort=0;
+    //its all in degrees, remember to convert
+    public static final double[] desiredArmAngle= new double[]{
+      //do note that ground height isn't actually at 0, because arm has minimum height
+      0,//Ground intake (Not sure what angle this needs to be)
+      -75,//L1
+      70,//L2
+      70,//L3
+      45 //L4 
+    };
   }
   public static class LiftConstants{
     //for some reason at 0.04 the robot goes insane
@@ -41,7 +50,7 @@ public final class Constants {
 
     public static final double[] desiredHeight= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
-      0.30,//normal height
+      0.30,//ground intake 
       0.46,//L1
       0.81,//L2
       1.21,//L3
