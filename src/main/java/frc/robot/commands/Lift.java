@@ -29,30 +29,34 @@ public class Lift extends Command {
     double height=0;
     switch(heightDesired){
       case Ground:
-        height=LiftConstants.desiredHeight[0];
+        height=LiftConstants.desiredLiftAngle[0];
         armAngleRequired=ArmConstants.desiredArmAngle[0];
         break;
       case L1:
-        height=LiftConstants.desiredHeight[1];
+        height=LiftConstants.desiredLiftAngle[1];
         armAngleRequired=ArmConstants.desiredArmAngle[1];
         break;
       case L2:
-        height=LiftConstants.desiredHeight[2];
+        height=LiftConstants.desiredLiftAngle[2];
         armAngleRequired=ArmConstants.desiredArmAngle[2];
         break;
       case L3:
-        height=LiftConstants.desiredHeight[3];
-        armAngleRequired=ArmConstants.desiredArmAngle[2];
-        break;
-      case L4:
-        height=LiftConstants.desiredHeight[4];
+        height=LiftConstants.desiredLiftAngle[3];
         armAngleRequired=ArmConstants.desiredArmAngle[3];
         break;
+      case L4:
+        height=LiftConstants.desiredLiftAngle[4];
+        armAngleRequired=ArmConstants.desiredArmAngle[4];
+        break;
+      case Stow:
+        height=LiftConstants.desiredLiftAngle[5];
+        armAngleRequired=ArmConstants.desiredArmAngle[5];
     }
-    angleRequired=Math.asin((height/2)/LiftConstants.armLength);
-    // SmartDashboard.putNumber("Angle required", Math.toDegrees(angleRequired));
+    SmartDashboard.putNumber("Lift Angle required", Math.toDegrees(angleRequired));
+    SmartDashboard.putNumber("Arm Angle required", armAngleRequired);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lift);
+    armAngleRequired=Math.toRadians(armAngleRequired);
   }
 
   // Called when the command is initially scheduled.
@@ -88,14 +92,15 @@ public class Lift extends Command {
     desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
     SmartDashboard.putNumber("Power/Lift", desiredPower);
     previousPower=desiredPower;
-    lift.setPower(desiredPower);
+    // lift.setPower(desiredPower);
     // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
+
 
     SmartDashboard.putNumber("Current arm angle", arm.getArmAngle());
     double currentArmAngle=Math.toRadians(arm.getArmAngle());
     double desiredArmPower=armController.calculate(currentArmAngle);
     SmartDashboard.putNumber("Power/Arm", desiredArmPower);
-    lift.setPower(desiredArmPower);
+    arm.setPower(desiredArmPower);
   }
 
   // Called once the command ends or is interrupted.

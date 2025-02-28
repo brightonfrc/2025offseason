@@ -32,8 +32,10 @@ public final class Constants {
       //do note that ground height isn't actually at 0, because arm has minimum height
       0,//Ground intake (Not sure what angle this needs to be)
       -75,//L1
-      70,//L2 and L3
-      45 //L4 
+      -70,//L2
+      -45,//L3
+      45, //L4
+      160 //stowed
     };
     public static final double maxPower=0.2;
     public static final double kPArm=0.1;
@@ -53,13 +55,15 @@ public final class Constants {
     //to ensure the arm doesn't tear itself apart. 
     public static final double maxPower=0.9;
 
-    public static final double[] desiredHeight= new double[]{
+    //angles required
+    public static final double[] desiredLiftAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
-      0.30,//ground intake 
-      0.46,//L1
-      0.81,//L2
-      1.21,//L3
-      1.4 //L4 (Officially its 6-feet up, but the at the end can also move)
+      0.22,//ground intake (placeholder) 
+      Math.PI/6,//L1
+      0.82357,//L2
+      1.2737,//L3
+      1.2099,//L4
+      0.22 //Stowed (placeholder)
     };
     
 
@@ -71,7 +75,6 @@ public final class Constants {
       L4,
       Stow
     }
-    //arm length is 29 inches?
     public static final double armLength=27.4*0.0254;
     public static final double kPLift=0.6;
     public static final double kILift=0.0;
