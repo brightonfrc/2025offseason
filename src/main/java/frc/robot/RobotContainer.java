@@ -69,9 +69,9 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     //align right
-    m_driverController.leftStick().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, 3, AprilTagAlignmentConstants.stopDisplacementX, AprilTagAlignmentConstants.stopDisplacementY));
+    m_driverController.leftBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, AprilTagAlignmentConstants.stopDisplacementY));
     //align left
-    m_driverController.rightStick().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, 3, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY));
+    m_driverController.rightBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY));
   }
 
   /**

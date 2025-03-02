@@ -108,7 +108,7 @@ public final class Constants {
 
   public static final class AprilTagAlignmentConstants{
     //0.5 m from reef
-    public static final double stopDisplacementX = 0.5;
+    public static final double stopDisplacementX = 0.3;
     //0.165 m left for left stick displacement
     public static final double stopDisplacementY = 0.165;
 
