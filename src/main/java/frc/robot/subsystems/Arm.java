@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.LiftConstants;
-
-import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
 import com.revrobotics.spark.SparkMax;
 
 public class Arm extends SubsystemBase {

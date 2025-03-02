@@ -24,6 +24,11 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class IntakeConstants{
+    
+    public static final double intakePower=0.6;
+    public static final double outtakePower=0.2;
+  }
   public static class AngleLimitConstants{
     //all in degrees, remember to convert to radians
 
@@ -230,6 +235,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kManualLiftControllerPort=1;
     public static final double kDriveDeadband = 0.1;
   }
 
