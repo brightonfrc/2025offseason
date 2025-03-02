@@ -4,43 +4,69 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AngleLimitConstants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.DatisLift;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RunArm extends Command {
   private Boolean positive;
   private Arm arm;
+  private DatisLift lift;
+  private Boolean emergencyStop;
   /** Creates a new RunArm. */
-  public RunArm(Arm arm, Boolean positive) {
+  public RunArm(Arm arm, Boolean positive, DatisLift lift) {
     this.positive=positive;
     this.arm=arm;
+    this.lift=lift;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    emergencyStop=false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double liftAngle=lift.getLiftAngle();
+    double armAngle=arm.getArmAngle();
+    SmartDashboard.putNumber("Angle above ground", liftAngle+armAngle);
+    // SmartDashboard.putBoolean("Command active", true);
+    // angle at max 108
+    // angle at zero 26.3
+    // angle at straight line is 262
+    double weightOffsetFactor=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(armAngle+liftAngle));
     if (positive){
-      arm.setPower(0.05);
+      // arm.setPower(weightOffsetFactor);
+      arm.setPower(0.1);
     }
     else{
-      arm.setPower(-0.05);
+      // arm.setPower(-0.2+weightOffsetFactor);
+      arm.setPower(-0.1);
+    }
+    //emergency end command if lift or arm angle outside of expected range
+    if ((armAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
+    ||(armAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
+      emergencyStop=true;
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    arm.setPower(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return emergencyStop;
   }
 }

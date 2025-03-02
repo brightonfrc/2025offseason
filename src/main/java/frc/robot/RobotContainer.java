@@ -24,6 +24,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -38,7 +39,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DatisLift lift= new DatisLift(new SparkMax(LiftConstants.liftNeoCANID, MotorType.kBrushless), new SparkMax(LiftConstants.reversedLiftNeoCANDID, MotorType.kBrushless), new DutyCycleEncoder(LiftConstants.encoderChannel));
-  private final Arm arm = new Arm(new AnalogEncoder(ArmConstants.armEncoderPort), new VictorSPX(ArmConstants.armCANID));
+  private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushed));
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -46,7 +47,7 @@ public class RobotContainer {
   
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
   // private Lift goToGround=new Lift(lift, Height.Ground);
-  
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -68,22 +69,21 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    //remember that A button is bound to "slow Mode"
     
     //delete once done testing
     // m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
     // m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
 
-    m_driverController.rightBumper().whileTrue(new RunArm(arm, true));
-    m_driverController.leftBumper().whileTrue(new RunArm(arm, false));
+    // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
+    // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
     
-    // Lift goToL4=new Lift(lift, Height.Ground);
-    // goToL4.withInterruptBehavior(InterruptionBehavior.kCancelSelf);
-    // m_driverController.b().onTrue(new Lift(lift, Height.Ground));
-    // m_driverController.rightBumper().onTrue(new Lift(lift, Height.L1));
-    // m_driverController.rightTrigger().onTrue(new Lift(lift, Height.L2));
-    // m_driverController.leftBumper().onTrue(new Lift(lift, Height.L3));
-    // m_driverController.leftTrigger().onTrue(new Lift(lift, Height.L4));
-    //I create keybinds for all the other heights later
+    m_driverController.y().onTrue(new Lift(lift, arm, Height.Ground));
+    m_driverController.povUp().onTrue(new Lift(lift, arm, Height.L1));
+    m_driverController.povRight().onTrue(new Lift(lift, arm, Height.L2));
+    m_driverController.povDown().onTrue(new Lift(lift, arm, Height.L3));
+    m_driverController.povLeft().onTrue(new Lift(lift, arm, Height.L4));
+    m_driverController.x().onTrue(new Lift(lift, arm, Height.Stow));
   }
 
   /**

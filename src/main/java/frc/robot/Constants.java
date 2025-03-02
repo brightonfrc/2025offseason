@@ -24,9 +24,25 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class AngleLimitConstants{
+    //all in degrees, remember to convert to radians
+
+    //arm angle below horizontal
+    //in actuality, it can reach -154, but I can't see a reason why you would need to go that far
+    public static final double minArmAngle=-140;
+    //arm angle above horizontal
+    //in actuality, it can reach 124, but I can't see a reason why you would need to go that far
+    public static final double maxArmAngle=115;
+    public static final double maxLiftAngle=100;
+    public static final double minLiftAngle=10;
+  }
   public static class ArmConstants{
+    public static final double kWeightMomentOffsetFactor=0.01;
+    //get a engineer's square the next time I do this
+    public static final double angleAtZero=262;
+    public static final int decimalPlaces=2;
     public static final int armCANID=13;
-    public static final int armEncoderPort=0;
+    public static final int armEncoderPort=1;
     //its all in degrees, remember to convert
     public static final double[] desiredArmAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
@@ -77,11 +93,11 @@ public final class Constants {
     }
     public static final double armLength=27.4*0.0254;
     public static final double kPLift=0.6;
-    public static final double kILift=0.0;
+    public static final double kILift=0.04;
     public static final double kDLift=0;
     public static final double angleTolerance=Math.PI/180;
     //remember to adjust as more components are added
-    public static final double kWeightMomentOffsetFactor=0.0246;
+    public static final double kWeightMomentOffsetFactor=0.02;
 
     
   }

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DatisLift;
+import frc.robot.Constants.AngleLimitConstants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.LiftConstants;
 import frc.robot.Constants.LiftConstants.Height;
@@ -22,6 +23,7 @@ public class Lift extends Command {
   private PIDController liftController;
   private PIDController armController;
   private double previousPower;
+  // private Boolean emergencyStop;
   /** Creates a new Lift. */
   public Lift(DatisLift lift, Arm arm, Height heightDesired) {
     this.arm=arm;
@@ -29,31 +31,29 @@ public class Lift extends Command {
     double height=0;
     switch(heightDesired){
       case Ground:
-        height=LiftConstants.desiredLiftAngle[0];
+        angleRequired=LiftConstants.desiredLiftAngle[0];
         armAngleRequired=ArmConstants.desiredArmAngle[0];
         break;
       case L1:
-        height=LiftConstants.desiredLiftAngle[1];
+        angleRequired=LiftConstants.desiredLiftAngle[1];
         armAngleRequired=ArmConstants.desiredArmAngle[1];
         break;
       case L2:
-        height=LiftConstants.desiredLiftAngle[2];
+        angleRequired=LiftConstants.desiredLiftAngle[2];
         armAngleRequired=ArmConstants.desiredArmAngle[2];
         break;
       case L3:
-        height=LiftConstants.desiredLiftAngle[3];
+        angleRequired=LiftConstants.desiredLiftAngle[3];
         armAngleRequired=ArmConstants.desiredArmAngle[3];
         break;
       case L4:
-        height=LiftConstants.desiredLiftAngle[4];
+        angleRequired=LiftConstants.desiredLiftAngle[4];
         armAngleRequired=ArmConstants.desiredArmAngle[4];
         break;
       case Stow:
-        height=LiftConstants.desiredLiftAngle[5];
+        angleRequired=LiftConstants.desiredLiftAngle[5];
         armAngleRequired=ArmConstants.desiredArmAngle[5];
     }
-    SmartDashboard.putNumber("Lift Angle required", Math.toDegrees(angleRequired));
-    SmartDashboard.putNumber("Arm Angle required", armAngleRequired);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lift);
     armAngleRequired=Math.toRadians(armAngleRequired);
@@ -68,13 +68,17 @@ public class Lift extends Command {
     previousPower=0;
     armController= new PIDController(ArmConstants.kPArm, ArmConstants.kIArm, ArmConstants.kDArm);
     armController.setTolerance(ArmConstants.angleTolerance);
+    //remember to edit this as needed
     armController.setSetpoint(armAngleRequired);
+    // emergencyStop=false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Current lift angle", lift.getLiftAngle());
+    SmartDashboard.putNumber("Lift Angle required", Math.toDegrees(angleRequired));
+    SmartDashboard.putNumber("Arm Angle required", armAngleRequired);
+
     double currentAngle=Math.toRadians(lift.getLiftAngle());
     double desiredPower=liftController.calculate(currentAngle);
     //scaling power down to reduce strain on lift
@@ -92,15 +96,22 @@ public class Lift extends Command {
     desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
     SmartDashboard.putNumber("Power/Lift", desiredPower);
     previousPower=desiredPower;
-    // lift.setPower(desiredPower);
+    lift.setPower(desiredPower);
     // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
 
 
-    SmartDashboard.putNumber("Current arm angle", arm.getArmAngle());
     double currentArmAngle=Math.toRadians(arm.getArmAngle());
     double desiredArmPower=armController.calculate(currentArmAngle);
     SmartDashboard.putNumber("Power/Arm", desiredArmPower);
-    arm.setPower(desiredArmPower);
+    // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
+
+    //emergency end command if lift or arm angle outside of expected range
+    // if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
+    // ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
+    // ||(currentArmAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
+    // ||(currentArmAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
+    //   emergencyStop=true;
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -114,5 +125,6 @@ public class Lift extends Command {
   @Override
   public boolean isFinished() {
     return liftController.atSetpoint()&&armController.atSetpoint();
+    // return ((liftController.atSetpoint()&&armController.atSetpoint())||emergencyStop);
   }
 }
