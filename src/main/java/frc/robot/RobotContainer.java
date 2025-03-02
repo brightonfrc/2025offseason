@@ -88,7 +88,7 @@ public class RobotContainer {
 
   // TODO: Delete
   public void printPose() {
-    Optional<Transform3d> opt = m_poseEstimator.getRobotToTag(3);
+    Optional<Transform3d> opt = m_poseEstimator.getRobotToTag();
     if(opt.isPresent()) {
       Transform3d r2t = opt.get();
       SmartDashboard.putString("robot2tag", r2t.getTranslation().toString() + "Rotation3d(yaw="+r2t.getRotation().getZ()+", pitch="+r2t.getRotation().getY()+", roll="+r2t.getX()+")");

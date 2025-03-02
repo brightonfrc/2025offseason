@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import java.util.Optional;
 
 public class AprilTagAlignment extends Command {
-  private final int tagID;
   private final DriveSubsystem driveSubsystem;
   private final AprilTagPoseEstimator poseEstimator;
   private final PIDController movementXPID;
@@ -22,8 +21,7 @@ public class AprilTagAlignment extends Command {
 
   private final PIDController rotationPID;
 
-  public AprilTagAlignment(DriveSubsystem _driveSubsystem, AprilTagPoseEstimator _poseEstimator, int _tagID, double offsetX, double offsetY) {
-    tagID = _tagID;
+  public AprilTagAlignment(DriveSubsystem _driveSubsystem, AprilTagPoseEstimator _poseEstimator, double offsetX, double offsetY) {
     driveSubsystem = _driveSubsystem;
     poseEstimator = _poseEstimator;
     addRequirements(_driveSubsystem, _poseEstimator);
@@ -58,11 +56,11 @@ public class AprilTagAlignment extends Command {
 
   @Override
   public void execute() {
-    Optional<Transform3d> possibleTransform = poseEstimator.getRobotToTag(this.tagID);
+    Optional<Transform3d> possibleTransform = poseEstimator.getRobotToTag();
     SmartDashboard.putString("Robot to tag", possibleTransform.toString());
 
     if (possibleTransform.isPresent()) {
-
+      SmartDashboard.putBoolean("Tag in view", true);
       Transform3d transform = possibleTransform.get();
       Translation3d translation = transform.getTranslation();
       Rotation3d rotation = transform.getRotation();
@@ -88,7 +86,10 @@ public class AprilTagAlignment extends Command {
         driveSubsystem.drive(0, 0, rotationOutput, false);
       }
     }
-    else endCommand = true;
+    else {
+      SmartDashboard.putBoolean("Tag in view", false);
+      endCommand = true;
+    }
   }
 
   private Boolean endCommand = false;

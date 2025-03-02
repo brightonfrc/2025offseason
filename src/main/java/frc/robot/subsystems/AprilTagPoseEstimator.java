@@ -67,7 +67,7 @@ public class AprilTagPoseEstimator extends SubsystemBase {
     return Optional.empty();
   }
 
-  public Optional<Transform3d> getRobotToTag(int tagID) {
+  public Optional<Transform3d> getRobotToTag() {
     // TODO: Use one tag only / is this even required? Right now will extrapolate to transform from a tag without
     // seeing that tag.
 
@@ -77,17 +77,19 @@ public class AprilTagPoseEstimator extends SubsystemBase {
     if(globalPose.isEmpty()) {
       return Optional.empty();
     }
-
-    // Look for tag
-    String tagText = "";
-    List<AprilTag> tags = this.aprilTagFieldLayout.getTags();
-    for(AprilTag tag : tags) {
-      if(tag.ID == tagID) {
-        tagText += "." + tag.ID;
-        return Optional.of(tag.pose.minus(globalPose.get().estimatedPose));
-      }
+    else{
+      return Optional.of(globalPose.get().estimatedPose);
     }
-    SmartDashboard.putString("tags", tagText);
+    // Look for tag
+    // String tagText = "";
+    // List<AprilTag> tags = this.aprilTagFieldLayout.getTags();
+    // for(AprilTag tag : tags) {
+    //   if(tag.ID == tagID) {
+    //     tagText += "." + tag.ID;
+    //     return Optional.of(tag.pose.minus(globalPose.get().estimatedPose));
+    //   }
+    // }
+    // SmartDashboard.putString("tags", tagText);
 
     // Required tag not on field
     return Optional.empty();
