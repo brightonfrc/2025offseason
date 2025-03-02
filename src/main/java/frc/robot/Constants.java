@@ -107,20 +107,24 @@ public final class Constants {
   }
 
   public static final class AprilTagAlignmentConstants{
-    public static final double stopDisplacementX = 1.0;
-    public static final double stopDisplacementY = 1.0;
+    //0.5 m from reef
+    public static final double stopDisplacementX = 0.3;
+    //0.165 m left for left stick displacement
+    public static final double stopDisplacementY = 0.165;
 
-    public static final double errorIntervalPositions = 1.0;
-    public static final double errorIntervalRotations = 1.0;
+    //1 cm of error
+    public static final double errorIntervalPositions = 0.01;
+    //0.5 degrees of error
+    public static final double errorIntervalRotations = Math.PI/360;
 
     // PID (REPLACE WITH ACTUAL VALUES AT SOME POINT)
-    public static final double kTurnP = 1.0;
-    public static final double kTurnI = 1.0;
-    public static final double kTurnD = 1.0;
+    public static final double kTurnP = 0.25;
+    public static final double kTurnI = 0.1;
+    public static final double kTurnD = 0;
 
-    public static final double kMoveP = 1.0;
-    public static final double kMoveI = 1.0;
-    public static final double kMoveD = 1.0;
+    public static final double kMoveP = 0.1;
+    public static final double kMoveI = 0;
+    public static final double kMoveD = 0;
   }
 
   public static final class ModuleConstants {
@@ -203,7 +207,8 @@ public final class Constants {
 
   public static final class CVConstants {
     // TODO: Fill
-    public static final String kCameraName = "Arducam_OV9281_USB"; // Options: [USB]C270_HD_WEBCAM, [Innomaker]Arducam_OV9281_USB
+    // Before using AprilTagPoseEstimator, ensure the camera is calibrated, in 3D mode, and on an AprilTag pipeline at https://photonvision.local:5800
+    public static final String kCameraName = "Arducam_OV9281_USB_Camera"; // Options: [USB]C270_HD_WEBCAM, [Innomaker]Arducam_OV9281_USB_Camera
     public static final Transform3d kRobotToCamera = new Transform3d(new Translation3d(0.330, 0, 0.125), new Rotation3d(0,0,0)); // Remember y is sideways, x is forwards for our code
 
   }

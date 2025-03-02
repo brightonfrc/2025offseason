@@ -48,6 +48,9 @@ public class AprilTagPoseEstimator extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  /**
+   * Get the currently-visible AprilTags on the pitch, as a list.
+   */
   public List<PhotonTrackedTarget> getVisibleTags() {
     this.photonPoseEstimator.setReferencePose(this.prevEstimatedRobotPose.estimatedPose);
 
@@ -61,12 +64,22 @@ public class AprilTagPoseEstimator extends SubsystemBase {
     return new ArrayList<PhotonTrackedTarget>();
   }
   
+  /**
+   * Get the robot's pose using field-relative coordinates.
+   * @return Optional.empty if no AprilTags can be seen and thus the position cannot be derived, or Optional<the robot's pose>.
+   */
   public Optional<EstimatedRobotPose> getGlobalPose() {
     this.photonPoseEstimator.setReferencePose(this.prevEstimatedRobotPose.estimatedPose);
 
-    SmartDashboard.putString("latestResult", cam.getLatestResult().toString());
+    List<PhotonTrackedTarget> targets = cam.getLatestResult().targets;
+    SmartDashboard.putNumber("latestResult/count", targets.size());
+
+    for(int i = 0; i < targets.size(); i++) {
+      SmartDashboard.putString("latestResult/"+i, targets.get(i).fiducialId+"@"+targets.get(i).bestCameraToTarget.toString());
+    }
 
     Optional<EstimatedRobotPose> pose = photonPoseEstimator.update(cam.getLatestResult());
+
     if(pose.isPresent()) {
       this.prevEstimatedRobotPose = pose.get();
       return Optional.of(this.prevEstimatedRobotPose);
@@ -74,17 +87,18 @@ public class AprilTagPoseEstimator extends SubsystemBase {
     return Optional.empty();
   }
 
+  /**
+   * Get the transform from the robot to a certain AprilTag; the given AprilTag needs not be seen since
+   * right now this function extrapolates from the global pose.
+   * @param tagID The integer ID of the AprilTag the robot's position is compared to, from the field.
+   * @return The transform from the robot to the tag.
+   */
   public Optional<Transform3d> getRobotToTag(int tagID) {
-    // TODO: Use one tag only / is this even required? Right now will extrapolate to transform from a tag without
-    // seeing that tag.
 
     // Could not work out pose
     Optional<EstimatedRobotPose> globalPose = this.getGlobalPose();
     SmartDashboard.putString("globalPose", globalPose.toString());
-    if(globalPose.isEmpty()) {
-      return Optional.empty();
-    }
-
+    
     // Look for tag
     String tagText = "";
     List<AprilTag> tags = this.aprilTagFieldLayout.getTags();
