@@ -58,7 +58,7 @@ public final class Constants {
     public static final double minLiftAngle=10;
   }
   public static class ArmConstants{
-    public static final double kWeightMomentOffsetFactor=0.05;
+    public static final double kWeightMomentOffsetFactor=0.03;
     //get a engineer's square the next time I do this
     public static final double angleAtZero=140;
     public static final int decimalPlaces=2;
@@ -69,14 +69,14 @@ public final class Constants {
       //do note that ground height isn't actually at 0, because arm has minimum height
       0,//Ground intake (Not sure what angle this needs to be)
       -75,//L1
-      -70,//L2
+      -55,//L2
       -45,//L3
       45, //L4
       115 //stowed
     };
-    public static final double maxPower=0.3;
-    public static final double kPArm=0.1;
-    public static final double kIArm=0;
+    public static final double maxPower=0.5;
+    public static final double kPArm=0.15;
+    public static final double kIArm=0.0;
     public static final double kDArm=0;
     //1 degree tolerance
     public static final double angleTolerance=Math.PI/180;
@@ -90,7 +90,7 @@ public final class Constants {
     public static final int liftNeoCANID=11;
     public static final int reversedLiftNeoCANDID=12;
     //to ensure the arm doesn't tear itself apart. 
-    public static final double maxPower=0.9;
+    public static final double maxPower=0.7;
 
     //angles required
     public static final double[] desiredLiftAngle= new double[]{

@@ -67,6 +67,7 @@ public class Lift extends Command {
     liftController.setSetpoint(angleRequired);
     previousPower=0;
     armController= new PIDController(ArmConstants.kPArm, ArmConstants.kIArm, ArmConstants.kDArm);
+    armController.reset();
     armController.setTolerance(ArmConstants.angleTolerance);
     //remember to edit this as needed
     armController.setSetpoint(armAngleRequired);
@@ -99,17 +100,19 @@ public class Lift extends Command {
 
 
     double currentArmAngle=Math.toRadians(arm.getArmAngle());
-    double desiredArmPower=armController.calculate(currentArmAngle);
+    double desiredArmPower=armController.calculate(currentAngle+currentArmAngle);
+    desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
+    SmartDashboard.putNumber("Angle above ground", Math.toDegrees(currentAngle+currentArmAngle));
     SmartDashboard.putNumber("Power/Arm", desiredArmPower);
-    arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
-
+    // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
+    arm.setPower(desiredArmPower);
     //emergency end command if lift or arm angle outside of expected range
-    if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
-    ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
-    ||(currentArmAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
-    ||(currentArmAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
-      emergencyStop=true;
-    }
+    // if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
+    // ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
+    // ||(currentArmAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
+    // ||(currentArmAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
+    //   emergencyStop=true;
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -122,7 +125,7 @@ public class Lift extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return liftController.atSetpoint()&&armController.atSetpoint();
-    return ((liftController.atSetpoint()&&armController.atSetpoint())||emergencyStop);
+    return liftController.atSetpoint()&&armController.atSetpoint();
+    // return ((liftController.atSetpoint()&&armController.atSetpoint())||emergencyStop);
   }
 }

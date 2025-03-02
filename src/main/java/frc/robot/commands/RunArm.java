@@ -29,31 +29,25 @@ public class RunArm extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    emergencyStop=false;
+    // emergencyStop=false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putBoolean("command active", true);
+    // SmartDashboard.putBoolean("command active", true);
     double liftAngle=lift.getLiftAngle();
     double armAngle=arm.getArmAngle();
     SmartDashboard.putNumber("Angle above ground", liftAngle+armAngle);
     // SmartDashboard.putBoolean("Command active", true);
     double weightOffsetFactor=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(armAngle+liftAngle));
     if (positive){
-      arm.setPower(weightOffsetFactor);
-      // arm.setPower(0.08);
+      // arm.setPower(weightOffsetFactor);
+      arm.setPower(0.10);
     }
     else{
-      arm.setPower(weightOffsetFactor);
-      // arm.setPower(-0.08);
-    }
-    //emergency end command if lift or arm angle outside of expected range
-    if ((armAngle>AngleLimitConstants.maxArmAngle)
-    ||(armAngle<AngleLimitConstants.minArmAngle)){
-      emergencyStop=true;
-      SmartDashboard.putBoolean("command active", false);
+      // arm.setPower(weightOffsetFactor);
+      arm.setPower(-0.10);
     }
   }
 
@@ -66,6 +60,7 @@ public class RunArm extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return emergencyStop;
+    // return emergencyStop;
+    return false;
   }
 }

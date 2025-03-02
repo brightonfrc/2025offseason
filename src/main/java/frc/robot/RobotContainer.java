@@ -43,7 +43,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DatisLift lift= new DatisLift(new SparkMax(LiftConstants.liftNeoCANID, MotorType.kBrushless), new SparkMax(LiftConstants.reversedLiftNeoCANDID, MotorType.kBrushless), new DutyCycleEncoder(LiftConstants.encoderChannel));
-  private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushed));
+  private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushless));
   private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -95,8 +95,8 @@ public class RobotContainer {
     m_driverController.x().onTrue(new Lift(lift, arm, Height.Stow));
 
     
-    // m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
-    // m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
+    m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
+    m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true));
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false));
