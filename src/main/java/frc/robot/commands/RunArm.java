@@ -35,26 +35,25 @@ public class RunArm extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("command active", true);
     double liftAngle=lift.getLiftAngle();
     double armAngle=arm.getArmAngle();
     SmartDashboard.putNumber("Angle above ground", liftAngle+armAngle);
     // SmartDashboard.putBoolean("Command active", true);
-    // angle at max 108
-    // angle at zero 26.3
-    // angle at straight line is 262
     double weightOffsetFactor=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(armAngle+liftAngle));
     if (positive){
-      // arm.setPower(weightOffsetFactor);
-      arm.setPower(0.1);
+      arm.setPower(weightOffsetFactor);
+      // arm.setPower(0.08);
     }
     else{
-      // arm.setPower(-0.2+weightOffsetFactor);
-      arm.setPower(-0.1);
+      arm.setPower(weightOffsetFactor);
+      // arm.setPower(-0.08);
     }
     //emergency end command if lift or arm angle outside of expected range
-    if ((armAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
-    ||(armAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
+    if ((armAngle>AngleLimitConstants.maxArmAngle)
+    ||(armAngle<AngleLimitConstants.minArmAngle)){
       emergencyStop=true;
+      SmartDashboard.putBoolean("command active", false);
     }
   }
 

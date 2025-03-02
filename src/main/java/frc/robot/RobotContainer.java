@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.LiftConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.LiftConstants.Height;
@@ -13,11 +14,14 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Lift;
 import frc.robot.commands.RunLift;
 import frc.robot.commands.RunArm;
+import frc.robot.commands.RunIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DatisLift;
 import frc.robot.commands.FieldOrientedDrive;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -40,6 +44,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DatisLift lift= new DatisLift(new SparkMax(LiftConstants.liftNeoCANID, MotorType.kBrushless), new SparkMax(LiftConstants.reversedLiftNeoCANDID, MotorType.kBrushless), new DutyCycleEncoder(LiftConstants.encoderChannel));
   private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushed));
+  private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -70,14 +75,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    //remember that A button is bound to "slow Mode"
+    //remember that A on the xbox controllerbutton is bound to "slow Mode"
     
     
-    m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
-    m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
+    // m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
+    // m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
 
-    m_manualLiftController.R2().whileTrue(new RunArm(arm, true, lift));
-    m_manualLiftController.L2().whileTrue(new RunArm(arm, false, lift));
+    // m_manualLiftController.R2().whileTrue(new RunArm(arm, true, lift));
+    // m_manualLiftController.L2().whileTrue(new RunArm(arm, false, lift));
 
     //bind intake and outtake to L3 and R3?
 
@@ -88,6 +93,15 @@ public class RobotContainer {
     m_driverController.povDown().onTrue(new Lift(lift, arm, Height.L3));
     m_driverController.povLeft().onTrue(new Lift(lift, arm, Height.L4));
     m_driverController.x().onTrue(new Lift(lift, arm, Height.Stow));
+
+    
+    // m_driverController.rightBumper().whileTrue(new RunLift(lift, true));
+    // m_driverController.leftBumper().whileTrue(new RunLift(lift, false));
+
+    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true));
+    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false));
+
+    
   }
 
   /**

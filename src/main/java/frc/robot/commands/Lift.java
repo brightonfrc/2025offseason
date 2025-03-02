@@ -23,7 +23,7 @@ public class Lift extends Command {
   private PIDController liftController;
   private PIDController armController;
   private double previousPower;
-  // private Boolean emergencyStop;
+  private Boolean emergencyStop;
   /** Creates a new Lift. */
   public Lift(DatisLift lift, Arm arm, Height heightDesired) {
     this.arm=arm;
@@ -70,48 +70,46 @@ public class Lift extends Command {
     armController.setTolerance(ArmConstants.angleTolerance);
     //remember to edit this as needed
     armController.setSetpoint(armAngleRequired);
-    // emergencyStop=false;
+    emergencyStop=false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     SmartDashboard.putNumber("Lift Angle required", Math.toDegrees(angleRequired));
-    SmartDashboard.putNumber("Arm Angle required", armAngleRequired);
+    SmartDashboard.putNumber("Arm Angle required", Math.toDegrees(armAngleRequired));
 
     double currentAngle=Math.toRadians(lift.getLiftAngle());
     double desiredPower=liftController.calculate(currentAngle);
-    //scaling power down to reduce strain on lift
-    desiredPower=desiredPower*LiftConstants.maxPower;
-    if (Math.abs(desiredPower-previousPower)>LiftConstants.maximumPowerChange){
-      //controller demands excessive power change
-      if (desiredPower<0){
-        //reducing power
-        desiredPower=previousPower-LiftConstants.maximumPowerChange;
-      }
-      else{
-        desiredPower=previousPower+LiftConstants.maximumPowerChange;
-      }
-    }
+    // if (Math.abs(desiredPower-previousPower)>LiftConstants.maximumPowerChange){
+    //   //controller demands excessive power change
+    //   if (desiredPower<0){
+    //     //reducing power
+    //     desiredPower=previousPower-LiftConstants.maximumPowerChange;
+    //   }
+    //   else{
+    //     desiredPower=previousPower+LiftConstants.maximumPowerChange;
+    //   }
+    // }
     desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
     SmartDashboard.putNumber("Power/Lift", desiredPower);
-    previousPower=desiredPower;
+    // previousPower=desiredPower;
     lift.setPower(desiredPower);
-    // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
+    SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
 
 
     double currentArmAngle=Math.toRadians(arm.getArmAngle());
     double desiredArmPower=armController.calculate(currentArmAngle);
     SmartDashboard.putNumber("Power/Arm", desiredArmPower);
-    // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
+    arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
 
     //emergency end command if lift or arm angle outside of expected range
-    // if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
-    // ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
-    // ||(currentArmAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
-    // ||(currentArmAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
-    //   emergencyStop=true;
-    // }
+    if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
+    ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
+    ||(currentArmAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
+    ||(currentArmAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
+      emergencyStop=true;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -124,7 +122,7 @@ public class Lift extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return liftController.atSetpoint()&&armController.atSetpoint();
-    // return ((liftController.atSetpoint()&&armController.atSetpoint())||emergencyStop);
+    // return liftController.atSetpoint()&&armController.atSetpoint();
+    return ((liftController.atSetpoint()&&armController.atSetpoint())||emergencyStop);
   }
 }

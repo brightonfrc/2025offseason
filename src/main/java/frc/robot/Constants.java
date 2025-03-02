@@ -24,10 +24,26 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  //CAN ID list
+  //Swerve Drive 1-8
+    // public static final int kFrontLeftDrivingCanId = 1;
+    // public static final int kFrontLeftTurningCanId = 2;
+    // public static final int kFrontRightDrivingCanId = 7;
+    // public static final int kFrontRightTurningCanId = 8;
+    // public static final int kRearLeftDrivingCanId = 3;
+    // public static final int kRearLeftTurningCanId = 4;
+    // public static final int kRearRightDrivingCanId = 5;
+    // public static final int kRearRightTurningCanId = 6;
+  //Misc Motors 11-14
+    // public static final int liftNeoCANID=11;
+    // public static final int reversedLiftNeoCANDID=12;
+    // public static final int armCANID=13;
+    // public static final int intakeCanID=14;
+
   public static class IntakeConstants{
-    
-    public static final double intakePower=0.6;
-    public static final double outtakePower=0.2;
+    public static final int intakeCanID=14;
+    public static final double intakePower=-0.4;
+    public static final double outtakePower=0.4;
   }
   public static class AngleLimitConstants{
     //all in degrees, remember to convert to radians
@@ -36,15 +52,15 @@ public final class Constants {
     //in actuality, it can reach -154, but I can't see a reason why you would need to go that far
     public static final double minArmAngle=-140;
     //arm angle above horizontal
-    //in actuality, it can reach 124, but I can't see a reason why you would need to go that far
-    public static final double maxArmAngle=115;
+    //in actuality, it starts at 124
+    public static final double maxArmAngle=128;
     public static final double maxLiftAngle=100;
     public static final double minLiftAngle=10;
   }
   public static class ArmConstants{
-    public static final double kWeightMomentOffsetFactor=0.01;
+    public static final double kWeightMomentOffsetFactor=0.05;
     //get a engineer's square the next time I do this
-    public static final double angleAtZero=262;
+    public static final double angleAtZero=140;
     public static final int decimalPlaces=2;
     public static final int armCANID=13;
     public static final int armEncoderPort=1;
@@ -56,9 +72,9 @@ public final class Constants {
       -70,//L2
       -45,//L3
       45, //L4
-      160 //stowed
+      115 //stowed
     };
-    public static final double maxPower=0.2;
+    public static final double maxPower=0.3;
     public static final double kPArm=0.1;
     public static final double kIArm=0;
     public static final double kDArm=0;
@@ -69,7 +85,7 @@ public final class Constants {
     //for some reason at 0.04 the robot goes insane
     public static final double maximumPowerChange=0.05;
     public static final double maximumTilt=10;
-    public static final double angleAtPeakHeight=87.6;
+    public static final double angleAtPeakHeight=138.8;
     public static final int encoderChannel=0;
     public static final int liftNeoCANID=11;
     public static final int reversedLiftNeoCANDID=12;
