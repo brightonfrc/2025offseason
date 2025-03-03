@@ -24,11 +24,11 @@ public class Lift extends Command {
   private PIDController armController;
   private double previousPower;
   private Boolean emergencyStop;
+  private Height height;
   /** Creates a new Lift. */
   public Lift(DatisLift lift, Arm arm, Height heightDesired) {
     this.arm=arm;
     this.lift=lift;
-    double height=0;
     switch(heightDesired){
       case Ground:
         angleRequired=LiftConstants.desiredLiftAngle[0];
@@ -57,6 +57,7 @@ public class Lift extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lift);
     armAngleRequired=Math.toRadians(armAngleRequired);
+    height=heightDesired;
   }
 
   // Called when the command is initially scheduled.
@@ -72,13 +73,14 @@ public class Lift extends Command {
     //remember to edit this as needed
     armController.setSetpoint(armAngleRequired);
     emergencyStop=false;
+    lift.setHeight(height);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Lift Angle required", Math.toDegrees(angleRequired));
-    SmartDashboard.putNumber("Arm Angle required", Math.toDegrees(armAngleRequired));
+    // SmartDashboard.putNumber("Angle required/Lift", Math.toDegrees(angleRequired));
+    // SmartDashboard.putNumber("Angle required/Arm", Math.toDegrees(armAngleRequired));
 
     double currentAngle=Math.toRadians(lift.getLiftAngle());
     double desiredPower=liftController.calculate(currentAngle);
@@ -93,17 +95,17 @@ public class Lift extends Command {
     //   }
     // }
     desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
-    SmartDashboard.putNumber("Power/Lift", desiredPower);
+    // SmartDashboard.putNumber("Power/Lift", desiredPower);
     // previousPower=desiredPower;
     lift.setPower(desiredPower);
-    SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
+    // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
 
 
     double currentArmAngle=Math.toRadians(arm.getArmAngle());
     double desiredArmPower=armController.calculate(currentAngle+currentArmAngle);
     desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
-    SmartDashboard.putNumber("Angle above ground", Math.toDegrees(currentAngle+currentArmAngle));
-    SmartDashboard.putNumber("Power/Arm", desiredArmPower);
+    // SmartDashboard.putNumber("Angle/Arm", Math.toDegrees(currentAngle+currentArmAngle));
+    // SmartDashboard.putNumber("Power/Arm", desiredArmPower);
     // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
     arm.setPower(desiredArmPower);
     //emergency end command if lift or arm angle outside of expected range

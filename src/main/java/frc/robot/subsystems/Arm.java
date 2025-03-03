@@ -21,7 +21,7 @@ public class Arm extends SubsystemBase {
     this.encoder=encoder;
     armMotor=motor;
   }
-  /**Gets the arm angle above or below the horizontal. So being below would create a negative value 
+  /**Gets the arm angle above or below the horizontal formed by the lift. So being below would create a negative value if arm below lift
    * @returns arm angle in degrees
   */
   public double getArmAngle(){
@@ -35,7 +35,7 @@ public class Arm extends SubsystemBase {
       angleAboveHorizontal-=360;
     }
     // SmartDashboard.putNumber("Raw Arm angle", measuredAngle);
-    SmartDashboard.putNumber("Arm angle", angleAboveHorizontal);
+    // SmartDashboard.putNumber("Arm angle", angleAboveHorizontal);
     return angleAboveHorizontal;
   }
   /**Method used to set arm power ranging from -1 to 1 */
@@ -51,5 +51,7 @@ public class Arm extends SubsystemBase {
       }
     }
     armMotor.set(power);
+  }
+  public void lock(){
   }
 }

@@ -59,7 +59,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     
-    // m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+    m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
 
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
     configureBindings();
@@ -84,6 +84,7 @@ public class RobotContainer {
     // m_manualLiftController.R2().whileTrue(new RunArm(arm, true, lift));
     // m_manualLiftController.L2().whileTrue(new RunArm(arm, false, lift));
 
+
     //bind intake and outtake to L3 and R3?
 
     
@@ -95,11 +96,11 @@ public class RobotContainer {
     m_driverController.x().onTrue(new Lift(lift, arm, Height.Stow));
 
     
-    m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
-    m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
+    // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
+    // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 
-    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true));
-    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
+    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
 
     
   }
@@ -129,6 +130,10 @@ public class RobotContainer {
   }
   public void getLiftAngle(){
     lift.getLiftAngle();
+  }
+  /**Prints out the current height set by the controller onto SmartDashboard */
+  public void getHeightSet(){
+    lift.getHeight();
   }
 }
 

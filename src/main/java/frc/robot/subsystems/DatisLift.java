@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LiftConstants;
+import frc.robot.Constants.LiftConstants.Height;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -14,16 +15,18 @@ public class DatisLift extends SubsystemBase {
   private SparkMax liftNeo;
   private SparkMax reversedLiftNeo;
   private DutyCycleEncoder encoder;
+  private Height height;
   /** Creates a new DatisLift. */
   public DatisLift(SparkMax liftNeo, SparkMax reversedLiftNeo, DutyCycleEncoder encoder) {
     this.liftNeo=liftNeo;
     this.reversedLiftNeo=reversedLiftNeo;
     this.encoder=encoder;
+    height=Height.Stow;
   }
   /**Method to get the current lift angle (0 being at lowest level) */
   public double getLiftAngle(){
-    // SmartDashboard.putNumber("Raw Lift Angle", encoder.get()*360);
-    SmartDashboard.putNumber("Lift Angle", 90-encoder.get()*360+LiftConstants.angleAtPeakHeight);
+    SmartDashboard.putNumber("Raw Lift Angle", encoder.get()*360);
+    // SmartDashboard.putNumber("Lift Angle", 90-encoder.get()*360+LiftConstants.angleAtPeakHeight);
     return 90-encoder.get()*360+LiftConstants.angleAtPeakHeight;
   }
   /**Method used to set lift power ranging from -1 to 1 */
@@ -39,5 +42,12 @@ public class DatisLift extends SubsystemBase {
     liftNeo.set(power);
     reversedLiftNeo.set(-power);
   }
-  
+  /**Call this to store what the current height of the lift would be */
+  public void setHeight(Height height){
+    this.height=height;
+  }
+  public Height getHeight(){
+    SmartDashboard.putString("Current Height:", height.name());
+    return height;
+  }
 }

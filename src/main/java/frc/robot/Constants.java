@@ -68,18 +68,20 @@ public final class Constants {
     public static final double[] desiredArmAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
       0,//Ground intake (Not sure what angle this needs to be)
-      -75,//L1
+      -30,//L1
       -55,//L2
-      -45,//L3
-      45, //L4
-      115 //stowed
+      -40,//L3
+      60, //L4
+      115, //stowed
     };
-    public static final double maxPower=0.5;
-    public static final double kPArm=0.15;
-    public static final double kIArm=0.0;
+    public static final double maxPower=0.4;
+    public static final double kPArm=0.08;
+    public static final double kIArm=0.04;
     public static final double kDArm=0;
     //1 degree tolerance
     public static final double angleTolerance=Math.PI/180;
+
+    public static final double armFallingPower=-0.01;
   }
   public static class LiftConstants{
     //for some reason at 0.04 the robot goes insane
@@ -96,11 +98,11 @@ public final class Constants {
     public static final double[] desiredLiftAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
       0.22,//ground intake (placeholder) 
-      Math.PI/6,//L1
-      0.82357,//L2
-      1.2737,//L3
-      1.2099,//L4
-      0.22 //Stowed (placeholder)
+      Math.toRadians(30),//L1
+      Math.toRadians(57),//L2
+      1.50,//L3
+      1.53,//L4
+      Math.toRadians(15), //Stowed (placeholder)
     };
     
 
@@ -114,13 +116,13 @@ public final class Constants {
     }
     public static final double armLength=27.4*0.0254;
     public static final double kPLift=0.6;
-    public static final double kILift=0.04;
+    public static final double kILift=0.02;
     public static final double kDLift=0;
     public static final double angleTolerance=Math.PI/180;
     //remember to adjust as more components are added
     public static final double kWeightMomentOffsetFactor=0.02;
 
-    
+    public static final double liftFallingPower=-0.04;
   }
   public static class AccelerationLimiterConstants{
     public static double maximumAcceleration=0.02;
@@ -132,20 +134,6 @@ public final class Constants {
     public static final double maximumSpeedReduced=0.10;
     public static final double maximumRotationSpeedRobotOriented=0.005;
   }
-
-  public static class GameSetup {
-    public static final double startAngleOffset = 0; // Degrees
-    public static final boolean isFieldRelative = false; // true: field relative; false: robot relative
-    public static final String pathPlannerAutoStrategy = "Speaker 1 Note Right";
-  }
-
-  public static class CANIds {
-
-    public static final int kLeftShooterMotor = 11;
-    public static final int kRightShooterMotor = 10;
-    public static final int kIntakeMotor = 9;
-    // public static final int kLiftMotor = 12;
-    }
   public static final class FieldOrientedDriveConstants{
     public static final double kFODP = 0.25;
     public static final double kFODI = 0.3;
