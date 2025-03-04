@@ -50,18 +50,22 @@ public class Lift extends Command {
         angleRequired=LiftConstants.desiredLiftAngle[4];
         armAngleRequired=ArmConstants.desiredArmAngle[4];
         break;
-      case Stow:
+      case Algae2:
         angleRequired=LiftConstants.desiredLiftAngle[5];
         armAngleRequired=ArmConstants.desiredArmAngle[5];
-      case Algae2:
+        break;
+      case Algae3:
         angleRequired=LiftConstants.desiredLiftAngle[6];
         armAngleRequired=ArmConstants.desiredArmAngle[6];
-      case Algae3:
+        break;
+      case CoralStation:
         angleRequired=LiftConstants.desiredLiftAngle[7];
         armAngleRequired=ArmConstants.desiredArmAngle[7];
-      case CoralStation:
+        break;
+      case StartingConfig:
         angleRequired=LiftConstants.desiredLiftAngle[8];
         armAngleRequired=ArmConstants.desiredArmAngle[8];
+        break;
     }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lift);
@@ -89,7 +93,7 @@ public class Lift extends Command {
   @Override
   public void execute() {
     // SmartDashboard.putNumber("Angle required/Lift", Math.toDegrees(angleRequired));
-    // SmartDashboard.putNumber("Angle required/Arm", Math.toDegrees(armAngleRequired));
+    SmartDashboard.putNumber("Angle required/Arm", Math.toDegrees(armAngleRequired));
 
     double currentAngle=Math.toRadians(lift.getLiftAngle());
     double desiredPower=liftController.calculate(currentAngle);
@@ -109,21 +113,38 @@ public class Lift extends Command {
     lift.setPower(desiredPower);
     // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
 
-
-    double currentArmAngle=Math.toRadians(arm.getArmAngle());
-    double desiredArmPower=armController.calculate(currentAngle+currentArmAngle);
-    desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
-    // SmartDashboard.putNumber("Angle/Arm", Math.toDegrees(currentAngle+currentArmAngle));
-    // SmartDashboard.putNumber("Power/Arm", desiredArmPower);
-    // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
-    arm.setPower(desiredArmPower);
-    //emergency end command if lift or arm angle outside of expected range
-    // if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
-    // ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
-    // ||(currentArmAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
-    // ||(currentArmAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
-    //   emergencyStop=true;
-    // }
+    if (height!=Height.StartingConfig) { 
+      double currentArmAngle=Math.toRadians(arm.getArmAngle());
+      double desiredArmPower=armController.calculate(currentAngle+currentArmAngle);
+      desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
+      SmartDashboard.putNumber("Angle/Arm", Math.toDegrees(currentAngle+currentArmAngle));
+      SmartDashboard.putNumber("Power/Arm", desiredArmPower);
+      // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
+      arm.setPower(desiredArmPower);
+      //emergency end command if lift or arm angle outside of expected range
+      // if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
+      // ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
+      // ||(currentArmAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
+      // ||(currentArmAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
+      //   emergencyStop=true;
+      // }
+    }
+    else if (height==Height.StartingConfig&&liftController.atSetpoint()){
+      double currentArmAngle=Math.toRadians(arm.getArmAngle());
+      double desiredArmPower=armController.calculate(currentAngle+currentArmAngle);
+      desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
+      SmartDashboard.putNumber("Angle/Arm", Math.toDegrees(currentAngle+currentArmAngle));
+      SmartDashboard.putNumber("Power/Arm", desiredArmPower);
+      // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
+      arm.setPower(desiredArmPower);
+      //emergency end command if lift or arm angle outside of expected range
+      // if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
+      // ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
+      // ||(currentArmAngle>Math.toRadians(AngleLimitConstants.maxArmAngle))
+      // ||(currentArmAngle<Math.toRadians(AngleLimitConstants.minArmAngle))){
+      //   emergencyStop=true;
+      // }
+    }
   }
 
   // Called once the command ends or is interrupted.
