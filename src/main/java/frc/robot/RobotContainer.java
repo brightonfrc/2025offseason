@@ -14,9 +14,11 @@ import frc.robot.subsystems.AprilTagPoseEstimator;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -88,16 +90,13 @@ public class RobotContainer {
 
   // TODO: Delete
   public void printPose() {
-    Optional<Transform3d> opt = m_poseEstimator.getRobotToTag();
+    Optional<Transform3d> opt = m_poseEstimator.getRobotToSeenTag();
     if(opt.isPresent()) {
       Transform3d r2t = opt.get();
       SmartDashboard.putString("robot2tag", r2t.getTranslation().toString() + "Rotation3d(yaw="+r2t.getRotation().getZ()+", pitch="+r2t.getRotation().getY()+", roll="+r2t.getX()+")");
       SmartDashboard.putNumber("robot2tag/t/x", r2t.getTranslation().getX());
       SmartDashboard.putNumber("robot2tag/t/y", r2t.getTranslation().getY());
-      SmartDashboard.putNumber("robot2tag/t/z", r2t.getTranslation().getZ());
       SmartDashboard.putNumber("robot2tag/r/y", r2t.getRotation().getZ());
-      SmartDashboard.putNumber("robot2tag/r/p", r2t.getRotation().getY());
-      SmartDashboard.putNumber("robot2tag/r/r", r2t.getX());
     }
   }
 }

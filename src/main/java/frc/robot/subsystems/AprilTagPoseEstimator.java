@@ -113,4 +113,17 @@ public class AprilTagPoseEstimator extends SubsystemBase {
     // Required tag not on field
     return Optional.empty();
   }
+/**
+ * Get the transform from the robot to the first visible AprilTag.
+ * @return The transform from the robot to the tag.
+ */
+  public Optional<Transform3d> getRobotToSeenTag() {
+    List<PhotonTrackedTarget> tags = this.getVisibleTags();
+    if(tags.size() == 0) {
+      return Optional.empty();
+    } else {
+      PhotonTrackedTarget tag = tags.get(0);
+      return this.getRobotToTag(tag.fiducialId);
+    }
+  }
 }

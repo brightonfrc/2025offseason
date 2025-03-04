@@ -11,9 +11,12 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+
+import java.util.List;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class AprilTagAlignment extends Command {
   private final DriveSubsystem driveSubsystem;
@@ -59,21 +62,20 @@ public class AprilTagAlignment extends Command {
 
   @Override
   public void execute() {
-    // Using field-relative position, as spamtactics set.
-    // TODO: Move back to AprilTag-relative pose (getRobotToTag)?
-    Optional<EstimatedRobotPose> pose = poseEstimator.getGlobalPose();
+    // Using displacement from first visible tag
+    Optional<Transform3d> pose = poseEstimator.getRobotToSeenTag();
     
-    Optional<Pose3d> possibleTransform;
+    Optional<Transform3d> possibleTransform;
     if(pose.isEmpty()) {
       possibleTransform = Optional.empty();
     } else {
-      possibleTransform = Optional.of(pose.get().estimatedPose);
+      possibleTransform = Optional.of(pose.get());
     }
     SmartDashboard.putString("Robot to tag", possibleTransform.toString());
 
     if (possibleTransform.isPresent()) {
       SmartDashboard.putBoolean("Tag in view", true);
-      Pose3d transform = possibleTransform.get();
+      Transform3d transform = possibleTransform.get();
       Translation3d translation = transform.getTranslation();
       Rotation3d rotation = transform.getRotation();
 
