@@ -101,6 +101,7 @@ public class RobotContainer {
     m_manualLiftController.povUp().onTrue(new Lift(lift, arm, Height.Algae2));
     m_manualLiftController.povRight().onTrue(new Lift(lift, arm, Height.Algae3));
     m_manualLiftController.povDown().onTrue(new Lift(lift, arm, Height.Ground));
+    m_manualLiftController.povLeft().onTrue(new Lift(lift, arm, Height.Hang));
     
     // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
     // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));

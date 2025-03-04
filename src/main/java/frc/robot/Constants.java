@@ -76,6 +76,7 @@ public final class Constants {
       -99, //Algae3 (placeholder)
       20, //CoralStation 
       -110 //StartingConfig 
+      -100 //hang (placeholder)
     };
     public static final double maxPower=0.4;
     public static final double kPArm=0.13;
@@ -108,7 +109,8 @@ public final class Constants {
       Math.toRadians(50),//Algae2 
       Math.toRadians(74),//Algae3 (placeholder)
       Math.toRadians(33),//CoralStation 
-      Math.toRadians(35)//StartingConfig 
+      Math.toRadians(35),//StartingConfig 
+      Math.toRadians(20)// hang (placeholder)
     };
     
 
@@ -121,7 +123,8 @@ public final class Constants {
       StartingConfig, 
       Algae2, //algae between L2 and L3
       Algae3, //algae between L3 and L4
-      CoralStation
+      CoralStation,
+      Hang
     }
     public static final double armLength=27.4*0.0254;
     public static final double kPLift=0.6;
