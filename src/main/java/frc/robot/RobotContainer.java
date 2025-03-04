@@ -88,12 +88,16 @@ public class RobotContainer {
     //bind intake and outtake to L3 and R3?
 
     
-    m_driverController.y().onTrue(new Lift(lift, arm, Height.Ground));
+    m_driverController.y().onTrue(new Lift(lift, arm, Height.CoralStation));
     m_driverController.povUp().onTrue(new Lift(lift, arm, Height.L1));
     m_driverController.povRight().onTrue(new Lift(lift, arm, Height.L2));
     m_driverController.povDown().onTrue(new Lift(lift, arm, Height.L3));
     m_driverController.povLeft().onTrue(new Lift(lift, arm, Height.L4));
     m_driverController.x().onTrue(new Lift(lift, arm, Height.Stow));
+
+    m_manualLiftController.povUp().onTrue(new Lift(lift, arm, Height.Algae2));
+    m_manualLiftController.povRight().onTrue(new Lift(lift, arm, Height.Algae3));
+    m_manualLiftController.povDown().onTrue(new Lift(lift, arm, Height.Ground));
 
     
     // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));

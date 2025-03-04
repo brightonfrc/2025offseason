@@ -53,6 +53,15 @@ public class Lift extends Command {
       case Stow:
         angleRequired=LiftConstants.desiredLiftAngle[5];
         armAngleRequired=ArmConstants.desiredArmAngle[5];
+      case Algae2:
+        angleRequired=LiftConstants.desiredLiftAngle[6];
+        armAngleRequired=ArmConstants.desiredArmAngle[6];
+      case Algae3:
+        angleRequired=LiftConstants.desiredLiftAngle[7];
+        armAngleRequired=ArmConstants.desiredArmAngle[7];
+      case CoralStation:
+        angleRequired=LiftConstants.desiredLiftAngle[8];
+        armAngleRequired=ArmConstants.desiredArmAngle[8];
     }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lift);

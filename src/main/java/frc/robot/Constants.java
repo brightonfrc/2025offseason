@@ -67,16 +67,19 @@ public final class Constants {
     //its all in degrees, remember to convert
     public static final double[] desiredArmAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
-      0,//Ground intake (Not sure what angle this needs to be)
+      0,//Ground intake (placeholder)
       -30,//L1
       -55,//L2
       -40,//L3
       60, //L4
-      115, //stowed
+      120, //stowed (placeholder)
+      -55, //Algae2 (placeholder)
+      -55, //Algae3 (placeholder)
+      20 //CoralStation (placeholder)
     };
     public static final double maxPower=0.4;
     public static final double kPArm=0.08;
-    public static final double kIArm=0.04;
+    public static final double kIArm=0.03;
     public static final double kDArm=0;
     //1 degree tolerance
     public static final double angleTolerance=Math.PI/180;
@@ -100,9 +103,12 @@ public final class Constants {
       0.22,//ground intake (placeholder) 
       Math.toRadians(30),//L1
       Math.toRadians(57),//L2
-      1.50,//L3
-      1.53,//L4
+      Math.toRadians(86),//L3 
+      Math.toRadians(87),//L4
       Math.toRadians(15), //Stowed (placeholder)
+      Math.toRadians(65), //Algae2 (placeholder)
+      Math.toRadians(85),  //Algae3 (placeholder)
+      Math.toRadians(30) //CoralStation (placeholder)
     };
     
 
@@ -112,7 +118,10 @@ public final class Constants {
       L2,
       L3,
       L4,
-      Stow
+      Stow, 
+      Algae2, //algae between L2 and L3
+      Algae3, //algae between L3 and L4
+      CoralStation
     }
     public static final double armLength=27.4*0.0254;
     public static final double kPLift=0.6;
