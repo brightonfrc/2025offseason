@@ -4,12 +4,19 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ColourSensorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FieldOrientedDrive;
+import frc.robot.subsystems.ColourSensor;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+
+import com.revrobotics.ColorSensorV3;
+
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,7 +35,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
   new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  
+  private final ColourSensor colourSensor= new ColourSensor(new ColorSensorV3(I2C.Port.kOnboard), new Color(ColourSensorConstants.reefColorHex));
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -67,5 +74,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
+  }
+  public void CheckReefAligned(){
+    colourSensor.CheckReefAligned();
   }
 }
