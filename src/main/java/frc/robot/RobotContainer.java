@@ -35,7 +35,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
   new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  private final ColourSensor colourSensor= new ColourSensor(new ColorSensorV3(I2C.Port.kOnboard), new Color(ColourSensorConstants.reefColorHex));
+  private final ColourSensor colourSensor= new ColourSensor(new ColorSensorV3(I2C.Port.kOnboard));
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
