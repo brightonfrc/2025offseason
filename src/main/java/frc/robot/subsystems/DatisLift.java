@@ -16,6 +16,7 @@ public class DatisLift extends SubsystemBase {
   private SparkMax reversedLiftNeo;
   private DutyCycleEncoder encoder;
   private Height height;
+  private double previousPowerSet;
   /** Creates a new DatisLift. */
   public DatisLift(SparkMax liftNeo, SparkMax reversedLiftNeo, DutyCycleEncoder encoder) {
     this.liftNeo=liftNeo;
@@ -23,6 +24,7 @@ public class DatisLift extends SubsystemBase {
     this.encoder=encoder;
     //just a placeholder
     height=Height.CoralStation;
+    previousPowerSet=0;
   }
   /**Method to get the current lift angle (0 being at lowest level) */
   public double getLiftAngle(){
@@ -42,6 +44,7 @@ public class DatisLift extends SubsystemBase {
     }
     liftNeo.set(power);
     reversedLiftNeo.set(-power);
+    previousPowerSet=power;
   }
   /**Call this to store what the current height of the lift would be */
   public void setHeight(Height height){
@@ -50,5 +53,8 @@ public class DatisLift extends SubsystemBase {
   public Height getHeight(){
     SmartDashboard.putString("Current Height:", height.name());
     return height;
+  }
+  public double getPreviousPowerSet(){
+    return previousPowerSet;
   }
 }

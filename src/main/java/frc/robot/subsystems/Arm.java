@@ -16,10 +16,12 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private DutyCycleEncoder encoder;
   private SparkMax armMotor;
-
+  private double previousPowerSet;
+  
   public Arm(DutyCycleEncoder encoder, SparkMax motor) {
     this.encoder=encoder;
     armMotor=motor;
+    previousPowerSet=0;
   }
   /**Gets the arm angle above or below the horizontal formed by the lift. So being below would create a negative value if arm below lift
    * @returns arm angle in degrees
@@ -51,7 +53,11 @@ public class Arm extends SubsystemBase {
       }
     }
     armMotor.set(power);
+    previousPowerSet=power;
   }
   public void lock(){
+  }
+  public double getPreviousPowerSet(){
+    return previousPowerSet;
   }
 }

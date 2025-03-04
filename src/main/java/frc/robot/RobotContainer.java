@@ -13,6 +13,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Lift;
 import frc.robot.commands.RunLift;
+import frc.robot.commands.SustainLift;
 import frc.robot.commands.RunArm;
 import frc.robot.commands.RunIntake;
 import frc.robot.subsystems.Arm;
@@ -53,13 +54,14 @@ public class RobotContainer {
   
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
   // private Lift goToGround=new Lift(lift, Height.Ground);
-
+  private final SustainLift sustainLift = new SustainLift(lift, arm);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     
     m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+    lift.setDefaultCommand(sustainLift);
 
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
     configureBindings();

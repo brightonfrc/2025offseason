@@ -72,13 +72,13 @@ public final class Constants {
       -55,//L2
       -30,//L3
       60, //L4
-      -80, //Algae2 (placeholder)
+      -80, //Algae2 
       -99, //Algae3 (placeholder)
-      20, //CoralStation (placeholder)
-      -110 //StartingConfig (placeholder)
+      20, //CoralStation 
+      -110 //StartingConfig 
     };
     public static final double maxPower=0.4;
-    public static final double kPArm=0.14;
+    public static final double kPArm=0.13;
     public static final double kIArm=0.03;
     public static final double kDArm=0;
     //1 degree tolerance
@@ -104,11 +104,11 @@ public final class Constants {
       Math.toRadians(30),//L1
       Math.toRadians(61),//L2
       Math.toRadians(86),//L3 
-      Math.toRadians(83),//L4
-      Math.toRadians(50),//Algae2 (placeholder)
+      Math.toRadians(80),//L4
+      Math.toRadians(50),//Algae2 
       Math.toRadians(74),//Algae3 (placeholder)
-      Math.toRadians(30),//CoralStation (placeholder)
-      Math.toRadians(35)//StartingConfig (placeholder)
+      Math.toRadians(33),//CoralStation 
+      Math.toRadians(35)//StartingConfig 
     };
     
 
@@ -131,7 +131,8 @@ public final class Constants {
     //remember to adjust as more components are added
     public static final double kWeightMomentOffsetFactor=0.02;
 
-    public static final double liftFallingPower=-0.06;
+    public static final double liftFallingPower=-0.25;
+    public static final double L4OuttakeAngle=Math.toRadians(75);
   }
   public static class AccelerationLimiterConstants{
     public static double maximumAcceleration=0.02;
