@@ -52,7 +52,7 @@ public class FieldOrientedDrive extends Command {
         bearingPIDController.enableContinuousInput(0, 2*Math.PI);
         previousXSpeed=0;
         previousYSpeed=0;
-        driveSubsystem.resetGyro();
+        // driveSubsystem.resetGyro();
         goalBearing=0;
         slowModeActive=false;
         hasToggled=false;
