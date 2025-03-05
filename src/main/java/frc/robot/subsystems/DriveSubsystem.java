@@ -49,6 +49,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  public double getTilt(){
+    if(Math.abs(m_gyro.getPitch())>Math.abs(m_gyro.getRoll()))
+    {
+      return Math.abs(m_gyro.getPitch());
+    } else{
+      return Math.abs(m_gyro.getRoll());
+    }
+  }
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(

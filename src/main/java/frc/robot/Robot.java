@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+
 import choreo.auto.AutoFactory;
+import edu.wpi.first.apriltag.AprilTagPoseEstimator;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -44,6 +46,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -57,7 +60,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -86,7 +89,17 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // if (m_robotContainer.checkTilt()){
+    //   m_robotContainer.StowLift();
+    // }
+    m_robotContainer.getLiftAngle();
+    m_robotContainer.getArmAngle();
+    m_robotContainer.getHeightSet();
+
+    // m_robotContainer.printPose();
+
+  }
 
   @Override
   public void testInit() {
