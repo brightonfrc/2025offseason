@@ -92,17 +92,17 @@ public class RobotContainer {
     
     //remember that A on the xbox controllerbutton is bound to "slow Mode"
     
-    m_driverController.y().onTrue(new Lift(lift, arm, Height.CoralStation));
-    m_driverController.povUp().onTrue(new Lift(lift, arm, Height.L1));
-    m_driverController.povRight().onTrue(new Lift(lift, arm, Height.L2));
-    m_driverController.povDown().onTrue(new Lift(lift, arm, Height.L3));
-    m_driverController.povLeft().onTrue(new Lift(lift, arm, Height.L4));
-    m_driverController.x().onTrue(new Lift(lift, arm, Height.StartingConfig));
+    m_driverController.y().onTrue(new JankLift(lift, arm, Height.CoralStation));
+    m_driverController.povUp().onTrue(new JankLift(lift, arm, Height.L1));
+    m_driverController.povRight().onTrue(new JankLift(lift, arm, Height.L2));
+    m_driverController.povDown().onTrue(new JankLift(lift, arm, Height.L3));
+    m_driverController.povLeft().onTrue(new JankLift(lift, arm, Height.L4));
+    m_driverController.x().onTrue(new JankLift(lift, arm, Height.StartingConfig));
     
-    m_manualLiftController.povUp().onTrue(new Lift(lift, arm, Height.Algae2));
-    m_manualLiftController.povRight().onTrue(new Lift(lift, arm, Height.Algae3));
-    m_manualLiftController.povDown().onTrue(new Lift(lift, arm, Height.Ground));
-    m_manualLiftController.povLeft().onTrue(new Lift(lift, arm, Height.HangStart));
+    m_manualLiftController.povUp().onTrue(new JankLift(lift, arm, Height.Algae2));
+    m_manualLiftController.povRight().onTrue(new JankLift(lift, arm, Height.Algae3));
+    m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
+    m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
     m_manualLiftController.square().onTrue(new HangRobot(lift));
     // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
     // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
