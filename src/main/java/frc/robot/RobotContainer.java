@@ -20,6 +20,7 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -71,9 +72,9 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     //align right
-    m_driverController.leftBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, AprilTagAlignmentConstants.stopDisplacementY));
+    m_driverController.leftBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX-AprilTagAlignmentConstants.cameraDisplacement, AprilTagAlignmentConstants.stopDisplacementY));
     //align left
-    m_driverController.rightBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY));
+    m_driverController.rightBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX-AprilTagAlignmentConstants.cameraDisplacement, -AprilTagAlignmentConstants.stopDisplacementY));
   }
 
   /**
@@ -85,7 +86,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // SmartDashboard.putString("Auto", "AprilTag Alignment");
     return null;
-    // return new AprilTagAlignment(m_driveSubsystem, new AprilTagPoseEstimator(), 3, 0.5, 0);
+    // return new AprilTagAlignment(m_driveSubsystem, new AprilTagPoseEstimator(), 3, 0.5);
   }
 
   // TODO: Delete
@@ -93,10 +94,10 @@ public class RobotContainer {
     Optional<Transform3d> opt = m_poseEstimator.getRobotToSeenTag();
     if(opt.isPresent()) {
       Transform3d r2t = opt.get();
-      SmartDashboard.putString("robot2tag", r2t.getTranslation().toString() + "Rotation3d(yaw="+r2t.getRotation().getZ()+", pitch="+r2t.getRotation().getY()+", roll="+r2t.getX()+")");
+      // SmartDashboard.putString("robot2tag", r2t.getTranslation().toString() + "Rotation3d(yaw="+r2t.getRotation().getZ()+", pitch="+r2t.getRotation().getY()+", roll="+r2t.getX()+")");
       SmartDashboard.putNumber("robot2tag/t/x", r2t.getTranslation().getX());
       SmartDashboard.putNumber("robot2tag/t/y", r2t.getTranslation().getY());
-      SmartDashboard.putNumber("robot2tag/r/y", r2t.getRotation().getZ());
+      SmartDashboard.putNumber("robot2tag/r/yaw", r2t.getRotation().getZ());
     }
   }
 }

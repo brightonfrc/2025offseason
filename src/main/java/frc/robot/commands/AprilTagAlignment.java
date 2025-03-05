@@ -49,10 +49,11 @@ public class AprilTagAlignment extends Command {
       AprilTagAlignmentConstants.kTurnI,
       AprilTagAlignmentConstants.kTurnD
     );
-
-  rotationPID.setSetpoint(0);
-  movementXPID.setSetpoint(offsetX);
-  movementYPID.setSetpoint(offsetY);
+    //at PI the robot is aligned. 
+    rotationPID.enableContinuousInput(-Math.PI, Math.PI);
+    rotationPID.setSetpoint(Math.PI);
+    movementXPID.setSetpoint(offsetX);
+    movementYPID.setSetpoint(offsetY);
 
     
     // Set tolerances for stopping
@@ -60,18 +61,20 @@ public class AprilTagAlignment extends Command {
     movementYPID.setTolerance(AprilTagAlignmentConstants.errorIntervalPositions);
   }
 
+  private Boolean tagDisappeared = false;
+
+  @Override
+  public void initialize() {
+    tagDisappeared=false;
+  }
+  
   @Override
   public void execute() {
     // Using displacement from first visible tag
     Optional<Transform3d> pose = poseEstimator.getRobotToSeenTag();
     
     Optional<Transform3d> possibleTransform;
-    if(pose.isEmpty()) {
-      possibleTransform = Optional.empty();
-    } else {
-      possibleTransform = Optional.of(pose.get());
-    }
-    SmartDashboard.putString("Robot to tag", possibleTransform.toString());
+    possibleTransform = pose;
 
     if (possibleTransform.isPresent()) {
       SmartDashboard.putBoolean("Tag in view", true);
@@ -83,6 +86,7 @@ public class AprilTagAlignment extends Command {
       double y = translation.getY(); // Left/Right
 
       double yaw = rotation.getZ();  // Rotation (Yaw)
+      yaw = (yaw + 2*Math.PI) % (2 * Math.PI);
 
       double rotationOutput = rotationPID.calculate(yaw);
 
@@ -90,7 +94,7 @@ public class AprilTagAlignment extends Command {
         // Use PID  to calculate the movement speed needed to reduce error
         double movementSpeed = movementXPID.calculate(x); // 
         double strafeSpeed = movementYPID.calculate(y);   // 
-
+        
         // Drive the robot towards the AprilTag
         driveSubsystem.drive(-movementSpeed, strafeSpeed, 0, false); 
         // don't invert strafespeed because y is also inversed (positive = left) 
@@ -102,11 +106,9 @@ public class AprilTagAlignment extends Command {
     }
     else {
       SmartDashboard.putBoolean("Tag in view", false);
-      endCommand = true;
+      tagDisappeared = true;
     }
   }
-
-  private Boolean endCommand = false;
 
   @Override
   public void end(boolean interrupted) {
@@ -115,6 +117,8 @@ public class AprilTagAlignment extends Command {
 
   @Override
   public boolean isFinished() {
-    return (movementXPID.atSetpoint() && movementYPID.atSetpoint() && rotationPID.atSetpoint()) || endCommand; // Stops when within error tolerance
+    Boolean atSetpoint = (movementXPID.atSetpoint() && movementYPID.atSetpoint() && rotationPID.atSetpoint());
+    System.out.println("At Setpoint " + atSetpoint + "; tagDisappeared " + tagDisappeared);
+    return atSetpoint || tagDisappeared; // Stops when within error tolerance
   }
 }

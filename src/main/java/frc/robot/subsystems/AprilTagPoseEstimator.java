@@ -59,8 +59,14 @@ public class AprilTagPoseEstimator extends SubsystemBase {
     Optional<EstimatedRobotPose> pose = photonPoseEstimator.update(cam.getLatestResult());
     if(pose.isPresent()) {
       this.prevEstimatedRobotPose = pose.get();
+      String result = "";
+      for(int i = 0; i < this.prevEstimatedRobotPose.targetsUsed.size(); i++) {
+        result += ":" + this.prevEstimatedRobotPose.targetsUsed.get(i).fiducialId;
+      }
+      SmartDashboard.putString("Visible Tags", result);
       return this.prevEstimatedRobotPose.targetsUsed;
     }
+    SmartDashboard.putString("Visible Tags", "(none)");
     return new ArrayList<PhotonTrackedTarget>();
   }
   
@@ -72,10 +78,10 @@ public class AprilTagPoseEstimator extends SubsystemBase {
     this.photonPoseEstimator.setReferencePose(this.prevEstimatedRobotPose.estimatedPose);
 
     List<PhotonTrackedTarget> targets = cam.getLatestResult().targets;
-    SmartDashboard.putNumber("latestResult/count", targets.size());
+    // SmartDashboard.putNumber("latestResult/count", targets.size());
 
     for(int i = 0; i < targets.size(); i++) {
-      SmartDashboard.putString("latestResult/"+i, targets.get(i).fiducialId+"@"+targets.get(i).bestCameraToTarget.toString());
+      // SmartDashboard.putString("latestResult/"+i, targets.get(i).fiducialId+"@"+targets.get(i).bestCameraToTarget.toString());
     }
 
     Optional<EstimatedRobotPose> pose = photonPoseEstimator.update(cam.getLatestResult());
@@ -97,15 +103,20 @@ public class AprilTagPoseEstimator extends SubsystemBase {
 
     // Could not work out pose
     Optional<EstimatedRobotPose> globalPose = this.getGlobalPose();
-    SmartDashboard.putString("globalPose", globalPose.toString());
+    // SmartDashboard.putString("globalPose", globalPose.toString());
     
+    if(globalPose.isEmpty()) return Optional.empty();
+
     // Look for tag
     String tagText = "";
     List<AprilTag> tags = this.aprilTagFieldLayout.getTags();
     for(AprilTag tag : tags) {
       if(tag.ID == tagID) {
         tagText += "." + tag.ID;
-        return Optional.of(tag.pose.minus(globalPose.get().estimatedPose));
+        Pose3d poseDifference = tag.pose.relativeTo(globalPose.get().estimatedPose);
+        // double yawRobotToTag = tag.pose.getRotation().getZ() - poseDifferenceFieldCoordinates.getRotation().getZ();
+        // Transform3d poseDifferenceTagCoordinates = poseDifferenceFieldCoordinates.;
+        return Optional.of(new Transform3d(poseDifference.getTranslation(), poseDifference.getRotation()));
       }
     }
     SmartDashboard.putString("tags", tagText);

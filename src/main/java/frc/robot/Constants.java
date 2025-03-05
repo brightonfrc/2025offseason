@@ -107,6 +107,7 @@ public final class Constants {
   }
 
   public static final class AprilTagAlignmentConstants{
+    public static final double cameraDisplacement=0.1;
     //0.5 m from reef
     public static final double stopDisplacementX = 0.3;
     //0.165 m left for left stick displacement
@@ -118,8 +119,8 @@ public final class Constants {
     public static final double errorIntervalRotations = Math.PI/360;
 
     // PID (REPLACE WITH ACTUAL VALUES AT SOME POINT)
-    public static final double kTurnP = 0.25;
-    public static final double kTurnI = 0.1;
+    public static final double kTurnP = 0.2;
+    public static final double kTurnI = 0.05;
     public static final double kTurnD = 0;
 
     public static final double kMoveP = 0.1;
