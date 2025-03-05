@@ -31,7 +31,7 @@ public class RunIntake extends Command {
     this.in=in;
     // Use addRequirements() here to declare subsystem dependencies.
     this.lift=lift;
-    this.arm=arm;
+    // this.arm=arm;
     if (lift.getHeight()==Height.L4){
       addRequirements(intake, lift, arm);
     }
@@ -47,12 +47,12 @@ public class RunIntake extends Command {
       l4Outake=true;
       liftController= new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
       liftController.setTolerance(LiftConstants.angleTolerance);
-      liftController.setSetpoint(LiftConstants.L4OuttakeAngle);
-      armController= new PIDController(ArmConstants.kPArm, ArmConstants.kIArm, ArmConstants.kDArm);
-      armController.reset();
-      armController.setTolerance(ArmConstants.angleTolerance);
-      //L4 arm 
-      armController.setSetpoint(ArmConstants.desiredArmAngle[4]);
+      liftController.setSetpoint(LiftConstants.L4OuttakeEnd);
+      // armController= new PIDController(ArmConstants.kPArm, ArmConstants.kIArm, ArmConstants.kDArm);
+      // armController.reset();
+      // armController.setTolerance(ArmConstants.angleTolerance);
+      // //L4 arm 
+      // armController.setSetpoint(ArmConstants.desiredArmAngle[4]);
     }
     else{
       l4Outake=false;
@@ -69,11 +69,12 @@ public class RunIntake extends Command {
       desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
       lift.setPower(desiredPower);
 
-      double currentArmAngle=Math.toRadians(arm.getArmAngle());
-      double desiredArmPower=armController.calculate(currentAngle+currentArmAngle);
-      desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
-      arm.setPower(desiredArmPower);
-      if (armController.atSetpoint()&&liftController.atSetpoint()){
+      // double currentArmAngle=Math.toRadians(arm.getArmAngle());
+      // double desiredArmPower=armController.calculate(currentAngle+currentArmAngle);
+      // desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
+      // arm.setPower(desiredArmPower);
+      // if (armController.atSetpoint()&&(Math.toRadians(currentAngle)<LiftConstants.L4OuttakeAngle)){
+      if (Math.toRadians(currentAngle)<LiftConstants.L4OuttakeAngle){
         intake.outtake();
       }
       // lift.setPower(LiftConstants.liftFallingPower);

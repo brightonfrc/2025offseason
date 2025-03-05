@@ -66,7 +66,7 @@ public class Lift extends Command {
         angleRequired=LiftConstants.desiredLiftAngle[8];
         armAngleRequired=ArmConstants.desiredArmAngle[8];
         break;
-      case Hang:
+      case HangStart:
         angleRequired=LiftConstants.desiredLiftAngle[9];
         armAngleRequired=ArmConstants.desiredArmAngle[9];
         break;

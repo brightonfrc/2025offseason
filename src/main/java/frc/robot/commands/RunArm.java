@@ -39,7 +39,7 @@ public class RunArm extends Command {
     double liftAngle=lift.getLiftAngle();
     double armAngle=arm.getArmAngle();
     SmartDashboard.putNumber("Angle above ground", liftAngle+armAngle);
-    // SmartDashboard.putBoolean("Command active", true);
+    SmartDashboard.putBoolean("Command active", true);
     double weightOffsetFactor=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(armAngle+liftAngle));
     if (positive){
       // arm.setPower(weightOffsetFactor);
@@ -55,6 +55,7 @@ public class RunArm extends Command {
   @Override
   public void end(boolean interrupted) {
     arm.setPower(0);
+    SmartDashboard.putBoolean("Command active", false);
   }
 
   // Returns true when the command should end.

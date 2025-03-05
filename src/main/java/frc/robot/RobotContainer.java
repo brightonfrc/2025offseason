@@ -19,6 +19,7 @@ import frc.robot.commands.RunIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DatisLift;
 import frc.robot.commands.FieldOrientedDrive;
+import frc.robot.commands.HangRobot;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
@@ -77,13 +78,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    
-    
-    m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
-    m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
+    //R2 and L2 don't work
 
-    m_manualLiftController.R2().whileTrue(new RunArm(arm, true, lift));
-    m_manualLiftController.L2().whileTrue(new RunArm(arm, false, lift));
+    // m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
+    // m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
+
+    m_manualLiftController.R1().whileTrue(new RunArm(arm, true, lift));
+    m_manualLiftController.L1().whileTrue(new RunArm(arm, false, lift));
 
 
     //bind intake and outtake to L3 and R3?
@@ -101,15 +102,14 @@ public class RobotContainer {
     m_manualLiftController.povUp().onTrue(new Lift(lift, arm, Height.Algae2));
     m_manualLiftController.povRight().onTrue(new Lift(lift, arm, Height.Algae3));
     m_manualLiftController.povDown().onTrue(new Lift(lift, arm, Height.Ground));
-    m_manualLiftController.povLeft().onTrue(new Lift(lift, arm, Height.Hang));
-    
+    m_manualLiftController.povLeft().onTrue(new Lift(lift, arm, Height.HangStart));
+    m_manualLiftController.square().onTrue(new HangRobot(lift));
     // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
     // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
 
-    
   }
 
   /**

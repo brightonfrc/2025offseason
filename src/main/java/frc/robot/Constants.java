@@ -58,10 +58,10 @@ public final class Constants {
     public static final double minLiftAngle=10;
   }
   public static class ArmConstants{
-    public static final double kWeightMomentOffsetFactor=0.03;
+    public static final double kWeightMomentOffsetFactor=0.034;
     //get a engineer's square the next time I do this
-    public static final double angleAtZero=140;
-    public static final int decimalPlaces=2;
+    public static final double angleAtZero=135.5;
+    // public static final int decimalPlaces=2;
     public static final int armCANID=13;
     public static final int armEncoderPort=1;
     //its all in degrees, remember to convert
@@ -74,12 +74,12 @@ public final class Constants {
       60, //L4
       -80, //Algae2 
       -99, //Algae3 (placeholder)
-      20, //CoralStation 
-      -110 //StartingConfig 
-      -100 //hang (placeholder)
+      30, //CoralStation 
+      -110, //StartingConfig 
+      -45, //hangStart
     };
     public static final double maxPower=0.4;
-    public static final double kPArm=0.13;
+    public static final double kPArm=0.09;
     public static final double kIArm=0.03;
     public static final double kDArm=0;
     //1 degree tolerance
@@ -110,7 +110,7 @@ public final class Constants {
       Math.toRadians(74),//Algae3 (placeholder)
       Math.toRadians(33),//CoralStation 
       Math.toRadians(35),//StartingConfig 
-      Math.toRadians(20)// hang (placeholder)
+      Math.toRadians(20)// hang 
     };
     
 
@@ -124,7 +124,7 @@ public final class Constants {
       Algae2, //algae between L2 and L3
       Algae3, //algae between L3 and L4
       CoralStation,
-      Hang
+      HangStart
     }
     public static final double armLength=27.4*0.0254;
     public static final double kPLift=0.6;
@@ -136,6 +136,10 @@ public final class Constants {
 
     public static final double liftFallingPower=-0.25;
     public static final double L4OuttakeAngle=Math.toRadians(75);
+    public static final double L4OuttakeEnd=Math.toRadians(65);
+    public static final double kPHang=1.2;
+    public static final double kIHang=0.5;
+    public static final double kDHang=0.0;
   }
   public static class AccelerationLimiterConstants{
     public static double maximumAcceleration=0.02;

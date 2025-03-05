@@ -4,47 +4,40 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Arm;
+import frc.robot.Constants.LiftConstants;
 import frc.robot.subsystems.DatisLift;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SustainLift extends Command {
-  private double armPower;
-  private double liftPower;
-  private Arm arm;
+public class HangRobot extends Command {
   private DatisLift lift;
-  /** Creates a new SustainLift. */
-  public SustainLift(DatisLift lift, Arm arm) {
-    this.arm=arm;
+  private PIDController liftController;
+  /** Creates a new HangRobot. */
+
+  public HangRobot(DatisLift lift) {
     this.lift=lift;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(lift, arm);
+    
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    armPower=arm.getPreviousPowerSet();
-    liftPower=lift.getPreviousPowerSet();
+    liftController = new PIDController(LiftConstants.kPHang, LiftConstants.kIHang, LiftConstants.kDHang);
+    liftController.setSetpoint(Math.toRadians(11));
+    liftController.setTolerance(LiftConstants.angleTolerance);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // SmartDashboard.putBoolean("Command active", true);
-    arm.setPower(armPower);
-    lift.setPower(liftPower);
+    lift.setPower(liftController.calculate(Math.toRadians(lift.getLiftAngle())));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    arm.setPower(0);
-    lift.setPower(0);
-    // SmartDashboard.putBoolean("Command active", false);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
