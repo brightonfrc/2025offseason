@@ -27,12 +27,126 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  //CAN ID list
+  //Swerve Drive 1-8
+    // public static final int kFrontLeftDrivingCanId = 1;
+    // public static final int kFrontLeftTurningCanId = 2;
+    // public static final int kFrontRightDrivingCanId = 7;
+    // public static final int kFrontRightTurningCanId = 8;
+    // public static final int kRearLeftDrivingCanId = 3;
+    // public static final int kRearLeftTurningCanId = 4;
+    // public static final int kRearRightDrivingCanId = 5;
+    // public static final int kRearRightTurningCanId = 6;
+  //Misc Motors 11-14
+    // public static final int liftNeoCANID=11;
+    // public static final int reversedLiftNeoCANDID=12;
+    // public static final int armCANID=13;
+    // public static final int intakeCanID=14;
+
+  public static class IntakeConstants{
+    public static final int intakeCanID=14;
+    public static final double intakePower=-0.4;
+    public static final double outtakePower=0.4;
+  }
+  public static class AngleLimitConstants{
+    //all in degrees, remember to convert to radians
+
+    //arm angle below horizontal
+    //in actuality, it can reach -154, but I can't see a reason why you would need to go that far
+    public static final double minArmAngle=-140;
+    //arm angle above horizontal
+    //in actuality, it starts at 124
+    public static final double maxArmAngle=128;
+    public static final double maxLiftAngle=100;
+    public static final double minLiftAngle=10;
+  }
+  public static class ArmConstants{
+    public static final double kWeightMomentOffsetFactor=0.034;
+    //get a engineer's square the next time I do this
+    public static final double angleAtZero=135.5;
+    // public static final int decimalPlaces=2;
+    public static final int armCANID=13;
+    public static final int armEncoderPort=1;
+    //its all in degrees, remember to convert
+    public static final double[] desiredArmAngle= new double[]{
+      //do note that ground height isn't actually at 0, because arm has minimum height
+      0,//Ground intake (placeholder)
+      -30,//L1
+      -55,//L2
+      -30,//L3
+      60, //L4
+      -80, //Algae2 
+      -99, //Algae3 (placeholder)
+      30, //CoralStation 
+      -110, //StartingConfig 
+      -45, //hangStart
+    };
+    public static final double maxPower=0.4;
+    public static final double kPArm=0.09;
+    public static final double kIArm=0.03;
+    public static final double kDArm=0;
+    //1 degree tolerance
+    public static final double angleTolerance=Math.PI/180;
+
+    public static final double armFallingPower=-0.01;
+  }
+  public static class LiftConstants{
+    //for some reason at 0.04 the robot goes insane
+    public static final double maximumPowerChange=0.05;
+    public static final double maximumTilt=10;
+    public static final double angleAtPeakHeight=138.8;
+    public static final int encoderChannel=0;
+    public static final int liftNeoCANID=11;
+    public static final int reversedLiftNeoCANDID=12;
+    //to ensure the arm doesn't tear itself apart. 
+    public static final double maxPower=0.7;
+
+    //angles required
+    public static final double[] desiredLiftAngle= new double[]{
+      //do note that ground height isn't actually at 0, because arm has minimum height
+      0.22,//ground intake (placeholder) 
+      Math.toRadians(30),//L1
+      Math.toRadians(61),//L2
+      Math.toRadians(86),//L3 
+      Math.toRadians(80),//L4
+      Math.toRadians(50),//Algae2 
+      Math.toRadians(74),//Algae3 (placeholder)
+      Math.toRadians(33),//CoralStation 
+      Math.toRadians(35),//StartingConfig 
+      Math.toRadians(20)// hang 
+    };
+    
+
+    public static enum Height{
+      Ground,
+      L1,
+      L2,
+      L3,
+      L4,
+      StartingConfig, 
+      Algae2, //algae between L2 and L3
+      Algae3, //algae between L3 and L4
+      CoralStation,
+      HangStart
+    }
+    public static final double armLength=27.4*0.0254;
+    public static final double kPLift=0.6;
+    public static final double kILift=0.03;
+    public static final double kDLift=0;
+    public static final double angleTolerance=Math.PI/180;
+    //remember to adjust as more components are added
+    public static final double kWeightMomentOffsetFactor=0.02;
+
+    public static final double liftFallingPower=-0.25;
+    public static final double L4OuttakeAngle=Math.toRadians(75);
+    public static final double L4OuttakeEnd=Math.toRadians(65);
+    public static final double kPHang=1.2;
+    public static final double kIHang=0.5;
+    public static final double kDHang=0.0;
+  }
   public static class AccelerationLimiterConstants{
     public static double maximumAcceleration=0.02;
     public static double maximumDeceleration=0.02;
-  }
-  public static class OperatorConstants{
-    public static final int kDriverControllerPort=0;
   }
   public static class TestingConstants{
     public static final double maximumSpeed=0.40;
@@ -40,20 +154,6 @@ public final class Constants {
     public static final double maximumSpeedReduced=0.10;
     public static final double maximumRotationSpeedRobotOriented=0.005;
   }
-
-  public static class GameSetup {
-    public static final double startAngleOffset = 0; // Degrees
-    public static final boolean isFieldRelative = false; // true: field relative; false: robot relative
-    public static final String pathPlannerAutoStrategy = "Speaker 1 Note Right";
-  }
-
-  public static class CANIds {
-
-    public static final int kLeftShooterMotor = 11;
-    public static final int kRightShooterMotor = 10;
-    public static final int kIntakeMotor = 9;
-    // public static final int kLiftMotor = 12;
-    }
   public static final class FieldOrientedDriveConstants{
     public static final double kFODP = 0.25;
     public static final double kFODI = 0.3;
@@ -181,6 +281,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kManualLiftControllerPort=1;
     public static final double kDriveDeadband = 0.1;
   }
 

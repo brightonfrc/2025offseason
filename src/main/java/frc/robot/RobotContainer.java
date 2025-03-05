@@ -4,15 +4,36 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.LiftConstants;
+import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.LiftConstants.Height;
 import frc.robot.Constants.AprilTagAlignmentConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AprilTagAlignment;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Lift;
+import frc.robot.commands.RunLift;
+import frc.robot.commands.SustainLift;
+import frc.robot.commands.RunArm;
+import frc.robot.commands.RunIntake;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.DatisLift;
 import frc.robot.commands.FieldOrientedDrive;
-import frc.robot.subsystems.AprilTagPoseEstimator;
+import frc.robot.commands.HangRobot;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
+
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.AprilTagPoseEstimator;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +45,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -36,19 +58,28 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final DatisLift lift= new DatisLift(new SparkMax(LiftConstants.liftNeoCANID, MotorType.kBrushless), new SparkMax(LiftConstants.reversedLiftNeoCANDID, MotorType.kBrushless), new DutyCycleEncoder(LiftConstants.encoderChannel));
+  private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushless));
+  private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   private final AprilTagPoseEstimator m_poseEstimator = new AprilTagPoseEstimator();
-  
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
-  new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  new CommandXboxController(OIConstants.kDriverControllerPort);
+  private final CommandPS4Controller m_manualLiftController= new CommandPS4Controller(OIConstants.kManualLiftControllerPort);
   
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
+  // private Lift goToGround=new Lift(lift, Height.Ground);
+  private final SustainLift sustainLift = new SustainLift(lift, arm);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    
     m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+    lift.setDefaultCommand(sustainLift);
+
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
     configureBindings();
   }
@@ -63,18 +94,47 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    //R2 and L2 don't work
+
+    // m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
+    // m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
+
+    m_manualLiftController.R1().whileTrue(new RunArm(arm, true, lift));
+    m_manualLiftController.L1().whileTrue(new RunArm(arm, false, lift));
+
+
+    //bind intake and outtake to L3 and R3?
+
     
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    //remember that A on the xbox controllerbutton is bound to "slow Mode"
+    
+    m_driverController.y().onTrue(new JankLift(lift, arm, Height.CoralStation));
+    m_driverController.povUp().onTrue(new JankLift(lift, arm, Height.L1));
+    m_driverController.povRight().onTrue(new JankLift(lift, arm, Height.L2));
+    m_driverController.povDown().onTrue(new JankLift(lift, arm, Height.L3));
+    m_driverController.povLeft().onTrue(new JankLift(lift, arm, Height.L4));
+    m_driverController.x().onTrue(new JankLift(lift, arm, Height.StartingConfig));
+    
+    m_manualLiftController.povUp().onTrue(new JankLift(lift, arm, Height.Algae2));
+    m_manualLiftController.povRight().onTrue(new JankLift(lift, arm, Height.Algae3));
+    m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
+    m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
+    m_manualLiftController.square().onTrue(new HangRobot(lift));
+    // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
+    // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
+
+    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
+    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
+
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     //align right
     m_driverController.leftBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
     //align left
     m_driverController.rightBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
+
   }
 
   /**
@@ -100,4 +160,26 @@ public class RobotContainer {
       SmartDashboard.putNumber("robot2tag/r/yaw", r2t.getRotation().getZ());
     }
   }
+
+  public void StowLift(){
+    // goToGround.schedule();
+  }
+  /**Returns true if robot roll or pitch exceeds the maximum tilt */
+  public Boolean checkTilt(){
+    if(m_driveSubsystem.getTilt()>LiftConstants.maximumTilt){
+      return true;
+    }
+    return false;
+  }
+  public void getArmAngle(){
+    arm.getArmAngle();
+  }
+  public void getLiftAngle(){
+    lift.getLiftAngle();
+  }
+  /**Prints out the current height set by the controller onto SmartDashboard */
+  public void getHeightSet(){
+    lift.getHeight();
+  }
 }
+

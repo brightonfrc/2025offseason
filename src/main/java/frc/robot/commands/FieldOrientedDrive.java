@@ -52,7 +52,7 @@ public class FieldOrientedDrive extends Command {
         bearingPIDController.enableContinuousInput(0, 2*Math.PI);
         previousXSpeed=0;
         previousYSpeed=0;
-        driveSubsystem.resetGyro();
+        // driveSubsystem.resetGyro();
         goalBearing=0;
         slowModeActive=false;
         hasToggled=false;
@@ -129,16 +129,18 @@ public class FieldOrientedDrive extends Command {
         // SmartDashboard.putNumber("rotSpeed", rotSpeed);
         
 
-        
-        if(xboxController.rightBumper().getAsBoolean()){
-            driveSubsystem.drive(0, 0, 0, false);
-        } else{
-            //Datis and Ella prefers this
-            driveSubsystem.drive(xSpeed, -ySpeed, rotSpeed, false);
+        //Datis and Ella prefers this
+        driveSubsystem.drive(xSpeed, -ySpeed, rotSpeed, false);
 
-            // William and Sam prefers this
-            // driveSubsystem.drive(xSpeed, -ySpeed, -xboxController.getRightX()*TestingConstants.maximumRotationSpeedRobotOriented, false);
-        }
+        // William and Sam prefers this
+        // driveSubsystem.drive(xSpeed, -ySpeed, -xboxController.getRightX()*TestingConstants.maximumRotationSpeedRobotOriented, false);
+        
+        // Emergency stop button (Not needed)
+        // if(xboxController.rightBumper().getAsBoolean()){
+        //     driveSubsystem.drive(0, 0, 0, false);
+        // } else{
+            
+        // }
     }
     // Called once the command ends or is interrupted.
     @Override
