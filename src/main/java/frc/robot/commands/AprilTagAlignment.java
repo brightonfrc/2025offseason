@@ -19,19 +19,31 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class AprilTagAlignment extends Command {
-  private final DriveSubsystem driveSubsystem;
-  private final AprilTagPoseEstimator poseEstimator;
-  private final PIDController movementXPID;
-  private final PIDController movementYPID;
+  private DriveSubsystem driveSubsystem;
+  private AprilTagPoseEstimator poseEstimator;
+  private PIDController movementXPID;
+  private PIDController movementYPID;
+  private double offsetX;
+  private double offsetY;
+  private Boolean tagDisappeared;
 
-
-  private final PIDController rotationPID;
+  private PIDController rotationPID;
 
   public AprilTagAlignment(DriveSubsystem _driveSubsystem, AprilTagPoseEstimator _poseEstimator, double offsetX, double offsetY) {
     driveSubsystem = _driveSubsystem;
     poseEstimator = _poseEstimator;
     addRequirements(_driveSubsystem, _poseEstimator);
+    this.offsetX=offsetX;
+    this.offsetY=offsetY;
+    this.addRequirements(_driveSubsystem, _poseEstimator);
+  }
 
+  
+
+  @Override
+  public void initialize() {
+    tagDisappeared=false;
+    System.out.println("Start Align");
     movementXPID = new PIDController(
       AprilTagAlignmentConstants.kMoveP,
       AprilTagAlignmentConstants.kMoveI,
@@ -60,25 +72,21 @@ public class AprilTagAlignment extends Command {
     movementXPID.setTolerance(AprilTagAlignmentConstants.errorIntervalPositions);
     movementYPID.setTolerance(AprilTagAlignmentConstants.errorIntervalPositions);
   }
-
-  private Boolean tagDisappeared = false;
-
-  @Override
-  public void initialize() {
-    tagDisappeared=false;
-  }
   
   @Override
   public void execute() {
+    // System.out.println("Aligning");
     // Using displacement from first visible tag
     Optional<Transform3d> pose = poseEstimator.getRobotToSeenTag();
-    
-    Optional<Transform3d> possibleTransform;
-    possibleTransform = pose;
+    SmartDashboard.putNumber("Command/setPoint/X", offsetX);
+    SmartDashboard.putNumber("Command/Setpoint/Y", offsetY);
 
-    if (possibleTransform.isPresent()) {
+    if (pose.isPresent()) {
       SmartDashboard.putBoolean("Tag in view", true);
-      Transform3d transform = possibleTransform.get();
+      Transform3d transform = pose.get();
+      SmartDashboard.putNumber("command/t/x", transform.getTranslation().getX());
+      SmartDashboard.putNumber("command/t/y", transform.getTranslation().getY());
+      SmartDashboard.putNumber("command/r/yaw", transform.getRotation().getZ());
       Translation3d translation = transform.getTranslation();
       Rotation3d rotation = transform.getRotation();
 
@@ -86,22 +94,27 @@ public class AprilTagAlignment extends Command {
       double y = translation.getY(); // Left/Right
 
       double yaw = rotation.getZ();  // Rotation (Yaw)
-      yaw = (yaw + 2*Math.PI) % (2 * Math.PI);
 
       double rotationOutput = rotationPID.calculate(yaw);
 
-      if(rotationPID.atSetpoint()){ // Move towards set point
+      if(rotationPID.atSetpoint()){ 
+        SmartDashboard.putBoolean("Aligned", true);
+        // Move towards set point
         // Use PID  to calculate the movement speed needed to reduce error
         double movementSpeed = movementXPID.calculate(x); // 
         double strafeSpeed = movementYPID.calculate(y);   // 
         
         // Drive the robot towards the AprilTag
+        SmartDashboard.putNumber("Speed/X", -movementSpeed);
+        SmartDashboard.putNumber("Speed/Y", strafeSpeed);
         driveSubsystem.drive(-movementSpeed, strafeSpeed, 0, false); 
-        // don't invert strafespeed because y is also inversed (positive = left) 
+        // no need to invert strafespeed because y is also inversed (positive = left) 
         // negative movementSpeed because robot needs to drive forwards (not backwards) in order to reduce xDisplacement
       }
       else{ // If not at set point, rotate towards setpoint
-        driveSubsystem.drive(0, 0, rotationOutput, false);
+        SmartDashboard.putBoolean("Aligned", false);
+        SmartDashboard.putNumber("Speed/rot", rotationOutput);
+        driveSubsystem.drive(0, 0, -rotationOutput, false);
       }
     }
     else {
@@ -112,6 +125,7 @@ public class AprilTagAlignment extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    System.out.println("End Align");
     driveSubsystem.drive(0, 0, 0, false); // Stop the robot
   }
 

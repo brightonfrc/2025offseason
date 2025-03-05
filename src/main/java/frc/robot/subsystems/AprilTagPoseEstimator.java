@@ -119,7 +119,7 @@ public class AprilTagPoseEstimator extends SubsystemBase {
         return Optional.of(new Transform3d(poseDifference.getTranslation(), poseDifference.getRotation()));
       }
     }
-    SmartDashboard.putString("tags", tagText);
+    // SmartDashboard.putString("tags", tagText);
 
     // Required tag not on field
     return Optional.empty();
