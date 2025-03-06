@@ -18,7 +18,10 @@ public class CoralStationAlign extends Command {
   private DriveSubsystem driveSubsystem;
   private PIDController bearingPIDController;
   private CommandXboxController controller;
-  /** Creates a new CoralStationAlign.
+  /** 
+   * Creates a new CoralStationAlign, which locks the robot's bearing towards the coral station
+   * Currently activated by holding down triangle.
+   * Not tested
    */
   public CoralStationAlign(DriveSubsystem driveSubsystem, CommandXboxController controller) {
     this.driveSubsystem=driveSubsystem;

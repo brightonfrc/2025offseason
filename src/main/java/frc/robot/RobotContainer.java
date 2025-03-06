@@ -146,7 +146,7 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
     
-    m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
+    m_manualLiftController.triangle().whileTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
