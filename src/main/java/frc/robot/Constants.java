@@ -27,6 +27,9 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class WinchConstants{
+    public static double winchPower=0.5;
+  }
   public static class CoralStationAlignConstants{
     public static double xDisplacement=0.8;
     public static double xTolerance=0.05;
