@@ -16,6 +16,7 @@ import frc.robot.Constants.AprilTagAlignmentConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AprilTagAlignment;
 import frc.robot.commands.Autos;
+import frc.robot.commands.CoralStationAlign;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Lift;
 import frc.robot.commands.RunLift;
@@ -144,7 +145,8 @@ public class RobotContainer {
 
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
-
+    
+    m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
