@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+
+import choreo.auto.AutoFactory;
+import edu.wpi.first.apriltag.AprilTagPoseEstimator;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -17,6 +20,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+  
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -56,16 +60,20 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    
+    m_robotContainer.resetGyro();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    m_robotContainer.getPose();
+  }
 
   @Override
   public void teleopInit() {
@@ -76,6 +84,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.SetUpDefaultCommand();
   }
 
   /** This function is called periodically during operator control. */
@@ -87,6 +96,9 @@ public class Robot extends TimedRobot {
     m_robotContainer.getLiftAngle();
     m_robotContainer.getArmAngle();
     m_robotContainer.getHeightSet();
+
+    // m_robotContainer.printPose();
+
   }
 
   @Override

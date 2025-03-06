@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,10 +15,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants.ChoreoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldOrientedDriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
+import choreo.trajectory.SwerveSample;
 import edu.wpi.first.wpilibj.SPI;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -63,12 +68,34 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
       });
+  
+  //for Choreo
+  private final PIDController xController = new PIDController(ChoreoConstants.translationkP, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
+  private final PIDController yController = new PIDController(ChoreoConstants.translationkP, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
+  private final PIDController headingController = new PIDController(ChoreoConstants.rotationkP, ChoreoConstants.rotationkI, ChoreoConstants.rotationkD);
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
   }
+
+  //for Choreo
+  public void followTrajectory(SwerveSample sample) {
+        // Get the current pose of the robot
+        Pose2d pose = getPose();
+
+        // Generate the next speeds for the robot
+        ChassisSpeeds speeds = new ChassisSpeeds(
+            sample.vx + xController.calculate(pose.getX(), sample.x),
+            sample.vy + yController.calculate(pose.getY(), sample.y),
+            sample.omega + headingController.calculate(pose.getRotation().getRadians(), sample.heading)
+        );
+
+        // Apply the generated speeds
+        drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,0,false);
+        // drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.omegaRadiansPerSecond/DriveConstants.kMaxAngularSpeed,false);
+    }
 
   @Override
   public void periodic() {
@@ -89,7 +116,21 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    Pose2d pose= m_odometry.getPoseMeters();
+    // double angle =m_gyro.getAngle()%360;
+    // if (angle<0){
+    //   angle+=360;
+    // }
+    // pose= new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(angle));
+    SmartDashboard.putNumber("Pose/x", pose.getX());
+    SmartDashboard.putNumber("Pose/y", pose.getY());
+    SmartDashboard.putNumber("Pose/rot", pose.getRotation().getDegrees());
+    return pose;
+  }
+  /**Returns currently-estimated pose without current bearing */
+  public Pose2d getPoseChoreo(){
+    Pose2d pose=getPose();
+    return new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(0));
   }
 
   /**
@@ -98,6 +139,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
+    
     m_odometry.resetPosition(
         Rotation2d.fromDegrees(m_gyro.getAngle()%360),
         new SwerveModulePosition[] {
