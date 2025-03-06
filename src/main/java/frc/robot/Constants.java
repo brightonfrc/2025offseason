@@ -27,6 +27,10 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class CoralStationAlignConstants{
+    public static double xDisplacement=0.8;
+    public static double xTolerance=0.05;
+  }
   public static class AutonomousNavConstants{
     // public static double translationkP=0.1;
     // public static double translationkI=0;
