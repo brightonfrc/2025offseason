@@ -76,7 +76,8 @@ public class CoralStationAlign extends Command {
     else{
       SmartDashboard.putBoolean("April Tag in view", true);
       SmartDashboard.putNumber("XDisplacement", pose.get().getX());
-      xSpeed= xPIDController.calculate(pose.get().getX());
+      //reverse xSpeed because drivetrain must drive at positive sped to reduce xdistance
+      xSpeed= -xPIDController.calculate(pose.get().getX());
     }
     double ySpeed= joystickMoveMagnitude * Math.sin(joystickMoveBearing) * TestingConstants.maximumSpeedReduced;
     driveSubsystem.drive(xSpeed, -ySpeed, bearingPIDController.calculate(bearing), false);
