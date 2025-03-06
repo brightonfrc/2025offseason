@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+
+import frc.robot.Constants.AutonomousNavConstants;
+import frc.robot.Constants.ChoreoConstants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.LiftConstants;
@@ -22,9 +25,16 @@ import frc.robot.commands.RunIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DatisLift;
 import frc.robot.commands.FieldOrientedDrive;
-import frc.robot.commands.HangRobot;
+import frc.robot.commands.MoveToPoint;
+import frc.robot.commands.StopRobot;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import choreo.auto.AutoFactory;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;=
+import frc.robot.commands.HangRobot;
 import frc.robot.subsystems.Intake;
 
 import com.revrobotics.spark.SparkMax;
@@ -44,7 +54,6 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -73,15 +82,25 @@ public class RobotContainer {
   // private Lift goToGround=new Lift(lift, Height.Ground);
   private final SustainLift sustainLift = new SustainLift(lift, arm);
 
+  //for Choreo
+  private final AutoFactory autoFactory;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    
     m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
     lift.setDefaultCommand(sustainLift);
-
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
+    //for Choreo
+    autoFactory = new AutoFactory(
+            m_driveSubsystem::getPoseChoreo, // A function that returns the current robot pose
+            m_driveSubsystem::resetOdometry, // A function that resets the current robot pose to the provided Pose2d
+            m_driveSubsystem::followTrajectory, // The drive subsystem trajectory follower 
+            false, // If alliance flipping should be enabled 
+            m_driveSubsystem // The drive subsystem
+        );
     configureBindings();
+    
   }
 
   /**
@@ -143,7 +162,34 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    StopRobot stop= new StopRobot(m_driveSubsystem);
+    //annoyingly, you can't reuse the same command in a Commands.sequence
+    StopRobot stopAgain= new StopRobot(m_driveSubsystem);
     // An example command will be run in autonomous
+    // return Autos.exampleAuto(m_exampleSubsystem);
+    // m_driveSubsystem.resetOdometry(new Pose2d(ChoreoConstants.startX,ChoreoConstants.startY,new Rotation2d(ChoreoConstants.startRadians)));
+    return Commands.sequence(
+        //for some reason, resetOdometry isn't working properly
+        autoFactory.resetOdometry("Testing"),  
+        autoFactory.trajectoryCmd("Testing"),
+        stop,
+        new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
+        //deposit coral
+        new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
+        autoFactory.resetOdometry("TestingPartTwo"),
+        autoFactory.trajectoryCmd("TestingPartTwo"),
+        stopAgain
+    );
+  }
+  public void SetUpDefaultCommand(){
+    m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+  }
+
+  public void resetGyro(){
+    m_driveSubsystem.resetGyro();
+  }
+  public void getPose(){
+    m_driveSubsystem.getPose();
     // SmartDashboard.putString("Auto", "AprilTag Alignment");
     return null;
     // return new AprilTagAlignment(m_driveSubsystem, new AprilTagPoseEstimator(), 3, 0.5);
