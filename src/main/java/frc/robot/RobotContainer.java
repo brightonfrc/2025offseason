@@ -13,7 +13,6 @@ import frc.robot.Constants.LiftConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.LiftConstants.Height;
 import frc.robot.Constants.AprilTagAlignmentConstants;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AprilTagAlignment;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -33,8 +32,9 @@ import choreo.auto.AutoFactory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;=
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.HangRobot;
+import frc.robot.commands.JankLift;
 import frc.robot.subsystems.Intake;
 
 import com.revrobotics.spark.SparkMax;
@@ -191,7 +191,6 @@ public class RobotContainer {
   public void getPose(){
     m_driveSubsystem.getPose();
     // SmartDashboard.putString("Auto", "AprilTag Alignment");
-    return null;
     // return new AprilTagAlignment(m_driveSubsystem, new AprilTagPoseEstimator(), 3, 0.5);
   }
 
