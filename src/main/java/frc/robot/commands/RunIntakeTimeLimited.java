@@ -23,10 +23,14 @@ public class RunIntakeTimeLimited extends Command {
   private PIDController armController;
   private long startTimeMillis = 0; // Store the start time manually
 
-  public RunIntakeTimeLimited(Intake intake, Boolean in, DatisLift lift, Arm arm) {
+  private double setTime = 1;
+
+  public RunIntakeTimeLimited(Intake intake, Boolean in, DatisLift lift, Arm arm, double setTime) {
     this.intake = intake;
     this.in = in;
     this.lift = lift;
+    this.setTime = setTime;
+
     if (lift.getHeight() == Height.L4) {
       addRequirements(intake, lift, arm);
     } else {
@@ -76,6 +80,6 @@ public class RunIntakeTimeLimited extends Command {
 
   @Override
   public boolean isFinished() {
-    return (System.currentTimeMillis() - startTimeMillis) >= 2000; // Stop after 2 seconds
+    return (System.currentTimeMillis() - startTimeMillis) >= setTime * 1000; // Stop after x seconds
   }
 }

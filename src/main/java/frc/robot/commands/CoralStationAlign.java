@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AprilTagAlignmentConstants;
 import frc.robot.Constants.CoralStationAlignConstants;
 import frc.robot.Constants.FieldOrientedDriveConstants;
@@ -26,6 +28,7 @@ public class CoralStationAlign extends Command {
   private CommandXboxController controller;
   private AprilTagPoseEstimator estimator;
   private PIDController xPIDController;
+  private boolean active = false;
   /** 
    * Creates a new CoralStationAlign, which locks the robot's bearing towards the coral station
    * Currently activated by holding down triangle.
@@ -42,24 +45,27 @@ public class CoralStationAlign extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    RobotContainer.aliningWithCoral = !RobotContainer.aliningWithCoral;
+
     //remember that gyro is flipped
-    bearingPIDController=new PIDController(
-      FieldOrientedDriveConstants.kFODP, 
-      FieldOrientedDriveConstants.kFODI, 
-      FieldOrientedDriveConstants.kFODD
-    );
-    //coral station bearing is at 240 to 0, where 0 is forwards for the robot. 
-    bearingPIDController.setSetpoint(4/3*Math.PI);
-    bearingPIDController.setTolerance(FieldOrientedDriveConstants.bearingTolerance);
-    bearingPIDController.enableContinuousInput(0, 2*Math.PI);
-    xPIDController=new PIDController(
-      AprilTagAlignmentConstants.kMoveP, 
-      AprilTagAlignmentConstants.kMoveI, 
-      AprilTagAlignmentConstants.kMoveD
-    );
-    xPIDController.setSetpoint(CoralStationAlignConstants.xDisplacement);
-    xPIDController.setSetpoint(CoralStationAlignConstants.xTolerance);
-  }
+      bearingPIDController=new PIDController(
+        FieldOrientedDriveConstants.kFODP, 
+        FieldOrientedDriveConstants.kFODI, 
+        FieldOrientedDriveConstants.kFODD
+      );
+      //coral station bearing is at 240 to 0, where 0 is forwards for the robot. 
+      bearingPIDController.setSetpoint(4/3*Math.PI);
+      bearingPIDController.setTolerance(FieldOrientedDriveConstants.bearingTolerance);
+      bearingPIDController.enableContinuousInput(0, 2*Math.PI);
+      xPIDController=new PIDController(
+        AprilTagAlignmentConstants.kMoveP, 
+        AprilTagAlignmentConstants.kMoveI, 
+        AprilTagAlignmentConstants.kMoveD
+      );
+      xPIDController.setSetpoint(CoralStationAlignConstants.xDisplacement);
+      xPIDController.setSetpoint(CoralStationAlignConstants.xTolerance);
+}
+  
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -90,6 +96,11 @@ public class CoralStationAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(RobotContainer.aliningWithCoral){
     return false;
+    }
+    else{
+      return true;
+    }
   }
 }

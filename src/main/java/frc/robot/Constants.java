@@ -49,24 +49,23 @@ public final class Constants {
     //public static double endRotOne=240;
     
 
-    public static StartingPosition startPos = StartingPosition.Middle;
+    public static StartingPosition startPos = StartingPosition.Left;
 
     public static enum StartingPosition{
-      Outer,
-      Middle,
-      Inner
+      Left,
+      Right,
+      Middle
     }
     
     //remember that the gyro is inverted, so 90 degrees is to the left
     //bearing of robot when first Choreo Path Ends.
     // TODO : ASSIGN THESE VALUES AS NEEDED
     public static double endRotOne = switch (startPos) {
-      case Outer -> 0;
-      case Inner -> 0;
+      case Left -> 300; // Should be 60 to the right, but just don't want it to go out of bounds...
+      case Right -> 60;
       case Middle -> 0;
       default -> 0;
     };
-  
   }
 
   public static class ChoreoConstants{
@@ -148,7 +147,7 @@ public final class Constants {
     //for some reason at 0.04 the robot goes insane
     public static final double maximumPowerChange=0.05;
     public static final double maximumTilt=10;
-    public static final double angleAtPeakHeight=138.8;
+    public static final double angleAtPeakHeight=198.1;
     public static final int encoderChannel=0;
     public static final int liftNeoCANID=11;
     public static final int reversedLiftNeoCANDID=12;
