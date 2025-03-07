@@ -33,6 +33,7 @@ import choreo.auto.AutoFactory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.HangRobot;
 import frc.robot.commands.JankLift;
@@ -146,7 +147,7 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
     
-    m_manualLiftController.triangle().whileTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
+    m_manualLiftController.triangle().whileTrue(new CoralStationAlign(m_driveSubsystem, m_driverController, m_poseEstimator));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -170,6 +171,37 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
     // m_driveSubsystem.resetOdometry(new Pose2d(ChoreoConstants.startX,ChoreoConstants.startY,new Rotation2d(ChoreoConstants.startRadians)));
+    
+    // YOU MUST CHANGE THE STARTPOS CONSTANT IN THE CONSTANTS BASED ON THE FIELD!!!!!!!
+    // TODO : Properly discuss with Datis and then setup the commands sequence as such
+    switch (AutonomousNavConstants.startPos){
+      case Outer:
+        return Commands.sequence(
+          autoFactory.resetOdometry("Outer"),
+          autoFactory.trajectoryCmd("Outer"),
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
+          stop
+        );
+      case Middle:
+        return Commands.sequence(
+          autoFactory.resetOdometry("Middle"),
+          autoFactory.trajectoryCmd("Middle"),
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
+          stop
+        );
+      case Inner:
+        return Commands.sequence(
+          autoFactory.resetOdometry("Inner"),
+          autoFactory.trajectoryCmd("Inner"),
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
+          stop
+        );
+      default:
+        return Commands.sequence(
+        );
+    }
+
+    /*
     return Commands.sequence(
         //for some reason, resetOdometry isn't working properly
         autoFactory.resetOdometry("Testing"),  
@@ -177,11 +209,14 @@ public class RobotContainer {
         stop,
         new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
         //deposit coral
+        // lift command
+        // runintakeshort command
         new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
         autoFactory.resetOdometry("TestingPartTwo"),
         autoFactory.trajectoryCmd("TestingPartTwo"),
         stopAgain
     );
+    */
   }
   public void SetUpDefaultCommand(){
     m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
