@@ -46,8 +46,29 @@ public final class Constants {
     public static double rotationTolerance=Math.PI/360;
     //remember that the gyro is inverted, so 90 degrees is to the left
     //bearing of robot when first Choreo Path Ends.
-    public static double endRotOne=240;
+    //public static double endRotOne=240;
+    
+
+    public static StartingPosition startPos = StartingPosition.Middle;
+
+    public static enum StartingPosition{
+      Outer,
+      Middle,
+      Inner
+    }
+    
+    //remember that the gyro is inverted, so 90 degrees is to the left
+    //bearing of robot when first Choreo Path Ends.
+    // TODO : ASSIGN THESE VALUES AS NEEDED
+    public static double endRotOne = switch (startPos) {
+      case Outer -> 0;
+      case Inner -> 0;
+      case Middle -> 0;
+      default -> 0;
+    };
+  
   }
+
   public static class ChoreoConstants{
     // public static double startX=7;
     // public static double startY=7;
