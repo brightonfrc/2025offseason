@@ -31,18 +31,15 @@ public class RunIntakeTimeLimited extends Command {
     this.lift = lift;
     this.setTime = setTime;
 
-    if (lift.getHeight() == Height.L4) {
-      addRequirements(intake, lift, arm);
-    } else {
-      addRequirements(intake);
-    }
+    addRequirements(intake, lift, arm);
+
   }
 
   @Override
   public void initialize() {
     startTimeMillis = System.currentTimeMillis(); // Record the start time
 
-    if (!in && lift.getHeight() == Height.L4) {
+    if (!in) {
       l4Outake = true;
       liftController = new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
       liftController.setTolerance(LiftConstants.angleTolerance);
