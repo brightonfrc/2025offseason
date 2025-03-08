@@ -36,7 +36,7 @@ public class Arm extends SubsystemBase {
     if (angleAboveHorizontal>180){
       angleAboveHorizontal-=360;
     }
-    // SmartDashboard.putNumber("Raw Arm angle", measuredAngle);
+    SmartDashboard.putNumber("Raw Arm angle", measuredAngle);
     // SmartDashboard.putNumber("Arm angle", angleAboveHorizontal);
     return angleAboveHorizontal;
   }

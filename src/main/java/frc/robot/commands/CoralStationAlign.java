@@ -45,8 +45,6 @@ public class CoralStationAlign extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.aliningWithCoral = !RobotContainer.aliningWithCoral;
-
     //remember that gyro is flipped
       bearingPIDController=new PIDController(
         FieldOrientedDriveConstants.kFODP, 
@@ -96,11 +94,7 @@ public class CoralStationAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(RobotContainer.aliningWithCoral){
-    return false;
-    }
-    else{
-      return true;
-    }
+    Optional<Transform3d> pose = estimator.getRobotToSeenTag();
+    return pose.isEmpty();
   }
 }

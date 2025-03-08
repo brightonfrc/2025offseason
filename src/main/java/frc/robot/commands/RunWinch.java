@@ -6,20 +6,28 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Winch;
+import frc.robot.commands.JankLift;
+import frc.robot.subsystems.Arm;;;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RunWinch extends Command {
   private Winch winch;
+  // private JankLift lft;
+  // private Arm newarm;
+
   /** Creates a new RunWinch. */
   public RunWinch(Winch winch) {
     this.winch=winch;
+    // this.lft = lft;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(winch);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

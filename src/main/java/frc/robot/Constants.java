@@ -76,7 +76,7 @@ public final class Constants {
     public static double translationkP=0.70;
     public static double translationkI=0.0;
     public static double translationkD=0.0;
-    public static double rotationkP=0.1;
+    public static double rotationkP=0.1;  
     public static double rotationkI=0.0;
     public static double rotationkD=0.0;
   }
@@ -99,7 +99,7 @@ public final class Constants {
   public static class IntakeConstants{
     public static final int intakeCanID=14;
     public static final double intakePower=-0.4;
-    public static final double outtakePower=0.4;
+    public static final double outtakePower=0.2;//0.4;
   }
   public static class AngleLimitConstants{
     //all in degrees, remember to convert to radians
@@ -116,26 +116,27 @@ public final class Constants {
   public static class ArmConstants{
     public static final double kWeightMomentOffsetFactor=0.034;
     //get a engineer's square the next time I do this
-    public static final double angleAtZero=135.5;
+    public static final double angleAtZero=136.5;
     // public static final int decimalPlaces=2;
     public static final int armCANID=13;
     public static final int armEncoderPort=1;
     //its all in degrees, remember to convert
     public static final double[] desiredArmAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
-      0,//Ground intake (placeholder)
+      -45,//Ground intake (placeholder)
       -30,//L1
       -55,//L2
       -30,//L3
       60, //L4
       -80, //Algae2 
       -99, //Algae3 (placeholder)
-      30, //CoralStation 
+      27, //CoralStation 
       -110, //StartingConfig 
       -45, //hangStart
+      145 // Internal Stow
     };
     public static final double maxPower=0.4;
-    public static final double kPArm=0.09;
+    public static final double kPArm=0.06;
     public static final double kIArm=0.03;
     public static final double kDArm=0;
     //1 degree tolerance
@@ -157,16 +158,18 @@ public final class Constants {
     //angles required
     public static final double[] desiredLiftAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
-      0.22,//ground intake (placeholder) 
+      Math.toRadians(10),//0.22,//ground intake (placeholder) 
       Math.toRadians(30),//L1
       Math.toRadians(61),//L2
       Math.toRadians(86),//L3 
       Math.toRadians(80),//L4
       Math.toRadians(50),//Algae2 
       Math.toRadians(74),//Algae3 (placeholder)
-      Math.toRadians(33),//CoralStation 
+      Math.toRadians(30),//CoralStation 
       Math.toRadians(35),//StartingConfig 
-      Math.toRadians(20)// hang 
+      Math.toRadians(20),// hang 
+      Math.toRadians(10),
+      Math.toRadians(15) // Internal Stow
     };
     
 
@@ -180,7 +183,9 @@ public final class Constants {
       Algae2, //algae between L2 and L3
       Algae3, //algae between L3 and L4
       CoralStation,
-      HangStart
+      HangStart,
+      HangEnd,
+      InternalStow
     }
     public static final double armLength=27.4*0.0254;
     public static final double kPLift=0.6;
@@ -190,9 +195,9 @@ public final class Constants {
     //remember to adjust as more components are added
     public static final double kWeightMomentOffsetFactor=0.02;
 
-    public static final double liftFallingPower=-0.25;
+    public static final double liftFallingPower=-0.4;//-0.25;
     public static final double L4OuttakeAngle=Math.toRadians(75);
-    public static final double L4OuttakeEnd=Math.toRadians(65);
+    public static final double L4OuttakeEnd=Math.toRadians(50);
     public static final double kPHang=1.2;
     public static final double kIHang=0.5;
     public static final double kDHang=0.0;
