@@ -15,7 +15,7 @@ import frc.robot.Constants.LiftConstants;
 import frc.robot.Constants.LiftConstants.Height;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class JankLift extends Command {
+public class JankLiftAutonomous extends Command {
   private DatisLift lift;
   private Arm arm;
   private double angleRequired;
@@ -26,7 +26,7 @@ public class JankLift extends Command {
   private Boolean emergencyStop;
   private Height height;
   /** Creates a new Lift. */
-  public JankLift(DatisLift lift, Arm arm, Height heightDesired) {
+  public JankLiftAutonomous(DatisLift lift, Arm arm, Height heightDesired) {
     this.arm=arm;
     this.lift=lift;
     switch(heightDesired){
@@ -169,8 +169,6 @@ public class JankLift extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return liftController.atSetpoint() && armController.atSetpoint();
   }
-
-
 }

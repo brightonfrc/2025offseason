@@ -33,6 +33,9 @@ public final class Constants {
   public static class CoralStationAlignConstants{
     public static double xDisplacement=0.8;
     public static double xTolerance=0.05;
+
+    public static double leftCoralStationRot = 135;
+    public static double rightCoralStationRot = 225;
   }
   public static class AutonomousNavConstants{
     // public static double translationkP=0.1;
@@ -49,7 +52,7 @@ public final class Constants {
     //public static double endRotOne=240;
     
 
-    public static StartingPosition startPos = StartingPosition.Left;
+    public static StartingPosition startPos = StartingPosition.Right;
 
     public static enum StartingPosition{
       Left,
@@ -128,8 +131,8 @@ public final class Constants {
       -55,//L2
       -30,//L3
       60, //L4
-      -80, //Algae2 
-      -99, //Algae3 (placeholder)
+      -60, //Algae2 
+      -70, //Algae3 (placeholder)
       27, //CoralStation 
       -110, //StartingConfig 
       -45, //hangStart
@@ -163,12 +166,12 @@ public final class Constants {
       Math.toRadians(61),//L2
       Math.toRadians(86),//L3 
       Math.toRadians(80),//L4
-      Math.toRadians(50),//Algae2 
-      Math.toRadians(74),//Algae3 (placeholder)
+      Math.toRadians(40),//Algae2 
+      Math.toRadians(68),//Algae3 (placeholder)
       Math.toRadians(30),//CoralStation 
       Math.toRadians(35),//StartingConfig 
-      Math.toRadians(20),// hang 
-      Math.toRadians(10),
+      Math.toRadians(20),// hang start
+      // Math.toRadians(10), // hang end
       Math.toRadians(15) // Internal Stow
     };
     
@@ -184,7 +187,7 @@ public final class Constants {
       Algae3, //algae between L3 and L4
       CoralStation,
       HangStart,
-      HangEnd,
+      // HangEnd,
       InternalStow
     }
     public static final double armLength=27.4*0.0254;

@@ -7,6 +7,7 @@ package frc.robot;
 
 import frc.robot.Constants.AutonomousNavConstants;
 import frc.robot.Constants.ChoreoConstants;
+import frc.robot.Constants.CoralStationAlignConstants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.LiftConstants;
@@ -38,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.HangRobot;
 import frc.robot.commands.JankLift;
+import frc.robot.commands.JankLiftAutonomous;
 import frc.robot.subsystems.Intake;
 
 import com.revrobotics.spark.SparkMax;
@@ -149,6 +151,7 @@ public class RobotContainer {
     m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
     m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
     m_manualLiftController.cross().onTrue(new HangRobot(lift));
+    m_manualLiftController.triangle().onTrue(new JankLift(lift, arm, Height.InternalStow));
     // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
     // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 
@@ -199,25 +202,25 @@ public class RobotContainer {
           autoFactory.trajectoryCmd("Left"),
           stop,
           new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-          new JankLift(lift, arm, Height.L4),
+          new JankLiftAutonomous(lift, arm, Height.L4),
           new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-          new JankLift(lift, arm, Height.CoralStation),
+          new JankLiftAutonomous(lift, arm, Height.CoralStation),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
           autoFactory.resetOdometry("LeftToStation"),
           autoFactory.trajectoryCmd("LeftToStation"),
           stop2,
           // Await for coral deposit...?
-          new MoveToPoint(m_driveSubsystem, Math.toRadians(135)),
-          new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 3),
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.leftCoralStationRot)),
+          new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
           autoFactory.resetOdometry("LeftFromStation"),
           autoFactory.trajectoryCmd("LeftFromStation"),
           stop3,
           //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-          new JankLift(lift, arm, Height.L4),
+          new JankLiftAutonomous(lift, arm, Height.L4),
           new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-          new JankLift(lift, arm, Height.CoralStation),
+          new JankLiftAutonomous(lift, arm, Height.CoralStation),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
         );
       case Right:
@@ -226,25 +229,25 @@ public class RobotContainer {
           autoFactory.trajectoryCmd("Right"),
           stop,
           new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-          new JankLift(lift, arm, Height.L4),
+          new JankLiftAutonomous(lift, arm, Height.L4),
           new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-          new JankLift(lift, arm, Height.CoralStation),
+          new JankLiftAutonomous(lift, arm, Height.CoralStation),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
           autoFactory.resetOdometry("RightToStation"),
           autoFactory.trajectoryCmd("RightToStation"),
           stop2,
           // Await for coral deposit...?
-          new MoveToPoint(m_driveSubsystem, Math.toRadians(135)),
-          new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 3),
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.leftCoralStationRot)),
+          new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
           autoFactory.resetOdometry("RightFromStation"),
           autoFactory.trajectoryCmd("RightFromStation"),
           stop3,
           //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-          new JankLift(lift, arm, Height.L4),
+          new JankLiftAutonomous(lift, arm, Height.L4),
           new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-          new JankLift(lift, arm, Height.CoralStation),
+          new JankLiftAutonomous(lift, arm, Height.CoralStation),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
         );
       case Middle: // Weird case
@@ -253,25 +256,25 @@ public class RobotContainer {
         autoFactory.trajectoryCmd("Middle"),
         stop,
         new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-        new JankLift(lift, arm, Height.L4),
+        new JankLiftAutonomous(lift, arm, Height.L4),
         new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-        new JankLift(lift, arm, Height.CoralStation),
+        new JankLiftAutonomous(lift, arm, Height.CoralStation),
         new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
         autoFactory.resetOdometry("MiddleToStation"),
         autoFactory.trajectoryCmd("MiddleToStation"),
         stop2,
         // Await for coral deposit...?
-        new MoveToPoint(m_driveSubsystem, Math.toRadians(225)),
-        new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 3),
+        new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.rightCoralStationRot)),
+        new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
         new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
         autoFactory.resetOdometry("MiddleFromStation"),
         autoFactory.trajectoryCmd("MiddleFromStation"),
         stop3,
         //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
         new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-        new JankLift(lift, arm, Height.L4),
+        new JankLiftAutonomous(lift, arm, Height.L4),
         new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-        new JankLift(lift, arm, Height.CoralStation),
+        new JankLiftAutonomous(lift, arm, Height.CoralStation),
         new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
       );
       default:
