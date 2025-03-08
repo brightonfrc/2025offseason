@@ -118,7 +118,9 @@ public class RobotContainer {
    * joysticks}.
    */
 
-   public static boolean aliningWithCoral = false;
+   //public static boolean aliningWithCoral = false;
+
+   public static boolean fieldRelative = true;
 
   private void configureBindings() {
     //R2 and L2 don't work
@@ -146,14 +148,17 @@ public class RobotContainer {
     m_manualLiftController.povRight().onTrue(new JankLift(lift, arm, Height.Algae3));
     m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
     m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
-    m_manualLiftController.square().onTrue(new HangRobot(lift));
+    m_manualLiftController.cross().onTrue(new HangRobot(lift));
     // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
     // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
     
-    m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController, m_poseEstimator));
+    //m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController, m_poseEstimator));
+    // m_manualLiftController.circle().onTrue(new MoveToPointTeleop(m_driveSubsystem, Math.toRadians(225))); // Right
+    // m_manualLiftController.square().onTrue(new MoveToPointTeleop(m_driveSubsystem, Math.toRadians(135))); // Left
+    //m_manualLiftController.triangle().onTrue();
     //m_manualLiftController.triangle().onTrue()
     //m_manualLiftController.triangle().onTrue(fieldOrientedDrive)
 

@@ -32,6 +32,11 @@ public class MoveToPoint extends Command {
     addRequirements(driveSubsystem);
   }
 
+  // public MoveToPoint(DriveSubsystem driveSubsystem, double goal, boolean fieldRelative){
+  //   this.driveSubsystem=driveSubsystem;
+  //   this.goal=goal;
+  //   addRequirements(driveSubsystem);
+  // }
 
   // Called when the command is initially scheduled.
   @Override

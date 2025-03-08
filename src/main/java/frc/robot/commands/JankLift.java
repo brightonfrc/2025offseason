@@ -70,6 +70,10 @@ public class JankLift extends Command {
         angleRequired=LiftConstants.desiredLiftAngle[9];
         armAngleRequired=ArmConstants.desiredArmAngle[9];
         break;
+      case HangEnd:
+        angleRequired=LiftConstants.desiredLiftAngle[10];
+        armAngleRequired=ArmConstants.desiredArmAngle[10];
+        break;
     }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(lift);
@@ -163,4 +167,6 @@ public class JankLift extends Command {
   public boolean isFinished() {
     return false;
   }
+
+
 }

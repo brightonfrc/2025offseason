@@ -11,12 +11,17 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SignalsConfig;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 public class DatisLift extends SubsystemBase {
   private SparkMax liftNeo;
   private SparkMax reversedLiftNeo;
   private DutyCycleEncoder encoder;
   private Height height;
   private double previousPowerSet;
+
   /** Creates a new DatisLift. */
   public DatisLift(SparkMax liftNeo, SparkMax reversedLiftNeo, DutyCycleEncoder encoder) {
     this.liftNeo=liftNeo;
@@ -57,4 +62,16 @@ public class DatisLift extends SubsystemBase {
   public double getPreviousPowerSet(){
     return previousPowerSet;
   }
+  // public void coaster(boolean isBraking){
+  //   if(!isBraking){
+  //     smconfig.idleMode(IdleMode.kCoast);
+  //     smconfig.follow(11);
+  //   }
+  //   else{
+  //     smconfig.idleMode(IdleMode.kBrake);
+  //     smconfig.follow(11);
+  //     smconfig.follow(11);
+  //     liftNeo.
+  //   }
+  // }
 }

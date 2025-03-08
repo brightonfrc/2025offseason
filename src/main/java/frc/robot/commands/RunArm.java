@@ -35,9 +35,11 @@ public class RunArm extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
     // SmartDashboard.putBoolean("command active", true);
     double liftAngle=lift.getLiftAngle();
     double armAngle=arm.getArmAngle();
+    SmartDashboard.putNumber("Angle of arm", armAngle);
     SmartDashboard.putNumber("Angle above ground", liftAngle+armAngle);
     SmartDashboard.putBoolean("Command active", true);
     double weightOffsetFactor=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(armAngle+liftAngle));
