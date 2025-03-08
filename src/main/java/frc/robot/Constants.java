@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants.LiftConstants.Height;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -50,14 +51,16 @@ public final class Constants {
     //remember that the gyro is inverted, so 90 degrees is to the left
     //bearing of robot when first Choreo Path Ends.
     //public static double endRotOne=240;
-    
 
-    public static StartingPosition startPos = StartingPosition.Right;
+    public static Height scoreHeight = Height.L4;
+
+    public static StartingPosition startPos = StartingPosition.Taxi;//StartingPosition.Right;
 
     public static enum StartingPosition{
       Left,
       Right,
-      Middle
+      Middle,
+      Taxi
     }
     
     //remember that the gyro is inverted, so 90 degrees is to the left

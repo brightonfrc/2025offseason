@@ -37,6 +37,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.HangRobot;
 import frc.robot.commands.JankLift;
 import frc.robot.commands.JankLiftAutonomous;
@@ -174,6 +175,12 @@ public class RobotContainer {
     //align left
     m_driverController.rightBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
 
+
+    //m_manualLiftController.square().onTrue(); // Reset gyro whenever necessary
+    m_manualLiftController.square().onTrue(
+      new InstantCommand(() -> m_driveSubsystem.resetGyro(), m_driveSubsystem)
+    );
+
   }
 
   /**
@@ -195,6 +202,8 @@ public class RobotContainer {
     // YOU MUST CHANGE THE STARTPOS CONSTANT IN THE CONSTANTS BASED ON THE FIELD!!!!!!!
     // TODO : Properly discuss with Datis and then setup the commands sequence as such
     
+    Height scoreHeight = AutonomousNavConstants.scoreHeight;//Height.L4; // Datis wants L4
+
     switch (AutonomousNavConstants.startPos){
       case Left:
         return Commands.sequence(
@@ -202,7 +211,7 @@ public class RobotContainer {
           autoFactory.trajectoryCmd("Left"),
           stop,
           new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-          new JankLiftAutonomous(lift, arm, Height.L4),
+          new JankLiftAutonomous(lift, arm, scoreHeight),
           new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
           new JankLiftAutonomous(lift, arm, Height.CoralStation),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
@@ -218,7 +227,7 @@ public class RobotContainer {
           stop3,
           //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-          new JankLiftAutonomous(lift, arm, Height.L4),
+          new JankLiftAutonomous(lift, arm, scoreHeight),
           new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
           new JankLiftAutonomous(lift, arm, Height.CoralStation),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
@@ -229,7 +238,7 @@ public class RobotContainer {
           autoFactory.trajectoryCmd("Right"),
           stop,
           new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-          new JankLiftAutonomous(lift, arm, Height.L4),
+          new JankLiftAutonomous(lift, arm, scoreHeight),
           new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
           new JankLiftAutonomous(lift, arm, Height.CoralStation),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
@@ -241,22 +250,23 @@ public class RobotContainer {
           new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
           autoFactory.resetOdometry("RightFromStation"),
-          autoFactory.trajectoryCmd("RightFromStation"),
-          stop3,
-          //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
-          new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-          new JankLiftAutonomous(lift, arm, Height.L4),
-          new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-          new JankLiftAutonomous(lift, arm, Height.CoralStation),
-          new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
+          autoFactory.trajectoryCmd("RightFromStation")//,
+          // // Might not work due to time constraints, need to ensure rotation is zero for start of tele
+          // stop3,
+          // //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
+          // // new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
+          // // new JankLiftAutonomous(lift, arm, scoreHeight),
+          // // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
+          // // new JankLiftAutonomous(lift, arm, Height.CoralStation),
+          // // new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
         );
-      case Middle: // Weird case
+      case Middle: // Weird case, have to check if collide with other robots
       return Commands.sequence(
         autoFactory.resetOdometry("Middle"),
         autoFactory.trajectoryCmd("Middle"),
         stop,
         new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-        new JankLiftAutonomous(lift, arm, Height.L4),
+        new JankLiftAutonomous(lift, arm, scoreHeight),
         new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
         new JankLiftAutonomous(lift, arm, Height.CoralStation),
         new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
@@ -272,11 +282,17 @@ public class RobotContainer {
         stop3,
         //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
         new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-        new JankLiftAutonomous(lift, arm, Height.L4),
+        new JankLiftAutonomous(lift, arm, scoreHeight),
         new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
         new JankLiftAutonomous(lift, arm, Height.CoralStation),
         new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
       );
+      case Taxi:
+        return Commands.sequence(
+          autoFactory.resetOdometry("Taxi"),
+          autoFactory.trajectoryCmd("Taxi"),
+          stop
+        );
       default:
         return Commands.sequence(
           stop
@@ -304,6 +320,11 @@ public class RobotContainer {
   }
   public void SetUpDefaultCommand(){
     m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
+  }
+
+  public void resetBearings(){  
+    m_driveSubsystem.resetOdometry(m_driveSubsystem.getPose());
+    m_driveSubsystem.resetGyro();
   }
 
   public void resetGyro(){
