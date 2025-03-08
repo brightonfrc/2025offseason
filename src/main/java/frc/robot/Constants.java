@@ -29,6 +29,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static class WinchConstants{
     public static double winchPower=0.5;
+    public static int winchCANID=15;
   }
   public static class CoralStationAlignConstants{
     public static double xDisplacement=0.8;

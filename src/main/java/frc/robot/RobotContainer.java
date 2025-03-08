@@ -11,6 +11,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.LiftConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.WinchConstants;
 import frc.robot.Constants.LiftConstants.Height;
 import frc.robot.Constants.AprilTagAlignmentConstants;
 import frc.robot.commands.AprilTagAlignment;
@@ -39,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.HangRobot;
 import frc.robot.commands.JankLift;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Winch;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -73,6 +75,7 @@ public class RobotContainer {
   private final DatisLift lift= new DatisLift(new SparkMax(LiftConstants.liftNeoCANID, MotorType.kBrushless), new SparkMax(LiftConstants.reversedLiftNeoCANDID, MotorType.kBrushless), new DutyCycleEncoder(LiftConstants.encoderChannel));
   private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushless));
   private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
+  private final Winch winch = new Winch(new SparkMax(WinchConstants.winchCANID, MotorType.kBrushless));
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   private final AprilTagPoseEstimator m_poseEstimator = new AprilTagPoseEstimator();
 
@@ -148,7 +151,7 @@ public class RobotContainer {
     m_manualLiftController.povRight().onTrue(new JankLift(lift, arm, Height.Algae3));
     m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
     m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
-    m_manualLiftController.cross().onTrue(new HangRobot(lift));
+    m_manualLiftController.cross().onTrue(new HangRobot(lift, winch));
     // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
     // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 

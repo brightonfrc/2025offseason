@@ -19,23 +19,23 @@ public class HangRobot extends Command {
   private DatisLift lift;
   private PIDController liftController;
   // private Arm newarm;
-  // private Winch win;
+  private Winch win;
   /** Creates a new HangRobot. */
 
-  public HangRobot(DatisLift lift) {
+  public HangRobot(DatisLift lift, Winch winch) {
     this.lift=lift;
     // this.newarm = newarm;
-    // this.win = win;
+    this.win = winch;
     // Use addRequirements() here to declare subsystem dependencies.
-    
+    addRequirements(lift, win);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // liftController = new PIDController(LiftConstants.kPHang, LiftConstants.kIHang, LiftConstants.kDHang);
-    // liftController.setSetpoint(Math.toRadians(11));
-    // liftController.setTolerance(LiftConstants.angleTolerance);
+    liftController = new PIDController(LiftConstants.kPHang, LiftConstants.kIHang, LiftConstants.kDHang);
+    liftController.setSetpoint(Math.toRadians(11));
+    liftController.setTolerance(LiftConstants.angleTolerance);
     // RunWinch runthing = new RunWinch(win);
     // runthing.schedule();
   }
@@ -44,11 +44,14 @@ public class HangRobot extends Command {
   @Override
   public void execute() {
     lift.setPower(liftController.calculate(Math.toRadians(lift.getLiftAngle())));
+    win.runWinch();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    
+  }
 
   // Returns true when the command should end.
   @Override
