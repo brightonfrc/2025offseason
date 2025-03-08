@@ -12,6 +12,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.LiftConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.WinchConstants;
 import frc.robot.Constants.LiftConstants.Height;
 import frc.robot.Constants.AprilTagAlignmentConstants;
 import frc.robot.commands.AprilTagAlignment;
@@ -42,6 +43,7 @@ import frc.robot.commands.HangRobot;
 import frc.robot.commands.JankLift;
 import frc.robot.commands.JankLiftAutonomous;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Winch;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -78,6 +80,7 @@ public class RobotContainer {
   private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   private final AprilTagPoseEstimator m_poseEstimator = new AprilTagPoseEstimator();
+  private final Winch winch = new Winch(new SparkMax(WinchConstants.winchCANID, MotorType.kBrushless));
 
   private boolean active = false;
 
@@ -151,7 +154,7 @@ public class RobotContainer {
     m_manualLiftController.povRight().onTrue(new JankLift(lift, arm, Height.Algae3));
     m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
     m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
-    m_manualLiftController.cross().onTrue(new HangRobot(lift));
+    m_manualLiftController.cross().onTrue(new HangRobot(lift, winch));
     m_manualLiftController.triangle().onTrue(new JankLift(lift, arm, Height.InternalStow));
     // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
     // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
