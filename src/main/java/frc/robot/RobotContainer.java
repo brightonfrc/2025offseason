@@ -156,8 +156,8 @@ public class RobotContainer {
     m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
     m_manualLiftController.cross().onTrue(new HangRobot(lift, winch));
     m_manualLiftController.triangle().onTrue(new JankLift(lift, arm, Height.InternalStow));
-    // m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
-    // m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
+    //m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
+    //m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.time.Year;
+
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -105,8 +107,8 @@ public final class Constants {
 
   public static class IntakeConstants{
     public static final int intakeCanID=14;
-    public static final double intakePower=-0.4;
-    public static final double outtakePower=0.2;//0.4;
+    public static final double intakePower=-0.5; //0.4
+    public static final double outtakePower=0.3;//0.2;
   }
   public static class AngleLimitConstants{
     //all in degrees, remember to convert to radians
@@ -144,7 +146,7 @@ public final class Constants {
     };
     public static final double maxPower=0.4;
     public static final double kPArm=0.06;
-    public static final double kIArm=0.03;
+    public static final double kIArm=0.03; 
     public static final double kDArm=0;
     //1 degree tolerance
     public static final double angleTolerance=Math.PI/180;
@@ -195,8 +197,8 @@ public final class Constants {
       InternalStow
     }
     public static final double armLength=27.4*0.0254;
-    public static final double kPLift=0.6;
-    public static final double kILift=0.03;
+    public static final double kPLift=0.55; //0.6
+    public static final double kILift=0.025; //0.03
     public static final double kDLift=0;
     public static final double angleTolerance=Math.PI/180;
     //remember to adjust as more components are added
