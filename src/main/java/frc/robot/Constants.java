@@ -132,7 +132,7 @@ public final class Constants {
     //its all in degrees, remember to convert
     public static final double[] desiredArmAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
-      -45,//Ground intake (placeholder)
+      -40,//Ground intake (placeholder)
       -30,//L1
       -55,//L2
       -30,//L3
@@ -145,8 +145,8 @@ public final class Constants {
       145 // Internal Stow
     };
     public static final double maxPower=0.4;
-    public static final double kPArm=0.06;
-    public static final double kIArm=0.03; 
+    public static final double kPArm=0.12;
+    public static final double kIArm=0.04; 
     public static final double kDArm=0;
     //1 degree tolerance
     public static final double angleTolerance=Math.PI/180;
