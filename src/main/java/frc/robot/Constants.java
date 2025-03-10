@@ -57,13 +57,15 @@ public final class Constants {
 
     public static Height scoreHeight = Height.L4;
 
-    public static StartingPosition startPos = StartingPosition.Taxi;//StartingPosition.Right;
+    public static StartingPosition
+     startPos = StartingPosition.Testing;//StartingPosition.Right;
 
     public static enum StartingPosition{
       Left,
       Right,
       Middle,
-      Taxi
+      Taxi,
+      Testing
     }
     
     //remember that the gyro is inverted, so 90 degrees is to the left

@@ -296,6 +296,13 @@ public class RobotContainer {
           autoFactory.trajectoryCmd("Taxi"),
           stop
         );
+      case Testing:
+        
+        return Commands.sequence(
+          autoFactory.resetOdometry("Test"),
+          autoFactory.trajectoryCmd("Test"),
+          stop
+        );
       default:
         return Commands.sequence(
           stop
