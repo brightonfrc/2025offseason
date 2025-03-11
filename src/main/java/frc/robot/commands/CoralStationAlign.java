@@ -33,7 +33,6 @@ public class CoralStationAlign extends Command {
    * Creates a new CoralStationAlign, which locks the robot's bearing towards the left coral station
    * Coral station require is decided by the general direction of left joystick
    * cancel by pressing right bumper
-   * Not tested
    */
   // public CoralStationAlign(DriveSubsystem driveSubsystem, CommandXboxController controller, AprilTagPoseEstimator estimator) {
   //   this.driveSubsystem=driveSubsystem;
@@ -54,21 +53,34 @@ public class CoralStationAlign extends Command {
   public void initialize() {
     //remember that gyro is flipped
       bearingPIDController=new PIDController(
-        FieldOrientedDriveConstants.kFODP, 
-        FieldOrientedDriveConstants.kFODI, 
-        FieldOrientedDriveConstants.kFODD
+        CoralStationAlignConstants.kRotP,
+        CoralStationAlignConstants.kRotI,
+        CoralStationAlignConstants.kRotD
       );
-      //left coral station bearing is at 120 to 0, where 0 is forwards for the robot. 
-      bearingPIDController.setSetpoint(2/3*Math.PI);
+      //left coral station bearing is at 126 to 0, where 0 is forwards for the robot. 
+      
+      double currentBearing=driveSubsystem.getGyroAngle();
+      if (currentBearing<0){
+        currentBearing+=360;
+      }
+      // SmartDashboard.putNumber("robotBearing", currentBearing);
+      if (currentBearing<180){
+        // SmartDashboard.putBoolean("SetRightCS", false);
+        bearingPIDController.setSetpoint(CoralStationAlignConstants.leftCoralStationRot*Math.PI/180);
+      }
+      else{
+        // SmartDashboard.putBoolean("SetRightCS", true);
+        bearingPIDController.setSetpoint(CoralStationAlignConstants.rightCoralStationRot*Math.PI/180);
+      }
       bearingPIDController.setTolerance(FieldOrientedDriveConstants.bearingTolerance);
       bearingPIDController.enableContinuousInput(0, 2*Math.PI);
-      xPIDController=new PIDController(
-        AprilTagAlignmentConstants.kMoveP, 
-        AprilTagAlignmentConstants.kMoveI, 
-        AprilTagAlignmentConstants.kMoveD
-      );
-      xPIDController.setSetpoint(CoralStationAlignConstants.xDisplacement);
-      xPIDController.setSetpoint(CoralStationAlignConstants.xTolerance);
+      // xPIDController=new PIDController(
+      //   AprilTagAlignmentConstants.kMoveP, 
+      //   AprilTagAlignmentConstants.kMoveI, 
+      //   AprilTagAlignmentConstants.kMoveD
+      // );
+      // xPIDController.setSetpoint(CoralStationAlignConstants.xDisplacement);
+      // xPIDController.setSetpoint(CoralStationAlignConstants.xTolerance);
       active=true;
 }
   
@@ -82,14 +94,13 @@ public class CoralStationAlign extends Command {
       //end command the moment rightBumper is pressed
       active=false;
     }
-    if (Math.hypot(controller.getRightY(), controller.getRightX())>  0.9) {
-      double joystickTurnBearing = Math.atan2(controller.getRightY(), controller.getRightX()) + Math.PI/2;
-      if (joystickTurnBearing>0){
-        //left stick facing right, which swaps coral station from left to Right. Bearing 240
-        bearingPIDController.setSetpoint(Math.PI*4/3);
+    if (Math.hypot(controller.getRightY(), controller.getRightX())> 0.9) {
+      if (controller.getRightX()>0){
+        //right stick facing right, which swaps coral station from left to Right. Bearing 240
+        bearingPIDController.setSetpoint(CoralStationAlignConstants.rightCoralStationRot*Math.PI/180);
       }
       else{
-        bearingPIDController.setSetpoint(Math.PI*2/3);
+        bearingPIDController.setSetpoint(CoralStationAlignConstants.leftCoralStationRot*Math.PI/180);
       }
     }
     double xSpeed=0;
@@ -121,6 +132,6 @@ public class CoralStationAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return active;
+    return !active;
   }
 }

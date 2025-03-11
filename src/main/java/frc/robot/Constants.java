@@ -38,8 +38,12 @@ public final class Constants {
     public static double xDisplacement=0.8;
     public static double xTolerance=0.05;
 
-    public static double leftCoralStationRot = 135;
-    public static double rightCoralStationRot = 225;
+    public static double leftCoralStationRot = 126;
+    public static double rightCoralStationRot = 234;
+
+    public static final double kRotP = 0.11;
+    public static final double kRotI = 0.0;
+    public static final double kRotD = 0.0;
   }
   public static class AutonomousNavConstants{
     public static double translationkP=0.1;
