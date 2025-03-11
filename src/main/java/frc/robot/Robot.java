@@ -63,13 +63,12 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     SmartDashboard.putString("Auto Path", AutonomousNavConstants.startPos.toString());
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    
+    m_robotContainer.resetGyro();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
     
-    m_robotContainer.resetGyro();
   }
 
   /** This function is called periodically during autonomous. */
@@ -81,7 +80,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
-    m_robotContainer.resetGyro();
+    // m_robotContainer.resetGyro();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -104,7 +103,6 @@ public class Robot extends TimedRobot {
     m_robotContainer.getHeightSet();
 
     // m_robotContainer.printPose();
-
   }
 
   @Override

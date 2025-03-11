@@ -32,9 +32,9 @@ public class MoveToPoint extends Command {
     addRequirements(driveSubsystem);
   }
 
-  // public MoveToPoint(DriveSubsystem driveSubsystem, double goal, boolean fieldRelative){
+  // public MoveToPoint(DriveSubsystem driveSubsystem, Pose2d goalPose2d){
   //   this.driveSubsystem=driveSubsystem;
-  //   this.goal=goal;
+  //   this.goal=goalPose2d;
   //   addRequirements(driveSubsystem);
   // }
 
@@ -50,7 +50,12 @@ public class MoveToPoint extends Command {
     rotController=new PIDController(AutonomousNavConstants.rotationkP, AutonomousNavConstants.rotationkI, AutonomousNavConstants.rotationkD);
     rotController.setTolerance(AutonomousNavConstants.rotationTolerance);
     rotController.enableContinuousInput(0, 2*Math.PI);
-    rotController.setSetpoint(goal);
+    double radiansSetpoint=goal;
+    //convert to range 0 to 2 PI
+    if (radiansSetpoint<0){
+      radiansSetpoint+=2*Math.PI;
+    }
+    rotController.setSetpoint(radiansSetpoint);
 
   }
 
@@ -64,17 +69,22 @@ public class MoveToPoint extends Command {
     }
     // SmartDashboard.putNumber("Pose/x", driveSubsystem.getPose().getX());
     // SmartDashboard.putNumber("Pose/y", driveSubsystem.getPose().getY());
-    
+    SmartDashboard.putBoolean("MoveToPointActive", true);
 
     //convert to radians
     robotBearing=Math.toRadians(robotBearing);
+    SmartDashboard.putNumber("Bearing", robotBearing);
     double rotSpeed=rotController.calculate(robotBearing);
-    // double xSpeed=xController.calculate(driveSubsystem.getPose().getX());
-    // double ySpeed=yController.calculate(driveSubsystem.getPose().getY());
+    // double xSpeed=xController.calculate(-driveSubsystem.getPose().getX());
+    // double ySpeed=yController.calculate(-driveSubsystem.getPose().getY());
     // SmartDashboard.putNumber("Speed/x", xSpeed);
     // SmartDashboard.putNumber("Speed/y", ySpeed);
     //rotation works
     // SmartDashboard.putNumber("Speed/rot", rotSpeed);
+    // driveSubsystem.drive(xSpeed, 0, 0, false);
+    // if (xController.atSetpoint()&&yController.atSetpoint()){
+    //   driveSubsystem.drive(0, 0, rotSpeed, false);
+    // }
     driveSubsystem.drive(0, 0, rotSpeed, false);
   }
 
@@ -82,12 +92,13 @@ public class MoveToPoint extends Command {
   @Override
   public void end(boolean interrupted) {
     driveSubsystem.drive(0, 0, 0, false);
+    SmartDashboard.putBoolean("MoveToPointActive", false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return (xController.atSetpoint()&&yController.atSetpoint()&&rotController.atSetpoint());
+    // return xController.atSetpoint()&&yController.atSetpoint()&&rotController.atSetpoint();
     return rotController.atSetpoint();
   }
 }

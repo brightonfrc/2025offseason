@@ -42,12 +42,12 @@ public final class Constants {
     public static double rightCoralStationRot = 225;
   }
   public static class AutonomousNavConstants{
-    // public static double translationkP=0.1;
-    // public static double translationkI=0;
-    // public static double translationkD=0;
-    // public static double translationTolerance=0.01;
-    public static double rotationkP=0.25;
-    public static double rotationkD=0.02;
+    public static double translationkP=0.1;
+    public static double translationkI=0;
+    public static double translationkD=0;
+    public static double translationTolerance=0.02;
+    public static double rotationkP=0.19;
+    public static double rotationkD=0.0;
     public static double rotationkI=0.1;
     //0.5 degrees of tolerance
     public static double rotationTolerance=Math.PI/360;

@@ -129,8 +129,9 @@ public class DriveSubsystem extends SubsystemBase {
   }
   /**Returns currently-estimated pose without current bearing */
   public Pose2d getPoseChoreo(){
-    Pose2d pose=getPose();
-    return new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(0));
+    Pose2d pose=getPose();    
+    //for some reason pose is reversed
+    return new Pose2d(-pose.getX(), -pose.getY(), Rotation2d.fromDegrees(0));
   }
 
   /**
