@@ -182,6 +182,7 @@ public class RobotContainer {
     m_manualLiftController.square().onTrue(
       new InstantCommand(() -> m_driveSubsystem.resetGyro(), m_driveSubsystem)
     );
+    m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
 
   }
 

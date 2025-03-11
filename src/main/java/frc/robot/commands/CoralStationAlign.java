@@ -28,18 +28,25 @@ public class CoralStationAlign extends Command {
   private CommandXboxController controller;
   private AprilTagPoseEstimator estimator;
   private PIDController xPIDController;
-  private boolean active = false;
+  private boolean active;
   /** 
-   * Creates a new CoralStationAlign, which locks the robot's bearing towards the coral station
-   * Currently activated by holding down triangle.
+   * Creates a new CoralStationAlign, which locks the robot's bearing towards the left coral station
+   * Coral station require is decided by the general direction of left joystick
+   * cancel by pressing right bumper
    * Not tested
    */
-  public CoralStationAlign(DriveSubsystem driveSubsystem, CommandXboxController controller, AprilTagPoseEstimator estimator) {
+  // public CoralStationAlign(DriveSubsystem driveSubsystem, CommandXboxController controller, AprilTagPoseEstimator estimator) {
+  //   this.driveSubsystem=driveSubsystem;
+  //   this.controller=controller;
+  //   this.estimator=estimator;
+  //   // Use addRequirements() here to declare subsystem dependencies.
+  //   addRequirements(driveSubsystem, estimator);
+  // }
+  public CoralStationAlign(DriveSubsystem driveSubsystem, CommandXboxController controller) {
     this.driveSubsystem=driveSubsystem;
     this.controller=controller;
-    this.estimator=estimator;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveSubsystem, estimator);
+    addRequirements(driveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -51,8 +58,8 @@ public class CoralStationAlign extends Command {
         FieldOrientedDriveConstants.kFODI, 
         FieldOrientedDriveConstants.kFODD
       );
-      //coral station bearing is at 240 to 0, where 0 is forwards for the robot. 
-      bearingPIDController.setSetpoint(4/3*Math.PI);
+      //left coral station bearing is at 120 to 0, where 0 is forwards for the robot. 
+      bearingPIDController.setSetpoint(2/3*Math.PI);
       bearingPIDController.setTolerance(FieldOrientedDriveConstants.bearingTolerance);
       bearingPIDController.enableContinuousInput(0, 2*Math.PI);
       xPIDController=new PIDController(
@@ -62,39 +69,58 @@ public class CoralStationAlign extends Command {
       );
       xPIDController.setSetpoint(CoralStationAlignConstants.xDisplacement);
       xPIDController.setSetpoint(CoralStationAlignConstants.xTolerance);
+      active=true;
 }
   
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("Coral Station Align Active", true);
+    //check to end command
+    if (controller.rightBumper().getAsBoolean()){
+      //end command the moment rightBumper is pressed
+      active=false;
+    }
+    if (Math.hypot(controller.getRightY(), controller.getRightX())>  0.9) {
+      double joystickTurnBearing = Math.atan2(controller.getRightY(), controller.getRightX()) + Math.PI/2;
+      if (joystickTurnBearing>0){
+        //left stick facing right, which swaps coral station from left to Right. Bearing 240
+        bearingPIDController.setSetpoint(Math.PI*4/3);
+      }
+      else{
+        bearingPIDController.setSetpoint(Math.PI*2/3);
+      }
+    }
     double xSpeed=0;
     double bearing = Math.toRadians(driveSubsystem.getGyroAngle());
     double joystickMoveBearing = Math.atan2(controller.getLeftX(), -controller.getLeftY());
     double joystickMoveMagnitude = Math.hypot(controller.getLeftX(), controller.getLeftY());
-    Optional<Transform3d> pose = estimator.getRobotToSeenTag();
-    if (pose.isEmpty()){
-      SmartDashboard.putBoolean("April Tag in view", false);
-      xSpeed= joystickMoveMagnitude * Math.cos(joystickMoveBearing) * TestingConstants.maximumSpeedReduced;
-    }
-    else{
-      SmartDashboard.putBoolean("April Tag in view", true);
-      SmartDashboard.putNumber("XDisplacement", pose.get().getX());
-      //reverse xSpeed because drivetrain must drive at positive sped to reduce xdistance
-      xSpeed= -xPIDController.calculate(pose.get().getX());
-    }
+    // Optional<Transform3d> pose = estimator.getRobotToSeenTag();
+    // if (pose.isEmpty()){
+    //   SmartDashboard.putBoolean("April Tag in view", false);
+    //   xSpeed= joystickMoveMagnitude * Math.cos(joystickMoveBearing) * TestingConstants.maximumSpeedReduced;
+    // }
+    // else{
+    //   SmartDashboard.putBoolean("April Tag in view", true);
+    //   SmartDashboard.putNumber("XDisplacement", pose.get().getX());
+    //   //reverse xSpeed because drivetrain must drive at positive sped to reduce xdistance
+    //   xSpeed= -xPIDController.calculate(pose.get().getX());
+    // }
+    xSpeed= joystickMoveMagnitude * Math.cos(joystickMoveBearing) * TestingConstants.maximumSpeedReduced;
     double ySpeed= joystickMoveMagnitude * Math.sin(joystickMoveBearing) * TestingConstants.maximumSpeedReduced;
     driveSubsystem.drive(xSpeed, -ySpeed, bearingPIDController.calculate(bearing), false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    SmartDashboard.putBoolean("Coral Station Align Active", false);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    Optional<Transform3d> pose = estimator.getRobotToSeenTag();
-    return pose.isEmpty();
+    return active;
   }
 }
