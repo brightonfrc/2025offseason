@@ -46,9 +46,9 @@ public final class Constants {
     public static double translationkI=0;
     public static double translationkD=0;
     public static double translationTolerance=0.02;
-    public static double rotationkP=0.19;
-    public static double rotationkD=0.0;
-    public static double rotationkI=0.1;
+    public static double rotationkP=0.25;
+    public static double rotationkD=0.005;
+    public static double rotationkI=0.01;
     //0.5 degrees of tolerance
     public static double rotationTolerance=Math.PI/360;
     //remember that the gyro is inverted, so 90 degrees is to the left

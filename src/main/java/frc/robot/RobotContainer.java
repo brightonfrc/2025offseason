@@ -301,7 +301,10 @@ public class RobotContainer {
           autoFactory.resetOdometry("Test"),
           autoFactory.trajectoryCmd("Test"),
           stop,
-          MoveToPoint(Math.toRadians(240))
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(240)),
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
+          autoFactory.resetOdometry("TestTwo"),
+          autoFactory.trajectoryCmd("TestTwo")
         );
       default:
         return Commands.sequence(
