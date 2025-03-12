@@ -88,7 +88,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DatisLift lift= new DatisLift(new SparkMax(LiftConstants.liftNeoCANID, MotorType.kBrushless), new SparkMax(LiftConstants.reversedLiftNeoCANDID, MotorType.kBrushless), new DutyCycleEncoder(LiftConstants.encoderChannel));
   private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushless));
-  // private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
+  private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   private final AprilTagPoseEstimator m_poseEstimator = new AprilTagPoseEstimator();
   private final Winch winch = new Winch(new SparkMax(WinchConstants.winchCANID, MotorType.kBrushless));
@@ -169,8 +169,8 @@ public class RobotContainer {
     //m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
     //m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 
-    // m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
-    // m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
+    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
     
     //m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController, m_poseEstimator));
     // m_manualLiftController.circle().onTrue(new MoveToPointTeleop(m_driveSubsystem, Math.toRadians(225))); // Right
@@ -223,105 +223,117 @@ public class RobotContainer {
     Height scoreHeight = AutonomousNavConstants.scoreHeight;//Height.L4; // Datis wants L4
 
     switch (AutonomousNavConstants.startPos){
-      // case Left:
-      //   return Commands.sequence(
-      //     autoFactory.resetOdometry("Left"),
-      //     autoFactory.trajectoryCmd("Left"),
-      //     stop,
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-      //     new JankLiftAutonomous(lift, arm, scoreHeight),
-      //     new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-      //     new JankLiftAutonomous(lift, arm, Height.CoralStation),
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-      //     autoFactory.resetOdometry("LeftToStation"),
-      //     autoFactory.trajectoryCmd("LeftToStation"),
-      //     stop2,
-      //     // Await for coral deposit...?
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.leftCoralStationRot)),
-      //     new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-      //     autoFactory.resetOdometry("LeftFromStation"),
-      //     autoFactory.trajectoryCmd("LeftFromStation"),
-      //     stop3,
-      //     //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-      //     new JankLiftAutonomous(lift, arm, scoreHeight),
-      //     new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-      //     new JankLiftAutonomous(lift, arm, Height.CoralStation),
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
-      //   );
-      // case Right:
-      //   return Commands.sequence(
-      //     autoFactory.resetOdometry("Right"),
-      //     autoFactory.trajectoryCmd("Right"),
-      //     stop,
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-      //     new JankLiftAutonomous(lift, arm, scoreHeight),
-      //     new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-      //     new JankLiftAutonomous(lift, arm, Height.CoralStation),
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-      //     autoFactory.resetOdometry("RightToStation"),
-      //     autoFactory.trajectoryCmd("RightToStation"),
-      //     stop2,
-      //     // Await for coral deposit...?
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.leftCoralStationRot)),
-      //     new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
-      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-      //     autoFactory.resetOdometry("RightFromStation"),
-      //     autoFactory.trajectoryCmd("RightFromStation")//,
-      //     // // Might not work due to time constraints, need to ensure rotation is zero for start of tele
-      //     // stop3,
-      //     // //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
-      //     // // new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-      //     // // new JankLiftAutonomous(lift, arm, scoreHeight),
-      //     // // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-      //     // // new JankLiftAutonomous(lift, arm, Height.CoralStation),
-      //     // // new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
-      //   );
-      // case Middle: // Weird case, have to check if collide with other robots
-      // return Commands.sequence(
-      //   autoFactory.resetOdometry("Middle"),
-      //   autoFactory.trajectoryCmd("Middle"),
-      //   stop,
-      //   new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-      //   new JankLiftAutonomous(lift, arm, scoreHeight),
-      //   new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-      //   new JankLiftAutonomous(lift, arm, Height.CoralStation),
-      //   new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-      //   autoFactory.resetOdometry("MiddleToStation"),
-      //   autoFactory.trajectoryCmd("MiddleToStation"),
-      //   stop2,
-      //   // Await for coral deposit...?
-      //   new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.rightCoralStationRot)),
-      //   new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
-      //   new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-      //   autoFactory.resetOdometry("MiddleFromStation"),
-      //   autoFactory.trajectoryCmd("MiddleFromStation"),
-      //   stop3,
-      //   //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
-      //   new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-      //   new JankLiftAutonomous(lift, arm, scoreHeight),
-      //   new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-      //   new JankLiftAutonomous(lift, arm, Height.CoralStation),
-      //   new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
-      // );
-      // case Taxi:
-      //   return Commands.sequence(
-      //     autoFactory.resetOdometry("Taxi"),
-      //     autoFactory.trajectoryCmd("Taxi"),
-      //     stop
-      //   );
-      case Testing:
-        //odometry must be relative to zero
+      case Left:
         return Commands.sequence(
-          autoFactory.resetOdometry("Test"),
-          autoFactory.trajectoryCmd("Test"),
+          autoFactory.resetOdometry("LeftStart"),
+          autoFactory.trajectoryCmd("LeftStart"),
           stop,
+          //turn around
           new MoveToPoint(m_driveSubsystem, Math.toRadians(240)),
+          new JankLiftAutonomous(lift, arm, scoreHeight),
+          new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
           new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-          autoFactory.resetOdometry("TestTwo"),
-          autoFactory.trajectoryCmd("TestTwo")
+          new JankLiftAutonomous(lift, arm, Height.CoralStation),
+          autoFactory.resetOdometry("LeftScoot"),
+          autoFactory.trajectoryCmd("LeftScoot"),
+          stop2,
+          autoFactory.resetOdometry("LeftCS"),
+          autoFactory.trajectoryCmd("LeftCS"),
+          stop3
+          // Sit tight until teleop
+
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.leftCoralStationRot)),
+          // new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
+          // autoFactory.resetOdometry("LeftFromStation"),
+          // autoFactory.trajectoryCmd("LeftFromStation"),
+          // stop3,
+          // //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
+          // new JankLiftAutonomous(lift, arm, scoreHeight),
+          // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
+          // new JankLiftAutonomous(lift, arm, Height.CoralStation),
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
         );
+      case Right:
+        return Commands.sequence(
+          autoFactory.resetOdometry("RightStart"),
+          autoFactory.trajectoryCmd("RightStart"),
+          stop,
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(120)),
+          new JankLiftAutonomous(lift, arm, scoreHeight),
+          new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
+          new JankLiftAutonomous(lift, arm, Height.CoralStation),
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
+          autoFactory.resetOdometry("RightScoot"),
+          autoFactory.trajectoryCmd("RightScoot"),
+          stop2,
+          autoFactory.resetOdometry("RightCS"),
+          autoFactory.trajectoryCmd("RightCS"),
+          stop3
+          // Await for coral deposit...?
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.leftCoralStationRot)),
+          // new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
+          // autoFactory.resetOdometry("RightFromStation"),
+          // autoFactory.trajectoryCmd("RightFromStation"),
+          // // Might not work due to time constraints, need to ensure rotation is zero for start of tele
+          // stop3,
+          // //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
+          // // new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
+          // // new JankLiftAutonomous(lift, arm, scoreHeight),
+          // // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
+          // // new JankLiftAutonomous(lift, arm, Height.CoralStation),
+          // // new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
+        );
+      case Middle: // Weird case, have to check if collide with other robots
+        return Commands.sequence(
+          autoFactory.resetOdometry("MiddleStart"),
+          autoFactory.trajectoryCmd("MiddleStart"),
+          stop,
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(Math.toRadians(180))),
+          new JankLiftAutonomous(lift, arm, scoreHeight),
+          new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
+          new JankLiftAutonomous(lift, arm, Height.CoralStation),
+          new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
+          //drive to CS
+          autoFactory.resetOdometry("MiddleScoot"),
+          autoFactory.trajectoryCmd("MiddleScoot"),
+          stop2,
+          autoFactory.resetOdometry("MiddleCS"),
+          autoFactory.trajectoryCmd("MiddleCS"),
+          stop3
+          // Await for coral deposit...?
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.rightCoralStationRot)),
+          // new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
+          // autoFactory.resetOdometry("MiddleFromStation"),
+          // autoFactory.trajectoryCmd("MiddleFromStation"),
+          // stop3,
+          // //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
+          // new JankLiftAutonomous(lift, arm, scoreHeight),
+          // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
+          // new JankLiftAutonomous(lift, arm, Height.CoralStation),
+          // new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
+        );
+      case Taxi:
+        return Commands.sequence(
+          autoFactory.resetOdometry("Taxi"),
+          autoFactory.trajectoryCmd("Taxi"),
+          stop
+        );
+      // case Testing:
+      //   //odometry must be relative to zero
+      //   return Commands.sequence(
+      //     autoFactory.resetOdometry("Test"),
+      //     autoFactory.trajectoryCmd("Test"),
+      //     stop,
+      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(240)),
+      //     new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
+      //     autoFactory.resetOdometry("TestTwo"),
+      //     autoFactory.trajectoryCmd("TestTwo")
+      //   );
       default:
         return Commands.sequence(
           stop

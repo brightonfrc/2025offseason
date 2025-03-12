@@ -63,10 +63,10 @@ public final class Constants {
     //bearing of robot when first Choreo Path Ends.
     //public static double endRotOne=240;
 
-    public static Height scoreHeight = Height.L4;
+    public static Height scoreHeight = Height.L3;
 
     public static StartingPosition
-     startPos = StartingPosition.Testing;//StartingPosition.Right;
+     startPos = StartingPosition.Taxi;//StartingPosition.Right;
 
     public static enum StartingPosition{
       Left,
