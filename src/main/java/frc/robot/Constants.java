@@ -4,12 +4,18 @@
 
 package frc.robot;
 
+import java.time.Year;
+
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.Constants.LiftConstants.Height;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -28,33 +34,204 @@ public final class Constants {
     public static String reefColorHex="0x800080";
     public static double minimumConfidenceThreshold=0.8;
   }
+  public static class WinchConstants{
+    public static double winchPower=0.5;
+    public static int winchCANID=15;
+  }
+  public static class CoralStationAlignConstants{
+    public static double xDisplacement=0.8;
+    public static double xTolerance=0.05;
+
+    public static double leftCoralStationRot = 126;
+    public static double rightCoralStationRot = 234;
+
+    public static final double kRotP = 0.14;
+    public static final double kRotI = 0.01;
+    public static final double kRotD = 0.0;
+  }
+  public static class AutonomousNavConstants{
+    public static double translationkP=0.1;
+    public static double translationkI=0;
+    public static double translationkD=0;
+    public static double translationTolerance=0.02;
+    public static double rotationkP=0.25;
+    public static double rotationkD=0.005;
+    public static double rotationkI=0.01;
+    //0.5 degrees of tolerance
+    public static double rotationTolerance=Math.PI/360;
+    //remember that the gyro is inverted, so 90 degrees is to the left
+    //bearing of robot when first Choreo Path Ends.
+    //public static double endRotOne=240;
+
+    public static Height scoreHeight = Height.L4;
+
+    public static StartingPosition
+     startPos = StartingPosition.Testing;//StartingPosition.Right;
+
+    public static enum StartingPosition{
+      Left,
+      Right,
+      Middle,
+      Taxi,
+      Testing
+    }
+    
+    //remember that the gyro is inverted, so 90 degrees is to the left
+    //bearing of robot when first Choreo Path Ends.
+    // TODO : ASSIGN THESE VALUES AS NEEDED
+    public static double endRotOne = switch (startPos) {
+      case Left -> 300; // Should be 60 to the right, but just don't want it to go out of bounds...
+      case Right -> 60;
+      case Middle -> 0;
+      default -> 0;
+    };
+  }
+
+  public static class ChoreoConstants{
+    // public static double startX=7;
+    // public static double startY=7;
+    // public static double startRadians=0;
+
+    public static double translationkP=0.70;
+    public static double translationkI=0.0;
+    public static double translationkD=0.0;
+    public static double rotationkP=0.1;  
+    public static double rotationkI=0.0;
+    public static double rotationkD=0.0;
+  }
+  //CAN ID list
+  //Swerve Drive 1-8
+    // public static final int kFrontLeftDrivingCanId = 1;
+    // public static final int kFrontLeftTurningCanId = 2;
+    // public static final int kFrontRightDrivingCanId = 7;
+    // public static final int kFrontRightTurningCanId = 8;
+    // public static final int kRearLeftDrivingCanId = 3;
+    // public static final int kRearLeftTurningCanId = 4;
+    // public static final int kRearRightDrivingCanId = 5;
+    // public static final int kRearRightTurningCanId = 6;
+  //Misc Motors 11-14
+    // public static final int liftNeoCANID=11;
+    // public static final int reversedLiftNeoCANDID=12;
+    // public static final int armCANID=13;
+    // public static final int intakeCanID=14;
+
+  public static class IntakeConstants{
+    public static final int intakeCanID=14;
+    public static final double intakePower=-0.5; //0.4
+    public static final double outtakePower=0.3;//0.2;
+  }
+  public static class AngleLimitConstants{
+    //all in degrees, remember to convert to radians
+
+    //arm angle below horizontal
+    //in actuality, it can reach -154, but I can't see a reason why you would need to go that far
+    public static final double minArmAngle=-140;
+    //arm angle above horizontal
+    //in actuality, it starts at 124
+    public static final double maxArmAngle=128;
+    public static final double maxLiftAngle=100;
+    public static final double minLiftAngle=10;
+  }
+  public static class ArmConstants{
+    public static final double kWeightMomentOffsetFactor=0.034;
+    //get a engineer's square the next time I do this
+    public static final double angleAtZero=136.5;
+    // public static final int decimalPlaces=2;
+    public static final int armCANID=13;
+    public static final int armEncoderPort=1;
+    //its all in degrees, remember to convert
+    public static final double[] desiredArmAngle= new double[]{
+      //do note that ground height isn't actually at 0, because arm has minimum height
+      -40,//Ground intake (placeholder)
+      -30,//L1
+      -55,//L2
+      -30,//L3
+      60, //L4
+      -60, //Algae2 
+      -70, //Algae3 (placeholder)
+      27, //CoralStation 
+      -110, //StartingConfig 
+      -45, //hangStart
+      145 // Internal Stow
+    };
+    public static final double maxPower=0.4;
+    public static final double kPArm=0.12;
+    public static final double kIArm=0.04; 
+    public static final double kDArm=0;
+    //1 degree tolerance
+    public static final double angleTolerance=Math.PI/180;
+
+    public static final double armFallingPower=-0.01;
+  }
+  public static class LiftConstants{
+    //for some reason at 0.04 the robot goes insane
+    public static final double maximumPowerChange=0.05;
+    public static final double maximumTilt=10;
+    public static final double angleAtPeakHeight=198.1;
+    public static final int encoderChannel=0;
+    public static final int liftNeoCANID=11;
+    public static final int reversedLiftNeoCANDID=12;
+    //to ensure the arm doesn't tear itself apart. 
+    public static final double maxPower=0.7;
+
+    //angles required
+    public static final double[] desiredLiftAngle= new double[]{
+      //do note that ground height isn't actually at 0, because arm has minimum height
+      Math.toRadians(10),//0.22,//ground intake (placeholder) 
+      Math.toRadians(30),//L1
+      Math.toRadians(61),//L2
+      Math.toRadians(86),//L3 
+      Math.toRadians(80),//L4
+      Math.toRadians(40),//Algae2 
+      Math.toRadians(68),//Algae3 (placeholder)
+      Math.toRadians(30),//CoralStation 
+      Math.toRadians(35),//StartingConfig 
+      Math.toRadians(20),// hang start
+      // Math.toRadians(10), // hang end
+      Math.toRadians(15) // Internal Stow
+    };
+    
+
+    public static enum Height{
+      Ground,
+      L1,
+      L2,
+      L3,
+      L4,
+      StartingConfig, 
+      Algae2, //algae between L2 and L3
+      Algae3, //algae between L3 and L4
+      CoralStation,
+      HangStart,
+      // HangEnd,
+      InternalStow
+    }
+    public static final double armLength=27.4*0.0254;
+    public static final double kPLift=0.55; //0.6
+    public static final double kILift=0.025; //0.03
+    public static final double kDLift=0;
+    public static final double angleTolerance=Math.PI/180;
+    //remember to adjust as more components are added
+    public static final double kWeightMomentOffsetFactor=0.02;
+
+    public static final double liftFallingPower=-0.4;//-0.25;
+    public static final double L4OuttakeAngle=Math.toRadians(75);
+    public static final double L4OuttakeEnd=Math.toRadians(50);
+    public static final double kPHang=1.2;
+    public static final double kIHang=0.5;
+    public static final double kDHang=0.0;
+  }
   public static class AccelerationLimiterConstants{
     public static double maximumAcceleration=0.02;
     public static double maximumDeceleration=0.02;
   }
-  public static class OperatorConstants{
-    public static final int kDriverControllerPort=0;
-  }
   public static class TestingConstants{
     public static final double maximumSpeed=0.40;
-    public static final double maximumRotationSpeed=0.01;
+    public static final double maximumRotationSpeed=1;
     public static final double maximumSpeedReduced=0.10;
-    public static final double maximumRotationSpeedRobotOriented=0.005;
+    public static final double maximumRotationSpeedRobotOriented=0.5;
+    public static final double reducedRotationSpeedRobotOriented=0.10;
   }
-
-  public static class GameSetup {
-    public static final double startAngleOffset = 0; // Degrees
-    public static final boolean isFieldRelative = false; // true: field relative; false: robot relative
-    public static final String pathPlannerAutoStrategy = "Speaker 1 Note Right";
-  }
-
-  public static class CANIds {
-
-    public static final int kLeftShooterMotor = 11;
-    public static final int kRightShooterMotor = 10;
-    public static final int kIntakeMotor = 9;
-    // public static final int kLiftMotor = 12;
-    }
   public static final class FieldOrientedDriveConstants{
     public static final double kFODP = 0.25;
     public static final double kFODI = 0.3;
@@ -65,22 +242,21 @@ public final class Constants {
 
     public static final double bearingTolerance = 0.5;
 
-    public static final double moveJoystickDeadzone=0.02;
   }
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
-    public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+    public static final double kMaxAngularSpeed = 4 * Math.PI; // radians per second
 
     public static final double kDirectionSlewRate = 1.2; // radians per second
     public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(14) + 90;
+    public static final double kTrackWidth = 0.574;
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(14) + 90;
+    public static final double kWheelBase = 0.574;
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -105,6 +281,28 @@ public final class Constants {
     public static final int kRearRightTurningCanId = 6;
 
     public static final boolean kGyroReversed = false;
+  }
+
+  public static final class AprilTagAlignmentConstants{
+    public static final double cameraDisplacement=0.100;
+    //0.5 m from reef
+    public static final double stopDisplacementX = 0.7;
+    //0.165 m left for left stick displacement
+    public static final double stopDisplacementY = 0.16;
+
+    //1 cm of error
+    public static final double errorIntervalPositions = 0.01;
+    //0.5 degrees of error
+    public static final double errorIntervalRotations = Math.PI/360;
+
+    // PID (REPLACE WITH ACTUAL VALUES AT SOME POINT)
+    public static final double kTurnP = 0.05;
+    public static final double kTurnI = 0.0;
+    public static final double kTurnD = 0;
+
+    public static final double kMoveP = 0.2;
+    public static final double kMoveI = 0;
+    public static final double kMoveD = 0;
   }
 
   public static final class ModuleConstants {
@@ -160,6 +358,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kManualLiftControllerPort=1;
     public static final double kDriveDeadband = 0.1;
   }
 
@@ -183,6 +382,14 @@ public final class Constants {
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+  }
+
+  public static final class CVConstants {
+    // TODO: Fill
+    // Before using AprilTagPoseEstimator, ensure the camera is calibrated, in 3D mode, and on an AprilTag pipeline at https://photonvision.local:5800
+    public static final String kCameraName = "Arducam_OV9281_USB_Camera"; // Options: [USB]C270_HD_WEBCAM, [Innomaker]Arducam_OV9281_USB_Camera
+    public static final Transform3d kRobotToCamera = new Transform3d(new Translation3d(0.330, 0, 0.125), new Rotation3d(0,0,0)); // Remember y is sideways, x is forwards for our code
+
   }
 
   // Don't think we need this, but just in case
