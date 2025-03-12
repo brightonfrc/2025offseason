@@ -88,6 +88,7 @@ public class CoralStationAlign extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("robotBearing", driveSubsystem.getGyroAngle());
     SmartDashboard.putBoolean("Coral Station Align Active", true);
     //check to end command
     if (controller.rightBumper().getAsBoolean()){
@@ -97,9 +98,11 @@ public class CoralStationAlign extends Command {
     if (Math.hypot(controller.getRightY(), controller.getRightX())> 0.9) {
       if (controller.getRightX()>0){
         //right stick facing right, which swaps coral station from left to Right. Bearing 240
+        bearingPIDController.reset();
         bearingPIDController.setSetpoint(CoralStationAlignConstants.rightCoralStationRot*Math.PI/180);
       }
       else{
+        bearingPIDController.reset();
         bearingPIDController.setSetpoint(CoralStationAlignConstants.leftCoralStationRot*Math.PI/180);
       }
     }

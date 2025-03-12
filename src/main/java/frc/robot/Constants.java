@@ -41,8 +41,8 @@ public final class Constants {
     public static double leftCoralStationRot = 126;
     public static double rightCoralStationRot = 234;
 
-    public static final double kRotP = 0.11;
-    public static final double kRotI = 0.0;
+    public static final double kRotP = 0.14;
+    public static final double kRotI = 0.01;
     public static final double kRotD = 0.0;
   }
   public static class AutonomousNavConstants{
@@ -226,6 +226,7 @@ public final class Constants {
     public static final double maximumRotationSpeed=1;
     public static final double maximumSpeedReduced=0.10;
     public static final double maximumRotationSpeedRobotOriented=0.5;
+    public static final double reducedRotationSpeedRobotOriented=0.10;
   }
   public static final class FieldOrientedDriveConstants{
     public static final double kFODP = 0.25;

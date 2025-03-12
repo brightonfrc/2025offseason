@@ -128,7 +128,7 @@ public class FieldOrientedDrive extends Command {
         // driveSubsystem.drive(xSpeed, -ySpeed, rotSpeed, false);
 
         // William and Sam prefers this
-        driveSubsystem.drive(xSpeed, -ySpeed, -xboxController.getRightX()*TestingConstants.maximumRotationSpeedRobotOriented, false);
+        driveSubsystem.drive(xSpeed, -ySpeed, -xboxController.getRightX()*(slowModeActive ? TestingConstants.reducedRotationSpeedRobotOriented : TestingConstants.maximumRotationSpeedRobotOriented), false);
         
         // Emergency stop button (Not needed)
         // if(xboxController.rightBumper().getAsBoolean()){

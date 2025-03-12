@@ -173,16 +173,20 @@ public class RobotContainer {
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     //align right
-    m_driverController.leftBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
+    // m_driverController.leftBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
     //align left
-    m_driverController.rightBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
-
+    // m_driverController.rightBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
+    //right bumper to cancel
+    m_driverController.leftBumper().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
 
     //m_manualLiftController.square().onTrue(); // Reset gyro whenever necessary
+    // if (m_manualLiftController.square().getAsBoolean()){
+    //   System.out.println("Gyro reset");
+    // }
     m_manualLiftController.square().onTrue(
       new InstantCommand(() -> m_driveSubsystem.resetGyro(), m_driveSubsystem)
     );
-    m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
+    
 
   }
 
