@@ -5,6 +5,9 @@
 package frc.robot;
 
 
+import frc.robot.Constants.ColourSensorConstants;
+
+
 import frc.robot.Constants.AutonomousNavConstants;
 import frc.robot.Constants.ChoreoConstants;
 import frc.robot.Constants.CoralStationAlignConstants;
@@ -28,6 +31,14 @@ import frc.robot.commands.RunIntakeTimeLimited;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DatisLift;
 import frc.robot.commands.FieldOrientedDrive;
+import frc.robot.subsystems.ColourSensor;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ExampleSubsystem;
+
+import com.revrobotics.ColorSensorV3;
+
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.commands.MoveToPoint;
 import frc.robot.commands.StopRobot;
 import frc.robot.subsystems.DriveSubsystem;
@@ -88,7 +99,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
   new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandPS4Controller m_manualLiftController= new CommandPS4Controller(OIConstants.kManualLiftControllerPort);
-  
+  private final ColourSensor colourSensor= new ColourSensor(new ColorSensorV3(I2C.Port.kOnboard));
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
   // private Lift goToGround=new Lift(lift, Height.Ground);
   private final SustainLift sustainLift = new SustainLift(lift, arm);
@@ -385,6 +396,9 @@ public class RobotContainer {
   /**Prints out the current height set by the controller onto SmartDashboard */
   public void getHeightSet(){
     lift.getHeight();
+  }
+  public void CheckReefAligned(){
+    colourSensor.CheckReefAligned();
   }
 }
 

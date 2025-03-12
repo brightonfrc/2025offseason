@@ -30,6 +30,10 @@ import frc.robot.Constants.LiftConstants.Height;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class ColourSensorConstants{
+    public static String reefColorHex="0x800080";
+    public static double minimumConfidenceThreshold=0.8;
+  }
   public static class WinchConstants{
     public static double winchPower=0.5;
     public static int winchCANID=15;
