@@ -32,62 +32,69 @@ public class RunIntake extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     this.lift=lift;
     // this.arm=arm;
-    if (lift.getHeight()==Height.L4){
-      addRequirements(intake, lift, arm);
-    }
-    else{
-      addRequirements(intake);
-    }
+    addRequirements(intake);
+    // if (lift.getHeight()==Height.L4){
+    //   addRequirements(intake, lift, arm);
+    // }
+    // else{
+    //   addRequirements(intake);
+    // }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if ((in==false) && (lift.getHeight()==Height.L4)){
-      l4Outake=true;
-      liftController= new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
-      liftController.setTolerance(LiftConstants.angleTolerance);
-      liftController.setSetpoint(LiftConstants.L4OuttakeEnd);
-      // armController= new PIDController(ArmConstants.kPArm, ArmConstants.kIArm, ArmConstants.kDArm);
-      // armController.reset();
-      // armController.setTolerance(ArmConstants.angleTolerance);
-      // //L4 arm 
-      // armController.setSetpoint(ArmConstants.desiredArmAngle[4]);
-    }
-    else{
-      l4Outake=false;
-    }
+    // if ((in==false) && (lift.getHeight()==Height.L4)){
+    //   l4Outake=true;
+    //   liftController= new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
+    //   liftController.setTolerance(LiftConstants.angleTolerance);
+    //   liftController.setSetpoint(LiftConstants.L4OuttakeEnd);
+    //   // armController= new PIDController(ArmConstants.kPArm, ArmConstants.kIArm, ArmConstants.kDArm);
+    //   // armController.reset();
+    //   // armController.setTolerance(ArmConstants.angleTolerance);
+    //   // //L4 arm 
+    //   // armController.setSetpoint(ArmConstants.desiredArmAngle[4]);
+    // }
+    // else{
+    //   l4Outake=false;
+    // }
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (l4Outake){  
-      double currentAngle=Math.toRadians(lift.getLiftAngle());
-      double desiredPower=liftController.calculate(currentAngle);
-      desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
-      lift.setPower(desiredPower);
+    // if (l4Outake){  
+    //   double currentAngle=Math.toRadians(lift.getLiftAngle());
+    //   double desiredPower=liftController.calculate(currentAngle);
+    //   desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
+    //   lift.setPower(desiredPower);
 
-      // double currentArmAngle=Math.toRadians(arm.getArmAngle());
-      // double desiredArmPower=armController.calculate(currentAngle+currentArmAngle);
-      // desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
-      // arm.setPower(desiredArmPower);
-      // if (armController.atSetpoint()&&(Math.toRadians(currentAngle)<LiftConstants.L4OuttakeAngle)){
-      if (Math.toRadians(currentAngle)<LiftConstants.L4OuttakeAngle){
-        intake.outtake();
-      }
-      // lift.setPower(LiftConstants.liftFallingPower);
-      // arm.setPower(ArmConstants.armFallingPower);
-    }else{
-      // SmartDashboard.putBoolean("command active", true);
-      if(in){
+    //   // double currentArmAngle=Math.toRadians(arm.getArmAngle());
+    //   // double desiredArmPower=armController.calculate(currentAngle+currentArmAngle);
+    //   // desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
+    //   // arm.setPower(desiredArmPower);
+    //   // if (armController.atSetpoint()&&(Math.toRadians(currentAngle)<LiftConstants.L4OuttakeAngle)){
+    //   if (Math.toRadians(currentAngle)<LiftConstants.L4OuttakeAngle){
+    //     intake.outtake();
+    //   }
+    //   // lift.setPower(LiftConstants.liftFallingPower);
+    //   // arm.setPower(ArmConstants.armFallingPower);
+    // }else{
+    //   // SmartDashboard.putBoolean("command active", true);
+    //   if(in){
         
-        intake.intake();
-      }
-      else{
-        intake.outtake();
-      }
+    //     intake.intake();
+    //   }
+    //   else{
+    //     intake.outtake();
+    //   }
+    // }
+    if(in){
+      intake.intake();
+    }
+    else{
+      intake.outtake();
     }
   }
 

@@ -133,7 +133,9 @@ public final class Constants {
     public static final double minLiftAngle=10;
   }
   public static class ArmConstants{
+
     public static final double kWeightMomentOffsetFactor=0.034;
+
     //get a engineer's square the next time I do this
     public static final double angleAtZero=136.5;
     // public static final int decimalPlaces=2;
@@ -143,13 +145,13 @@ public final class Constants {
     public static final double[] desiredArmAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
       -40,//Ground intake (placeholder)
-      -30,//L1
-      -55,//L2
-      -30,//L3
-      60, //L4
+      90,//L1
+      115,//L2
+      115,//L3
+      70, //L4
       -60, //Algae2 
       -70, //Algae3 (placeholder)
-      27, //CoralStation 
+      125, //CoralStation 
       -110, //StartingConfig 
       -45, //hangStart
       145 // Internal Stow
@@ -178,13 +180,13 @@ public final class Constants {
     public static final double[] desiredLiftAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
       Math.toRadians(10),//0.22,//ground intake (placeholder) 
-      Math.toRadians(30),//L1
-      Math.toRadians(61),//L2
-      Math.toRadians(86),//L3 
-      Math.toRadians(80),//L4
+      Math.toRadians(12),//L1
+      Math.toRadians(13.40),//L2
+      Math.toRadians(31.33),//L3 
+      Math.toRadians(68.10),//L4
       Math.toRadians(40),//Algae2 
       Math.toRadians(68),//Algae3 (placeholder)
-      Math.toRadians(30),//CoralStation 
+      Math.toRadians(19.18),//CoralStation 
       Math.toRadians(35),//StartingConfig 
       Math.toRadians(20),// hang start
       // Math.toRadians(10), // hang end
@@ -211,6 +213,7 @@ public final class Constants {
     public static final double kILift=0.025; //0.03
     public static final double kDLift=0;
     public static final double angleTolerance=Math.PI/180;
+
     //remember to adjust as more components are added
     public static final double kWeightMomentOffsetFactor=0.02;
 

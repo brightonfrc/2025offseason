@@ -39,33 +39,38 @@ public class RunIntakeTimeLimited extends Command {
   public void initialize() {
     startTimeMillis = System.currentTimeMillis(); // Record the start time
 
-    if (!in) {
-      l4Outake = true;
-      liftController = new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
-      liftController.setTolerance(LiftConstants.angleTolerance);
-      liftController.setSetpoint(LiftConstants.L4OuttakeEnd);
-    } else {
-      l4Outake = false;
-    }
+    // if (!in) {
+    //   l4Outake = true;
+    //   liftController = new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
+    //   liftController.setTolerance(LiftConstants.angleTolerance);
+    //   liftController.setSetpoint(LiftConstants.L4OuttakeEnd);
+    // } else {
+    //   l4Outake = false;
+    // }
   }
 
   @Override
   public void execute() {
-    if (l4Outake) {  
-      double currentAngle = Math.toRadians(lift.getLiftAngle());
-      double desiredPower = liftController.calculate(currentAngle);
-      desiredPower += LiftConstants.kWeightMomentOffsetFactor * Math.cos(currentAngle);
-      lift.setPower(desiredPower);
+    // if (l4Outake) {  
+    //   double currentAngle = Math.toRadians(lift.getLiftAngle());
+    //   double desiredPower = liftController.calculate(currentAngle);
+    //   desiredPower += LiftConstants.kWeightMomentOffsetFactor * Math.cos(currentAngle);
+    //   lift.setPower(desiredPower);
 
-      if (Math.toRadians(currentAngle) < LiftConstants.L4OuttakeAngle) {
-        intake.outtake();
-      }
+    //   if (Math.toRadians(currentAngle) < LiftConstants.L4OuttakeAngle) {
+    //     intake.outtake();
+    //   }
+    // } else {
+    //   if (in) {
+    //     intake.intake();
+    //   } else {
+    //     intake.outtake();
+    //   }
+    // }
+    if (in) {
+      intake.intake();
     } else {
-      if (in) {
-        intake.intake();
-      } else {
-        intake.outtake();
-      }
+      intake.outtake();
     }
   }
 

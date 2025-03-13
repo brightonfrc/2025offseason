@@ -141,11 +141,16 @@ public class RobotContainer {
   private void configureBindings() {
     //R2 and L2 don't work
 
-    // m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
-    // m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
+    // To do
+  
+    //1. Reset Encoder angles
+    //2. Redo weight offsets
+    //3. Redo PID
+    m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
+    m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
 
-    m_manualLiftController.R1().whileTrue(new RunArm(arm, true, lift));
-    m_manualLiftController.L1().whileTrue(new RunArm(arm, false, lift));
+    // m_manualLiftController.R1().whileTrue(new RunArm(arm, true, lift));
+    // m_manualLiftController.L1().whileTrue(new RunArm(arm, false, lift));
 
 
     //bind intake and outtake to L3 and R3?
@@ -158,12 +163,12 @@ public class RobotContainer {
     m_driverController.povRight().onTrue(new JankLift(lift, arm, Height.L2));
     m_driverController.povDown().onTrue(new JankLift(lift, arm, Height.L3));
     m_driverController.povLeft().onTrue(new JankLift(lift, arm, Height.L4));
-    m_driverController.x().onTrue(new JankLift(lift, arm, Height.StartingConfig));
+    // m_driverController.x().onTrue(new JankLift(lift, arm, Height.StartingConfig));
     
-    m_manualLiftController.povUp().onTrue(new JankLift(lift, arm, Height.Algae2));
-    m_manualLiftController.povRight().onTrue(new JankLift(lift, arm, Height.Algae3));
+    // m_manualLiftController.povUp().onTrue(new JankLift(lift, arm, Height.Algae2));
+    // m_manualLiftController.povRight().onTrue(new JankLift(lift, arm, Height.Algae3));
     m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
-    m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
+    // m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
     m_manualLiftController.cross().onTrue(new HangRobot(lift, winch));
     m_manualLiftController.triangle().onTrue(new JankLift(lift, arm, Height.InternalStow));
     //m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
@@ -171,6 +176,7 @@ public class RobotContainer {
 
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
+    m_driverController.leftBumper().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
     
     //m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController, m_poseEstimator));
     // m_manualLiftController.circle().onTrue(new MoveToPointTeleop(m_driveSubsystem, Math.toRadians(225))); // Right
@@ -188,13 +194,13 @@ public class RobotContainer {
     //align left
     // m_driverController.rightBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
     //right bumper to cancel
-    m_driverController.leftBumper().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
+    
 
     //m_manualLiftController.square().onTrue(); // Reset gyro whenever necessary
     // if (m_manualLiftController.square().getAsBoolean()){
     //   System.out.println("Gyro reset");
     // }
-    m_manualLiftController.square().onTrue(
+    m_manualLiftController.x().onTrue(
       new InstantCommand(() -> m_driveSubsystem.resetGyro(), m_driveSubsystem)
     );
     
