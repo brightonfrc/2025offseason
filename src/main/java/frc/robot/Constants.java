@@ -158,8 +158,8 @@ public final class Constants {
       145 // Internal Stow
     };
     public static final double maxPower=0.4;
-    public static final double kPArm=0.3;
-    public static final double kIArm=0.01; 
+    public static final double kPArm=0.25;
+    public static final double kIArm=0.00; 
     public static final double kDArm=0;
     //1 degree tolerance
     public static final double angleTolerance=Math.PI/180;
@@ -210,7 +210,7 @@ public final class Constants {
       InternalStow
     }
     public static final double armLength=27.4*0.0254;
-    public static final double kPLift=0.2; //0.6
+    public static final double kPLift=0.25; //0.6
     public static final double kILift=0.0; //0.03
     public static final double kDLift=0;
     public static final double angleTolerance=Math.PI/180;
