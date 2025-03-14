@@ -42,8 +42,9 @@ public final class Constants {
     public static double xDisplacement=0.8;
     public static double xTolerance=0.05;
 
-    public static double leftCoralStationRot = 126;
-    public static double rightCoralStationRot = 234;
+    //remember that back of robot must face coral station
+    public static double leftCoralStationRot = 306; //126
+    public static double rightCoralStationRot = 54; //234
 
     public static final double kRotP = 0.14;
     public static final double kRotI = 0.01;
@@ -63,10 +64,10 @@ public final class Constants {
     //bearing of robot when first Choreo Path Ends.
     //public static double endRotOne=240;
 
-    public static Height scoreHeight = Height.L3;
+    public static Height scoreHeight = Height.L4;
 
     public static StartingPosition
-     startPos = StartingPosition.Taxi;//StartingPosition.Right;
+     startPos = StartingPosition.Middle;//StartingPosition.Right;
 
     public static enum StartingPosition{
       Left,
@@ -157,8 +158,8 @@ public final class Constants {
       145 // Internal Stow
     };
     public static final double maxPower=0.4;
-    public static final double kPArm=0.12;
-    public static final double kIArm=0.04; 
+    public static final double kPArm=0.2;
+    public static final double kIArm=0.00; 
     public static final double kDArm=0;
     //1 degree tolerance
     public static final double angleTolerance=Math.PI/180;
@@ -209,8 +210,8 @@ public final class Constants {
       InternalStow
     }
     public static final double armLength=27.4*0.0254;
-    public static final double kPLift=0.55; //0.6
-    public static final double kILift=0.025; //0.03
+    public static final double kPLift=0.2; //0.6
+    public static final double kILift=0.0; //0.03
     public static final double kDLift=0;
     public static final double angleTolerance=Math.PI/180;
 

@@ -163,19 +163,27 @@ public class RobotContainer {
     m_driverController.povRight().onTrue(new JankLift(lift, arm, Height.L2));
     m_driverController.povDown().onTrue(new JankLift(lift, arm, Height.L3));
     m_driverController.povLeft().onTrue(new JankLift(lift, arm, Height.L4));
+    if (m_driverController.x().getAsBoolean()){
+      System.out.println("Gyro reset");
+    }
+    m_driverController.x().onTrue( // Reset gyro whenever necessary
+      new InstantCommand(() -> m_driveSubsystem.resetGyro(), m_driveSubsystem)
+    );
+    
     // m_driverController.x().onTrue(new JankLift(lift, arm, Height.StartingConfig));
     
     // m_manualLiftController.povUp().onTrue(new JankLift(lift, arm, Height.Algae2));
     // m_manualLiftController.povRight().onTrue(new JankLift(lift, arm, Height.Algae3));
-    m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
+    // m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
     // m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
-    m_manualLiftController.cross().onTrue(new HangRobot(lift, winch));
-    m_manualLiftController.triangle().onTrue(new JankLift(lift, arm, Height.InternalStow));
+    // m_manualLiftController.cross().onTrue(new HangRobot(lift, winch));
+    // m_manualLiftController.triangle().onTrue(new JankLift(lift, arm, Height.InternalStow));
     //m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
     //m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, true, lift, arm));
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
+    //right bumper cancel
     m_driverController.leftBumper().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
     
     //m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController, m_poseEstimator));
@@ -196,13 +204,7 @@ public class RobotContainer {
     //right bumper to cancel
     
 
-    //m_manualLiftController.square().onTrue(); // Reset gyro whenever necessary
-    // if (m_manualLiftController.square().getAsBoolean()){
-    //   System.out.println("Gyro reset");
-    // }
-    m_manualLiftController.x().onTrue(
-      new InstantCommand(() -> m_driveSubsystem.resetGyro(), m_driveSubsystem)
-    );
+    
     
 
   }

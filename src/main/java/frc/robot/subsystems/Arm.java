@@ -37,7 +37,7 @@ public class Arm extends SubsystemBase {
       angleAboveHorizontal-=360;
     }
     SmartDashboard.putNumber("Raw Arm angle", measuredAngle);
-    // SmartDashboard.putNumber("Arm angle", angleAboveHorizontal);
+    SmartDashboard.putNumber("Arm angle", angleAboveHorizontal);
     return angleAboveHorizontal;
   }
   /**Method used to set arm power ranging from -1 to 1 */
