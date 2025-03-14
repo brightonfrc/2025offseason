@@ -135,10 +135,10 @@ public final class Constants {
   }
   public static class ArmConstants{
 
-    public static final double kWeightMomentOffsetFactor=0.034;
+    public static final double kWeightMomentOffsetFactor=0.03;
 
     //get a engineer's square the next time I do this
-    public static final double angleAtZero=136.5;
+    public static final double angleAtZero=154.8;
     // public static final int decimalPlaces=2;
     public static final int armCANID=13;
     public static final int armEncoderPort=1;
@@ -158,8 +158,8 @@ public final class Constants {
       145 // Internal Stow
     };
     public static final double maxPower=0.4;
-    public static final double kPArm=0.2;
-    public static final double kIArm=0.00; 
+    public static final double kPArm=0.3;
+    public static final double kIArm=0.01; 
     public static final double kDArm=0;
     //1 degree tolerance
     public static final double angleTolerance=Math.PI/180;
@@ -170,7 +170,7 @@ public final class Constants {
     //for some reason at 0.04 the robot goes insane
     public static final double maximumPowerChange=0.05;
     public static final double maximumTilt=10;
-    public static final double angleAtPeakHeight=198.1;
+    public static final double angleAtPeakHeight=278.2;
     public static final int encoderChannel=0;
     public static final int liftNeoCANID=11;
     public static final int reversedLiftNeoCANDID=12;
@@ -184,7 +184,7 @@ public final class Constants {
       Math.toRadians(12),//L1
       Math.toRadians(13.40),//L2
       Math.toRadians(31.33),//L3 
-      Math.toRadians(68.10),//L4
+      Math.toRadians(70),//L4
       Math.toRadians(40),//Algae2 
       Math.toRadians(68),//Algae3 (placeholder)
       Math.toRadians(19.18),//CoralStation 
@@ -216,7 +216,7 @@ public final class Constants {
     public static final double angleTolerance=Math.PI/180;
 
     //remember to adjust as more components are added
-    public static final double kWeightMomentOffsetFactor=0.02;
+    public static final double kWeightMomentOffsetFactor=0.0;
 
     public static final double liftFallingPower=-0.4;//-0.25;
     public static final double L4OuttakeAngle=Math.toRadians(75);

@@ -31,7 +31,7 @@ import frc.robot.commands.RunIntakeTimeLimited;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DatisLift;
 import frc.robot.commands.FieldOrientedDrive;
-import frc.robot.subsystems.ColourSensor;
+// import frc.robot.subsystems.ColourSensor;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -99,7 +99,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
   new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandPS4Controller m_manualLiftController= new CommandPS4Controller(OIConstants.kManualLiftControllerPort);
-  private final ColourSensor colourSensor= new ColourSensor(new ColorSensorV3(I2C.Port.kOnboard));
+  // private final ColourSensor colourSensor= new ColourSensor(new ColorSensorV3(I2C.Port.kOnboard));
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
   // private Lift goToGround=new Lift(lift, Height.Ground);
   private final SustainLift sustainLift = new SustainLift(lift, arm);
@@ -143,14 +143,13 @@ public class RobotContainer {
 
     // To do
   
-    //1. Reset Encoder angles
     //2. Redo weight offsets
     //3. Redo PID
     m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
     m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
 
-    // m_manualLiftController.R1().whileTrue(new RunArm(arm, true, lift));
-    // m_manualLiftController.L1().whileTrue(new RunArm(arm, false, lift));
+    m_manualLiftController.R2().whileTrue(new RunArm(arm, true, lift));
+    m_manualLiftController.L2().whileTrue(new RunArm(arm, false, lift));
 
 
     //bind intake and outtake to L3 and R3?
@@ -417,8 +416,8 @@ public class RobotContainer {
   public void getHeightSet(){
     lift.getHeight();
   }
-  public void CheckReefAligned(){
-    colourSensor.CheckReefAligned();
-  }
+  // public void CheckReefAligned(){
+  //   colourSensor.CheckReefAligned();
+  // }
 }
 
