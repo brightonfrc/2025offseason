@@ -23,6 +23,7 @@ public class FieldOrientedDrive extends Command {
     private double rotSpeed;
     private double xSpeed;
     private double ySpeed;
+    private double maximumAcceleration;
 
     private double previousXSpeed;
     private double previousYSpeed;
@@ -68,6 +69,7 @@ public class FieldOrientedDrive extends Command {
             hasToggled=false;
         }
         SmartDashboard.putBoolean("Slow Mode Active", slowModeActive);
+        maximumAcceleration=(slowModeActive ? AccelerationLimiterConstants.maximumAccelerationReduced : AccelerationLimiterConstants.maximumAcceleration);
         // SmartDashboard.putNumber("Goal bearing", goalBearing);
         //Both joysticks assumes the right to be bearing 0 and then works clockwise from there. To have bearing 0 be in front, the bearing
         //has to be moved back by 90 degrees/ 1/2 PI
@@ -101,21 +103,21 @@ public class FieldOrientedDrive extends Command {
         // SmartDashboard.putNumber("Drive: Left joystick magnitude", joystickMoveMagnitude);
 
         xSpeed = joystickMoveMagnitude * Math.cos(joystickMoveBearing) * (slowModeActive ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
-        if(xSpeed>previousXSpeed+AccelerationLimiterConstants.maximumAcceleration){
-            xSpeed=previousXSpeed+AccelerationLimiterConstants.maximumAcceleration;
+        if(xSpeed>previousXSpeed+maximumAcceleration){
+            xSpeed=previousXSpeed+maximumAcceleration;
         }
-        else if (xSpeed<previousXSpeed-AccelerationLimiterConstants.maximumDeceleration){
-            xSpeed=previousXSpeed-AccelerationLimiterConstants.maximumDeceleration;
+        else if (xSpeed<previousXSpeed- maximumAcceleration){
+            xSpeed=previousXSpeed- maximumAcceleration;
         }
         previousXSpeed=xSpeed;
         // SmartDashboard.putNumber("xSpeed", xSpeed);
 
         ySpeed = joystickMoveMagnitude * Math.sin(joystickMoveBearing) * (slowModeActive ? TestingConstants.maximumSpeedReduced : TestingConstants.maximumSpeed);
-        if(ySpeed>previousYSpeed+AccelerationLimiterConstants.maximumAcceleration){
-            ySpeed=previousYSpeed+AccelerationLimiterConstants.maximumAcceleration;
+        if(ySpeed>previousYSpeed+maximumAcceleration){
+            ySpeed=previousYSpeed+ maximumAcceleration;
         }
-        else if (ySpeed<previousYSpeed-AccelerationLimiterConstants.maximumDeceleration){
-            ySpeed=previousYSpeed-AccelerationLimiterConstants.maximumDeceleration;
+        else if (ySpeed<previousYSpeed-maximumAcceleration){
+            ySpeed=previousYSpeed-maximumAcceleration;
         }
         previousYSpeed=ySpeed;
         // SmartDashboard.putNumber("ySpeed", ySpeed);

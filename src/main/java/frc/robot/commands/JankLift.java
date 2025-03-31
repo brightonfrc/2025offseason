@@ -104,7 +104,7 @@ public class JankLift extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // SmartDashboard.putNumber("Angle required/Lift", Math.toDegrees(angleRequired));
+    SmartDashboard.putNumber("Angle required/Lift", Math.toDegrees(angleRequired));
     SmartDashboard.putNumber("Angle required/Arm", Math.toDegrees(armAngleRequired));
 
     double currentAngle=Math.toRadians(lift.getLiftAngle());
@@ -119,8 +119,9 @@ public class JankLift extends Command {
     //     desiredPower=previousPower+LiftConstants.maximumPowerChange;
     //   }
     // }
+    SmartDashboard.putNumber("Angle/Lift", Math.toDegrees(currentAngle));
     desiredPower+=LiftConstants.kWeightMomentOffsetFactor*Math.cos(currentAngle);
-    // SmartDashboard.putNumber("Power/Lift", desiredPower);
+    SmartDashboard.putNumber("Power/Lift", desiredPower);
     // previousPower=desiredPower;
     lift.setPower(desiredPower);
     // SmartDashboard.putBoolean("Command active", !liftController.atSetpoint());
@@ -131,8 +132,9 @@ public class JankLift extends Command {
       desiredArmPower+=ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle));
       SmartDashboard.putNumber("Angle/Arm", Math.toDegrees(currentAngle+currentArmAngle));
       SmartDashboard.putNumber("Power/Arm", desiredArmPower);
+      // SmartDashboard.putNumber("Power/WeightOffset", ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
       // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
-      arm.setPower(desiredArmPower);
+      // arm.setPower(desiredArmPower);
       //emergency end command if lift or arm angle outside of expected range
       // if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
       // ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
@@ -148,7 +150,7 @@ public class JankLift extends Command {
       SmartDashboard.putNumber("Angle/Arm", Math.toDegrees(currentAngle+currentArmAngle));
       SmartDashboard.putNumber("Power/Arm", desiredArmPower);
       // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
-      arm.setPower(desiredArmPower);
+      // arm.setPower(desiredArmPower);
       //emergency end command if lift or arm angle outside of expected range
       // if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
       // ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))

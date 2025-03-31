@@ -30,6 +30,14 @@ import frc.robot.Constants.LiftConstants.Height;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class stupidConstants{
+    //delete ASAP
+    public static double armTolerance=Math.PI/180*4;
+    public static double liftTolerance=Math.PI/180*5;
+    public static double kPArm=0.3;
+    public static double kIArm=0.01;
+  }
+
   public static class ColourSensorConstants{
     public static String reefColorHex="0x800080";
     public static double minimumConfidenceThreshold=0.8;
@@ -43,8 +51,8 @@ public final class Constants {
     public static double xTolerance=0.05;
 
     //remember that back of robot must face coral station
-    public static double leftCoralStationRot = 306; //126
-    public static double rightCoralStationRot = 54; //234
+    public static double leftCoralStationRot = 126; //126
+    public static double rightCoralStationRot = 234; //234
 
     public static final double kRotP = 0.14;
     public static final double kRotI = 0.01;
@@ -67,7 +75,8 @@ public final class Constants {
     public static Height scoreHeight = Height.L4;
 
     public static StartingPosition
-     startPos = StartingPosition.Middle;//StartingPosition.Right;
+    //remember to change this
+    startPos = StartingPosition.Taxi;//StartingPosition.Right;
 
     public static enum StartingPosition{
       Left,
@@ -118,7 +127,7 @@ public final class Constants {
 
   public static class IntakeConstants{
     public static final int intakeCanID=14;
-    public static final double intakePower=-0.5; //0.4
+    public static final double intakePower=-0.6; //0.4
     public static final double outtakePower=0.3;//0.2;
   }
   public static class AngleLimitConstants{
@@ -135,7 +144,7 @@ public final class Constants {
   }
   public static class ArmConstants{
 
-    public static final double kWeightMomentOffsetFactor=0.03;
+    public static final double kWeightMomentOffsetFactor=0.033;
 
     //get a engineer's square the next time I do this
     public static final double angleAtZero=154.8;
@@ -147,20 +156,20 @@ public final class Constants {
       //do note that ground height isn't actually at 0, because arm has minimum height
       -40,//Ground intake (placeholder)
       90,//L1
-      115,//L2
-      115,//L3
-      70, //L4
+      100,//L2
+      100,//L3
+      80, //L4
       -60, //Algae2 
       -70, //Algae3 (placeholder)
-      125, //CoralStation 
+      56.5, //CoralStation 
       -110, //StartingConfig 
       -45, //hangStart
-      145 // Internal Stow
+      140 // Internal Stow
     };
     public static final double maxPower=0.4;
-    public static final double kPArm=0.25;
-    public static final double kIArm=0.00; 
-    public static final double kDArm=0;
+    public static final double kPArm=0.28;//0.27
+    public static final double kIArm=0.0; 
+    public static final double kDArm=0.07;
     //1 degree tolerance
     public static final double angleTolerance=Math.PI/180;
 
@@ -181,17 +190,17 @@ public final class Constants {
     public static final double[] desiredLiftAngle= new double[]{
       //do note that ground height isn't actually at 0, because arm has minimum height
       Math.toRadians(10),//0.22,//ground intake (placeholder) 
-      Math.toRadians(12),//L1
-      Math.toRadians(13.40),//L2
-      Math.toRadians(31.33),//L3 
-      Math.toRadians(70),//L4
+      Math.toRadians(18),//L1
+      Math.toRadians(24),//L2 is 16 degrees below L3, so test L3 first
+      Math.toRadians(44),//L3 
+      Math.toRadians(87),//L4
       Math.toRadians(40),//Algae2 
       Math.toRadians(68),//Algae3 (placeholder)
-      Math.toRadians(19.18),//CoralStation 
+      Math.toRadians(26),//CoralStation 
       Math.toRadians(35),//StartingConfig 
       Math.toRadians(20),// hang start
       // Math.toRadians(10), // hang end
-      Math.toRadians(15) // Internal Stow
+      Math.toRadians(18) // Internal Stow
     };
     
 
@@ -210,7 +219,7 @@ public final class Constants {
       InternalStow
     }
     public static final double armLength=27.4*0.0254;
-    public static final double kPLift=0.25; //0.6
+    public static final double kPLift=0.29; //0.6
     public static final double kILift=0.0; //0.03
     public static final double kDLift=0;
     public static final double angleTolerance=Math.PI/180;
@@ -227,10 +236,10 @@ public final class Constants {
   }
   public static class AccelerationLimiterConstants{
     public static double maximumAcceleration=0.02;
-    public static double maximumDeceleration=0.02;
+    public static double maximumAccelerationReduced=0.01;
   }
   public static class TestingConstants{
-    public static final double maximumSpeed=0.40;
+    public static final double maximumSpeed=0.4;
     public static final double maximumRotationSpeed=1;
     public static final double maximumSpeedReduced=0.10;
     public static final double maximumRotationSpeedRobotOriented=0.5;

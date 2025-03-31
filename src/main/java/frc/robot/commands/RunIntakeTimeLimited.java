@@ -72,12 +72,14 @@ public class RunIntakeTimeLimited extends Command {
     } else {
       intake.outtake();
     }
+    SmartDashboard.putBoolean("Running intake", true);
   }
 
   @Override
   public void end(boolean interrupted) {
     intake.stop();
     lift.setPower(0);
+    SmartDashboard.putBoolean("Running intake", false);
   }
 
   @Override

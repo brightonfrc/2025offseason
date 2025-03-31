@@ -12,6 +12,7 @@ import frc.robot.subsystems.DatisLift;
 import frc.robot.Constants.AngleLimitConstants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.LiftConstants;
+import frc.robot.Constants.stupidConstants;
 import frc.robot.Constants.LiftConstants.Height;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -89,12 +90,12 @@ public class JankLiftAutonomous extends Command {
   @Override
   public void initialize() {
     liftController= new PIDController(LiftConstants.kPLift, LiftConstants.kILift, LiftConstants.kDLift);
-    liftController.setTolerance(LiftConstants.angleTolerance);
+    liftController.setTolerance(stupidConstants.liftTolerance);
     liftController.setSetpoint(angleRequired);
     previousPower=0;
-    armController= new PIDController(ArmConstants.kPArm, ArmConstants.kIArm, ArmConstants.kDArm);
+    armController= new PIDController(stupidConstants.kPArm, stupidConstants.kIArm, ArmConstants.kDArm);
     armController.reset();
-    armController.setTolerance(ArmConstants.angleTolerance);
+    armController.setTolerance(stupidConstants.armTolerance);
     //remember to edit this as needed
     armController.setSetpoint(armAngleRequired);
     emergencyStop=false;
@@ -132,7 +133,9 @@ public class JankLiftAutonomous extends Command {
       SmartDashboard.putNumber("Angle/Arm", Math.toDegrees(currentAngle+currentArmAngle));
       SmartDashboard.putNumber("Power/Arm", desiredArmPower);
       // arm.setPower(desiredArmPower+ArmConstants.kWeightMomentOffsetFactor*Math.cos(Math.toRadians(currentArmAngle+currentAngle)));
-      arm.setPower(desiredArmPower);
+
+      // arm.setPower(desiredArmPower);
+
       //emergency end command if lift or arm angle outside of expected range
       // if ((currentAngle>Math.toRadians(AngleLimitConstants.maxLiftAngle))
       // ||(currentAngle<Math.toRadians(AngleLimitConstants.minLiftAngle))
