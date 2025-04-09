@@ -85,13 +85,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final DatisLift lift= new DatisLift(new SparkMax(LiftConstants.liftNeoCANID, MotorType.kBrushless), new SparkMax(LiftConstants.reversedLiftNeoCANDID, MotorType.kBrushless), new DutyCycleEncoder(LiftConstants.encoderChannel));
-  private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushless));
-  private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
+  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  // private final DatisLift lift= new DatisLift(new SparkMax(LiftConstants.liftNeoCANID, MotorType.kBrushless), new SparkMax(LiftConstants.reversedLiftNeoCANDID, MotorType.kBrushless), new DutyCycleEncoder(LiftConstants.encoderChannel));
+  // private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushless));
+  // private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   private final AprilTagPoseEstimator m_poseEstimator = new AprilTagPoseEstimator();
-  private final Winch winch = new Winch(new SparkMax(WinchConstants.winchCANID, MotorType.kBrushless));
+  // private final Winch winch = new Winch(new SparkMax(WinchConstants.winchCANID, MotorType.kBrushless));
 
   private boolean active = false;
 
@@ -102,7 +102,7 @@ public class RobotContainer {
   // private final ColourSensor colourSensor= new ColourSensor(new ColorSensorV3(I2C.Port.kOnboard));
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
   // private Lift goToGround=new Lift(lift, Height.Ground);
-  private final SustainLift sustainLift = new SustainLift(lift, arm);
+  // private final SustainLift sustainLift = new SustainLift(lift, arm);
 
   //for Choreo
   private final AutoFactory autoFactory;
@@ -111,7 +111,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
-    lift.setDefaultCommand(sustainLift);
+    // lift.setDefaultCommand(sustainLift);
     // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
     //for Choreo
     autoFactory = new AutoFactory(
@@ -148,8 +148,8 @@ public class RobotContainer {
     // m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
     // m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
 
-    m_manualLiftController.R1().whileTrue(new RunArm(arm, true, lift));
-    m_manualLiftController.L1().whileTrue(new RunArm(arm, false, lift));
+    // m_manualLiftController.R1().whileTrue(new RunArm(arm, true, lift));
+    // m_manualLiftController.L1().whileTrue(new RunArm(arm, false, lift));
 
 
     //bind intake and outtake to L3 and R3?
@@ -157,18 +157,18 @@ public class RobotContainer {
     
     //remember that A on the xbox controllerbutton is bound to "slow Mode"
     
-    m_driverController.y().onTrue(new JankLift(lift, arm, Height.CoralStation));
-    m_driverController.povUp().onTrue(new JankLift(lift, arm, Height.L1));
-    m_driverController.povRight().onTrue(new JankLift(lift, arm, Height.L2));
-    m_driverController.povDown().onTrue(new JankLift(lift, arm, Height.L3));
-    m_driverController.povLeft().onTrue(new JankLift(lift, arm, Height.L4));
+    // m_driverController.y().onTrue(new JankLift(lift, arm, Height.CoralStation));
+    // m_driverController.povUp().onTrue(new JankLift(lift, arm, Height.L1));
+    // m_driverController.povRight().onTrue(new JankLift(lift, arm, Height.L2));
+    // m_driverController.povDown().onTrue(new JankLift(lift, arm, Height.L3));
+    // m_driverController.povLeft().onTrue(new JankLift(lift, arm, Height.L4));
     if (m_driverController.x().getAsBoolean()){
       System.out.println("Gyro reset");
     }
     m_driverController.x().onTrue( // Reset gyro whenever necessary
       new InstantCommand(() -> m_driveSubsystem.resetGyro(), m_driveSubsystem)
     );
-    m_driverController.b().onTrue(new JankLift(lift, arm, Height.InternalStow));
+    // m_driverController.b().onTrue(new JankLift(lift, arm, Height.InternalStow));
     
     // m_driverController.x().onTrue(new JankLift(lift, arm, Height.StartingConfig));
     
@@ -182,9 +182,9 @@ public class RobotContainer {
     //m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
 
     //push coral down
-    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm)); 
-    //pull coral up
-    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
+    // m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm)); 
+    // //pull coral up
+    // m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
     //right bumper cancel
     m_driverController.leftBumper().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
     
@@ -315,13 +315,13 @@ public class RobotContainer {
           // autoFactory.trajectoryCmd("MiddleCS"),
           // stop3
 
-          autoFactory.resetOdometry("MiddleStart"),
-          Commands.parallel(
-            autoFactory.trajectoryCmd("MiddleStart"),
-            new JankLiftAutonomous(lift, arm, scoreHeight)
-            ),
-          stop,
-          new RunIntakeTimeLimited(intake, true /* We want it to outtake, so in should be true */, lift, arm, 2)
+          // autoFactory.resetOdometry("MiddleStart"),
+          // Commands.parallel(
+          //   autoFactory.trajectoryCmd("MiddleStart"),
+          //   new JankLiftAutonomous(lift, arm, scoreHeight)
+          //   ),
+          // stop,
+          // new RunIntakeTimeLimited(intake, true /* We want it to outtake, so in should be true */, lift, arm, 2)
           // new JankLiftAutonomous(lift, arm, Height.InternalStow),
           // autoFactory.resetOdometry("LeftCS"),
           // autoFactory.trajectoryCmd("LeftCS"),
@@ -350,8 +350,8 @@ public class RobotContainer {
       case Testing:
         //odometry must be relative to zero
         return Commands.sequence(
-          new JankLiftAutonomous(lift, arm, scoreHeight),
-          new RunIntakeTimeLimited(intake, true, lift, arm, 2)
+          // new JankLiftAutonomous(lift, arm, scoreHeight),
+          // new RunIntakeTimeLimited(intake, true, lift, arm, 2)
       //     autoFactory.resetOdometry("Test"),
       //     autoFactory.trajectoryCmd("Test"),
       //     stop,
@@ -415,26 +415,26 @@ public class RobotContainer {
     }
   }
 
-  public void StowLift(){
-    // goToGround.schedule();
-  }
-  /**Returns true if robot roll or pitch exceeds the maximum tilt */
-  public Boolean checkTilt(){
-    if(m_driveSubsystem.getTilt()>LiftConstants.maximumTilt){
-      return true;
-    }
-    return false;
-  }
-  public void getArmAngle(){
-    arm.getArmAngle();
-  }
-  public void getLiftAngle(){
-    lift.getLiftAngle();
-  }
-  /**Prints out the current height set by the controller onto SmartDashboard */
-  public void getHeightSet(){
-    lift.getHeight();
-  }
+  // public void StowLift(){
+  //   // goToGround.schedule();
+  // }
+  // /**Returns true if robot roll or pitch exceeds the maximum tilt */
+  // public Boolean checkTilt(){
+  //   if(m_driveSubsystem.getTilt()>LiftConstants.maximumTilt){
+  //     return true;
+  //   }
+  //   return false;
+  // }
+  // public void getArmAngle(){
+  //   arm.getArmAngle();
+  // }
+  // public void getLiftAngle(){
+  //   lift.getLiftAngle();
+  // }
+  // /**Prints out the current height set by the controller onto SmartDashboard */
+  // public void getHeightSet(){
+  //   lift.getHeight();
+  // }
   // public void CheckReefAligned(){
   //   colourSensor.CheckReefAligned();
   // }
