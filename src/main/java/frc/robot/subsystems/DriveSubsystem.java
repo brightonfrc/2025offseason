@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Robot;
 import frc.robot.Constants.ChoreoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldOrientedDriveConstants;
@@ -23,7 +24,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
 import choreo.trajectory.SwerveSample;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
@@ -76,6 +85,31 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    RobotConfig config = null;
+    try{
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    AutoBuilder.configure(
+      this::getPose,
+      this::resetOdometry,
+      this::getChassisSpeeds,
+      (speeds, feedforwards) -> ChassisDrive(speeds),
+      new PPHolonomicDriveController(
+        new PIDConstants(5.0, 0.0, 0.0),
+        new PIDConstants(5.0, 0.0, 0.0)
+      ),
+      config,
+      () -> {
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      },
+      this
+      );
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
   }
@@ -234,6 +268,16 @@ public class DriveSubsystem extends SubsystemBase {
       m_rearRight.getState()
     );
   }
+
+  public void ChassisDrive(ChassisSpeeds speeds){
+    double xSpeed = speeds.vxMetersPerSecond;
+    double ySpeed = speeds.vyMetersPerSecond;
+    double omega = speeds.omegaRadiansPerSecond;
+    drive(xSpeed, ySpeed, omega, false);
+  }
+
+  
+  
 
   /**
    * Returns the turn rate of the robot.
