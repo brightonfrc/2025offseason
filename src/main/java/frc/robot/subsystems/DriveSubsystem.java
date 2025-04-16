@@ -226,6 +226,15 @@ public class DriveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(m_gyro.getAngle()%360).getDegrees();
   }
 
+  public ChassisSpeeds getChassisSpeeds(){
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(
+      m_frontLeft.getState(),
+      m_frontRight.getState(),
+      m_rearLeft.getState(),
+      m_rearRight.getState()
+    );
+  }
+
   /**
    * Returns the turn rate of the robot.
    *
