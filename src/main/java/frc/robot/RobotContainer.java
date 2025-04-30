@@ -225,7 +225,8 @@ public class RobotContainer {
     StopRobot stop4 = new StopRobot(m_driveSubsystem);
 
     return Commands.sequence(
-      new PathPlannerAuto("Test")
+      new PathPlannerAuto("Test"),
+      stop
     );
     // An example command will be run in autonomous
     // return Autos.exampleAuto(m_exampleSubsystem);
