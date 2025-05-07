@@ -85,20 +85,21 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    RobotConfig config = null;
+    RobotConfig config;
     try{
       config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
       e.printStackTrace();
+      return;
     }
     AutoBuilder.configure(
       this::getPose,
       this::resetOdometry,
       this::getChassisSpeeds,
-      (speeds, feedforwards) -> ChassisDrive(speeds),
+      (speeds, feedforwards) -> chassisDrive(speeds),
       new PPHolonomicDriveController(
-        new PIDConstants(5.0, 0.0, 0.0),
-        new PIDConstants(5.0, 0.0, 0.0)
+        new PIDConstants(0.4, 0.0, 0.4),
+        new PIDConstants(0.4, 0.0, 0.0)
       ),
       config,
       () -> {
@@ -269,7 +270,7 @@ public class DriveSubsystem extends SubsystemBase {
     );
   }
 
-  public void ChassisDrive(ChassisSpeeds speeds){
+  public void chassisDrive(ChassisSpeeds speeds){
     double xSpeed = speeds.vxMetersPerSecond;
     double ySpeed = speeds.vyMetersPerSecond;
     double omega = speeds.omegaRadiansPerSecond;

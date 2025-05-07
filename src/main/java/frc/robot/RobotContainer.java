@@ -225,7 +225,7 @@ public class RobotContainer {
     StopRobot stop4 = new StopRobot(m_driveSubsystem);
 
     return Commands.sequence(
-      new PathPlannerAuto("Test"),
+      new PathPlannerAuto("Auto"),
       stop
     );
     // An example command will be run in autonomous
@@ -403,8 +403,8 @@ public class RobotContainer {
   public void resetGyro(){
     m_driveSubsystem.resetGyro();
   }
-  public void getPose(){
-    m_driveSubsystem.getPose();
+  public Pose2d getPose(){
+    return m_driveSubsystem.getPose();
     // SmartDashboard.putString("Auto", "AprilTag Alignment");
     // return new AprilTagAlignment(m_driveSubsystem, new AprilTagPoseEstimator(), 3, 0.5);
   }
