@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Robot;
+import frc.robot.Constants.AutonPathPlannerConstants;
 import frc.robot.Constants.ChoreoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldOrientedDriveConstants;
@@ -79,9 +80,9 @@ public class DriveSubsystem extends SubsystemBase {
       });
   
   //for Choreo
-  private final PIDController xController = new PIDController(ChoreoConstants.translationkP, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
-  private final PIDController yController = new PIDController(ChoreoConstants.translationkP, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
-  private final PIDController headingController = new PIDController(ChoreoConstants.rotationkP, ChoreoConstants.rotationkI, ChoreoConstants.rotationkD);
+  // private final PIDController xController = new PIDController(ChoreoConstants.translationkP, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
+  // private final PIDController yController = new PIDController(ChoreoConstants.translationkP, ChoreoConstants.translationkI, ChoreoConstants.translationkD);
+  // private final PIDController headingController = new PIDController(ChoreoConstants.rotationkP, ChoreoConstants.rotationkI, ChoreoConstants.rotationkD);
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -98,8 +99,8 @@ public class DriveSubsystem extends SubsystemBase {
       this::getChassisSpeeds,
       (speeds, feedforwards) -> chassisDrive(speeds),
       new PPHolonomicDriveController(
-        new PIDConstants(0.4, 0.0, 0.4),
-        new PIDConstants(0.4, 0.0, 0.0)
+        new PIDConstants(AutonPathPlannerConstants.translationkP, AutonPathPlannerConstants.translationkI, AutonPathPlannerConstants.translationkD),//new PIDConstants(0.4, 0.0, 0.4),
+        new PIDConstants(AutonPathPlannerConstants.rotationkP, AutonPathPlannerConstants.rotationkI, AutonPathPlannerConstants.rotationkD)//new PIDConstants(0.4, 0.0, 0.0)
       ),
       config,
       () -> {
@@ -116,21 +117,21 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   //for Choreo
-  public void followTrajectory(SwerveSample sample) {
-        // Get the current pose of the robot
-        Pose2d pose = getPose();
+  // public void followTrajectory(SwerveSample sample) {
+  //       // Get the current pose of the robot
+  //       Pose2d pose = getPose();
 
-        // Generate the next speeds for the robot
-        ChassisSpeeds speeds = new ChassisSpeeds(
-            sample.vx + xController.calculate(pose.getX(), sample.x),
-            sample.vy + yController.calculate(pose.getY(), sample.y),
-            sample.omega + headingController.calculate(pose.getRotation().getRadians(), sample.heading)
-        );
+  //       // Generate the next speeds for the robot
+  //       ChassisSpeeds speeds = new ChassisSpeeds(
+  //           sample.vx + xController.calculate(pose.getX(), sample.x),
+  //           sample.vy + yController.calculate(pose.getY(), sample.y),
+  //           sample.omega + headingController.calculate(pose.getRotation().getRadians(), sample.heading)
+  //       );
 
-        // Apply the generated speeds
-        drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,0,false);
-        // drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.omegaRadiansPerSecond/DriveConstants.kMaxAngularSpeed,false);
-    }
+  //       // Apply the generated speeds
+  //       drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,0,false);
+  //       // drive(speeds.vxMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.vyMetersPerSecond/DriveConstants.kMaxSpeedMetersPerSecond,speeds.omegaRadiansPerSecond/DriveConstants.kMaxAngularSpeed,false);
+  //   }
 
   @Override
   public void periodic() {
