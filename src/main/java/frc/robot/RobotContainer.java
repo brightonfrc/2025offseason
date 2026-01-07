@@ -22,14 +22,6 @@ import frc.robot.commands.AprilTagAlignment;
 import frc.robot.commands.Autos;
 import frc.robot.commands.CoralStationAlign;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Lift;
-import frc.robot.commands.RunLift;
-import frc.robot.commands.SustainLift;
-import frc.robot.commands.RunArm;
-import frc.robot.commands.RunIntake;
-import frc.robot.commands.RunIntakeTimeLimited;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.DatisLift;
 import frc.robot.commands.FieldOrientedDrive;
 // import frc.robot.subsystems.ColourSensor;
 import frc.robot.subsystems.DriveSubsystem;
@@ -51,11 +43,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.HangRobot;
-import frc.robot.commands.JankLift;
-import frc.robot.commands.JankLiftAutonomous;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Winch;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -85,14 +72,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  // private final DatisLift lift= new DatisLift(new SparkMax(LiftConstants.liftNeoCANID, MotorType.kBrushless), new SparkMax(LiftConstants.reversedLiftNeoCANDID, MotorType.kBrushless), new DutyCycleEncoder(LiftConstants.encoderChannel));
-  // private final Arm arm = new Arm(new DutyCycleEncoder(ArmConstants.armEncoderPort), new SparkMax(ArmConstants.armCANID, MotorType.kBrushless));
-  // private final Intake intake = new Intake(new SparkMax(IntakeConstants.intakeCanID, MotorType.kBrushless));
   private final DriveSubsystem m_driveSubsystem= new DriveSubsystem();
   private final AprilTagPoseEstimator m_poseEstimator = new AprilTagPoseEstimator();
-  // private final Winch winch = new Winch(new SparkMax(WinchConstants.winchCANID, MotorType.kBrushless));
 
   private boolean active = false;
 
@@ -100,29 +81,11 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
   new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandPS4Controller m_manualLiftController= new CommandPS4Controller(OIConstants.kManualLiftControllerPort);
-  // private final ColourSensor colourSensor= new ColourSensor(new ColorSensorV3(I2C.Port.kOnboard));
   private final FieldOrientedDrive fieldOrientedDrive= new FieldOrientedDrive(m_driveSubsystem, m_driverController);
-  // private Lift goToGround=new Lift(lift, Height.Ground);
-  // private final SustainLift sustainLift = new SustainLift(lift, arm);
-
-  //for Choreo
-  // private final AutoFactory autoFactory;
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
-    // lift.setDefaultCommand(sustainLift);
-    // m_driveSubsystem.drive(m_driverController.getLeftX(), m_driverController.getLeftY(), 0, false);
-    //for Choreo
-    // autoFactory = new AutoFactory(
-    //         m_driveSubsystem::getPoseChoreo, // A function that returns the current robot pose
-    //         m_driveSubsystem::resetOdometry, // A function that resets the current robot pose to the provided Pose2d
-    //         m_driveSubsystem::followTrajectory, // The drive subsystem trajectory follower 
-    //         false, // If alliance flipping should be enabled 
-    //         m_driveSubsystem // The drive subsystem
-    //     );
-    // configureBindings();
   }
 
   /**
@@ -141,75 +104,13 @@ public class RobotContainer {
 
   private void configureBindings() {
     //R2 and L2 don't work
-
-    // To do
-  
-    //2. Redo weight offsets
-    //3. Redo PID
-    // m_manualLiftController.R1().whileTrue(new RunLift(lift, true));
-    // m_manualLiftController.L1().whileTrue(new RunLift(lift, false));
-
-    // m_manualLiftController.R1().whileTrue(new RunArm(arm, true, lift));
-    // m_manualLiftController.L1().whileTrue(new RunArm(arm, false, lift));
-
-
-    //bind intake and outtake to L3 and R3?
-
-    
-    //remember that A on the xbox controllerbutton is bound to "slow Mode"
-    
-    // m_driverController.y().onTrue(new JankLift(lift, arm, Height.CoralStation));
-    // m_driverController.povUp().onTrue(new JankLift(lift, arm, Height.L1));
-    // m_driverController.povRight().onTrue(new JankLift(lift, arm, Height.L2));
-    // m_driverController.povDown().onTrue(new JankLift(lift, arm, Height.L3));
-    // m_driverController.povLeft().onTrue(new JankLift(lift, arm, Height.L4));
     if (m_driverController.x().getAsBoolean()){
       System.out.println("Gyro reset");
     }
     m_driverController.x().onTrue( // Reset gyro whenever necessary
       new InstantCommand(() -> m_driveSubsystem.resetGyro(), m_driveSubsystem)
     );
-    // m_driverController.b().onTrue(new JankLift(lift, arm, Height.InternalStow));
-    
-    // m_driverController.x().onTrue(new JankLift(lift, arm, Height.StartingConfig));
-    
-    // m_manualLiftController.povUp().onTrue(new JankLift(lift, arm, Height.Algae2));
-    // m_manualLiftController.povRight().onTrue(new JankLift(lift, arm, Height.Algae3));
-    // m_manualLiftController.povDown().onTrue(new JankLift(lift, arm, Height.Ground));
-    // m_manualLiftController.povLeft().onTrue(new JankLift(lift, arm, Height.HangStart));
-    // m_manualLiftController.cross().onTrue(new HangRobot(lift, winch));
-    // m_manualLiftController.triangle().onTrue(new JankLift(lift, arm, Height.InternalStow));
-    //m_driverController.rightBumper().whileTrue(new RunArm(arm, true, lift));
-    //m_driverController.leftBumper().whileTrue(new RunArm(arm, false, lift));
-
-    //push coral down
-    // m_driverController.rightTrigger().whileTrue(new RunIntake(intake, true, lift, arm)); 
-    // //pull coral up
-    // m_driverController.leftTrigger().whileTrue(new RunIntake(intake, false, lift, arm));
-    //right bumper cancel
     m_driverController.leftBumper().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController));
-    
-    //m_manualLiftController.triangle().onTrue(new CoralStationAlign(m_driveSubsystem, m_driverController, m_poseEstimator));
-    // m_manualLiftController.circle().onTrue(new MoveToPointTeleop(m_driveSubsystem, Math.toRadians(225))); // Right
-    // m_manualLiftController.square().onTrue(new MoveToPointTeleop(m_driveSubsystem, Math.toRadians(135))); // Left
-    //m_manualLiftController.triangle().onTrue();
-    //m_manualLiftController.triangle().onTrue()
-    //m_manualLiftController.triangle().onTrue(fieldOrientedDrive)
-
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    //align right
-    // m_driverController.leftBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
-    //align left
-    // m_driverController.rightBumper().onTrue(new AprilTagAlignment(m_driveSubsystem, m_poseEstimator, AprilTagAlignmentConstants.stopDisplacementX, -AprilTagAlignmentConstants.stopDisplacementY+AprilTagAlignmentConstants.cameraDisplacement));
-    //right bumper to cancel
-    
-
-    
-    
-
   }
 
   /**
@@ -220,177 +121,15 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     StopRobot stop = new StopRobot(m_driveSubsystem);
     //annoyingly, you can't reuse the same command in a Commands.sequence
-    StopRobot stop2 = new StopRobot(m_driveSubsystem);
-    StopRobot stop3 = new StopRobot(m_driveSubsystem);
-    StopRobot stop4 = new StopRobot(m_driveSubsystem);
+    // StopRobot stop2 = new StopRobot(m_driveSubsystem);
+    // StopRobot stop3 = new StopRobot(m_driveSubsystem);
+    // StopRobot stop4 = new StopRobot(m_driveSubsystem);
 
     return Commands.sequence(
       new PathPlannerAuto("Auto"),
       stop
     );
-    // An example command will be run in autonomous
-    // return Autos.exampleAuto(m_exampleSubsystem);
-    // m_driveSubsystem.resetOdometry(new Pose2d(ChoreoConstants.startX,ChoreoConstants.startY,new Rotation2d(ChoreoConstants.startRadians)));
-    
-    //return Commands.sequence(stop);
-
-    // YOU MUST CHANGE THE STARTPOS CONSTANT IN THE CONSTANTS BASED ON THE FIELD!!!!!!!
-    // TODO : Properly discuss with Datis and then setup the commands sequence as such
-    
-    // Height scoreHeight = AutonomousNavConstants.scoreHeight;//Height.L4; // Datis wants L4
-
-    // switch (AutonomousNavConstants.startPos){
-    //   case Left:
-    //     return Commands.sequence(
-    //       // autoFactory.resetOdometry("LeftStart"),
-    //       // autoFactory.trajectoryCmd("LeftStart"),
-    //       // stop
-    //       //shift right
-    //       // autoFactory.resetOdometry("LeftScoot"),
-    //       // autoFactory.trajectoryCmd("LeftScoot"),
-    //       // stop2,
-    //       // new JankLiftAutonomous(lift, arm, scoreHeight)//,
-    //       // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-    //       // new JankLiftAutonomous(lift, arm, Height.CoralStation),
-    //       // autoFactory.resetOdometry("LeftCS"),
-    //       // autoFactory.trajectoryCmd("LeftCS"),
-    //       // stop3
-    //       // Sit tight until teleop
-
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.leftCoralStationRot)),
-    //       // new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-    //       // autoFactory.resetOdometry("LeftFromStation"),
-    //       // autoFactory.trajectoryCmd("LeftFromStation"),
-    //       // stop3,
-    //       // //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-    //       // new JankLiftAutonomous(lift, arm, scoreHeight),
-    //       // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-    //       // new JankLiftAutonomous(lift, arm, Height.CoralStation),
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
-    //     );
-    //   case Right:
-    //   //not tested, at all
-    //     return Commands.sequence(
-    //     //   autoFactory.resetOdometry("RightStart"),
-    //     //   autoFactory.trajectoryCmd("RightStart"),
-    //     //   stop,
-    //     //   new MoveToPoint(m_driveSubsystem, Math.toRadians(120)),
-    //     //   new JankLiftAutonomous(lift, arm, scoreHeight),
-    //     //   new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-    //     //   new JankLiftAutonomous(lift, arm, Height.CoralStation),
-    //     //   new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-    //     //   autoFactory.resetOdometry("RightScoot"),
-    //     //   autoFactory.trajectoryCmd("RightScoot"),
-    //     //   stop2,
-    //     //   autoFactory.resetOdometry("RightCS"),
-    //     //   autoFactory.trajectoryCmd("RightCS"),
-    //     //   stop3
-    //       // Await for coral deposit...?
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.leftCoralStationRot)),
-    //       // new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-    //       // autoFactory.resetOdometry("RightFromStation"),
-    //       // autoFactory.trajectoryCmd("RightFromStation"),
-    //       // // Might not work due to time constraints, need to ensure rotation is zero for start of tele
-    //       // stop3,
-    //       // //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
-    //       // // new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-    //       // // new JankLiftAutonomous(lift, arm, scoreHeight),
-    //       // // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-    //       // // new JankLiftAutonomous(lift, arm, Height.CoralStation),
-    //       // // new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
-    //     );
-    //   case Middle: 
-    //     return Commands.sequence(
-    //       // Weird case, doesn't rotate
-    //       // autoFactory.resetOdometry("MiddleStart"),
-    //       // autoFactory.trajectoryCmd("MiddleStart"),
-    //       // stop,
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(Math.toRadians(180))),
-    //       // new JankLiftAutonomous(lift, arm, scoreHeight),
-    //       // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-    //       // new JankLiftAutonomous(lift, arm, Height.CoralStation),
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-    //       // //drive to CS
-    //       // autoFactory.resetOdometry("MiddleScoot"),
-    //       // autoFactory.trajectoryCmd("MiddleScoot"),
-    //       // stop2,
-    //       // autoFactory.resetOdometry("MiddleCS"),
-    //       // autoFactory.trajectoryCmd("MiddleCS"),
-    //       // stop3
-
-    //       // autoFactory.resetOdometry("MiddleStart"),
-    //       // Commands.parallel(
-    //       //   autoFactory.trajectoryCmd("MiddleStart"),
-    //       //   new JankLiftAutonomous(lift, arm, scoreHeight)
-    //       //   ),
-    //       // stop,
-    //       // new RunIntakeTimeLimited(intake, true /* We want it to outtake, so in should be true */, lift, arm, 2)
-    //       // new JankLiftAutonomous(lift, arm, Height.InternalStow),
-    //       // autoFactory.resetOdometry("LeftCS"),
-    //       // autoFactory.trajectoryCmd("LeftCS"),
-    //       // stop3
-    //       // Sit tight until teleop
-    //       // Await for coral deposit...?
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(CoralStationAlignConstants.rightCoralStationRot)),
-    //       // new RunIntakeTimeLimited(intake, true /* We want it to intake, so in should be true */, lift, arm, 4),
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-    //       // autoFactory.resetOdometry("MiddleFromStation"),
-    //       // autoFactory.trajectoryCmd("MiddleFromStation"),
-    //       // stop3,
-    //       // //new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotTwo)),
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-    //       // new JankLiftAutonomous(lift, arm, scoreHeight),
-    //       // new RunIntakeTimeLimited(intake, false /* We want it to outtake, so in should be false */, lift, arm, 2),
-    //       // new JankLiftAutonomous(lift, arm, Height.CoralStation),
-    //       // new MoveToPoint(m_driveSubsystem, Math.toRadians(0))
-    //     );
-    //   case Taxi:
-    //     return Commands.sequence(
-    //       autoFactory.resetOdometry("Taxi"),
-    //       autoFactory.trajectoryCmd("Taxi"),
-    //       stop
-    //     );
-    //   case Testing:
-    //     //odometry must be relative to zero
-    //     return Commands.sequence(
-    //       // new JankLiftAutonomous(lift, arm, scoreHeight),
-    //       // new RunIntakeTimeLimited(intake, true, lift, arm, 2)
-    //   //     autoFactory.resetOdometry("Test"),
-    //   //     autoFactory.trajectoryCmd("Test"),
-    //   //     stop,
-    //   //     new MoveToPoint(m_driveSubsystem, Math.toRadians(240)),
-    //   //     new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-    //   //     autoFactory.resetOdometry("TestTwo"),
-    //   //     autoFactory.trajectoryCmd("TestTwo")
-    //     );
-    //   default:
-    //     return Commands.sequence(
-    //       stop
-    //     );
     }
-
-     
-
-    /*
-    return Commands.sequence(
-        //for some reason, resetOdometry isn't working properly
-        autoFactory.resetOdometry("Testing"),  
-        autoFactory.trajectoryCmd("Testing"),
-        stop,
-        new MoveToPoint(m_driveSubsystem, Math.toRadians(AutonomousNavConstants.endRotOne)),
-        //deposit coral
-        // lift command
-        // runintakeshort command
-        new MoveToPoint(m_driveSubsystem, Math.toRadians(0)),
-        autoFactory.resetOdometry("TestingPartTwo"),
-        autoFactory.trajectoryCmd("TestingPartTwo"),
-        stopAgain
-    );
-    */
-  //}
   public void SetUpDefaultCommand(){
     m_driveSubsystem.setDefaultCommand(fieldOrientedDrive);
   }
@@ -421,28 +160,5 @@ public class RobotContainer {
     }
   }
 
-  // public void StowLift(){
-  //   // goToGround.schedule();
-  // }
-  // /**Returns true if robot roll or pitch exceeds the maximum tilt */
-  // public Boolean checkTilt(){
-  //   if(m_driveSubsystem.getTilt()>LiftConstants.maximumTilt){
-  //     return true;
-  //   }
-  //   return false;
-  // }
-  // public void getArmAngle(){
-  //   arm.getArmAngle();
-  // }
-  // public void getLiftAngle(){
-  //   lift.getLiftAngle();
-  // }
-  // /**Prints out the current height set by the controller onto SmartDashboard */
-  // public void getHeightSet(){
-  //   lift.getHeight();
-  // }
-  // public void CheckReefAligned(){
-  //   colourSensor.CheckReefAligned();
-  // }
 }
 
