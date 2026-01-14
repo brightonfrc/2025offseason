@@ -127,7 +127,7 @@ public class FieldOrientedDrive extends Command {
         
 
         //Datis and Ella prefers this
-        // driveSubsystem.drive(xSpeed, -ySpeed, rotSpeed, false);
+        driveSubsystem.drive(xSpeed, -ySpeed, rotSpeed, false);
 
         // William and Sam prefers this
         driveSubsystem.drive(xSpeed, -ySpeed, -xboxController.getRightX()*(slowModeActive ? TestingConstants.reducedRotationSpeedRobotOriented : TestingConstants.maximumRotationSpeedRobotOriented), false);

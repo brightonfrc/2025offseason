@@ -220,9 +220,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     StopRobot stop = new StopRobot(m_driveSubsystem);
     //annoyingly, you can't reuse the same command in a Commands.sequence
-    StopRobot stop2 = new StopRobot(m_driveSubsystem);
-    StopRobot stop3 = new StopRobot(m_driveSubsystem);
-    StopRobot stop4 = new StopRobot(m_driveSubsystem);
+    // StopRobot stop2 = new StopRobot(m_driveSubsystem);
+    // StopRobot stop3 = new StopRobot(m_driveSubsystem);
+    // StopRobot stop4 = new StopRobot(m_driveSubsystem);
 
     return Commands.sequence(
       new PathPlannerAuto("Auto"),
